@@ -1,0 +1,533 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+
+\tcbuselibrary{skins}
+
+\geometry{margin=1in, top=1in, bottom=1in}
+
+% ── Colour palette ───────────────────────────────────────────────────────────
+\definecolor{primary}  {RGB}{38,  50,  56}
+\definecolor{accent}   {RGB}{0,  188, 212}
+\definecolor{lightbg}  {RGB}{224,247,250}
+\definecolor{gold}     {RGB}{255,152,  0}
+\definecolor{goldbg}   {RGB}{255,243,224}
+\definecolor{softgray} {RGB}{245,246,247}
+\definecolor{darktext} {RGB}{33,  33,  33}
+\definecolor{green1}   {RGB}{0,  150, 136}
+\definecolor{greenbg}  {RGB}{224,242,241}
+
+% ── Headers / Footers ────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Applications of Laplace Transform}\;\textcolor{accent}{|}\;Assignment}
+\fancyhead[R]{\small\color{darktext}BS Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ──────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}{}
+  {0em}{}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}{}
+  {0em}{}
+
+% ── tcolorbox styles ─────────────────────────────────────────────────────────
+\newtcolorbox{formulabox}{
+  enhanced,
+  colback=goldbg, colframe=gold, arc=5pt, boxrule=1.5pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  title={\small\bfseries Key Result / Formula},
+  colbacktitle=gold!30, coltitle=darktext,
+  attach boxed title to top left={xshift=12pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=gold, colback=gold!25, boxrule=1pt},
+}
+
+\newtcolorbox{conceptbox}{
+  enhanced,
+  borderline west={4pt}{0pt}{accent},
+  colback=lightbg!55, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newtcolorbox{examplebox}{
+  enhanced,
+  colback=softgray, colframe=primary!50, arc=5pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Worked Example},
+  colbacktitle=primary, coltitle=white,
+}
+
+\newtcolorbox{answerbox}{
+  enhanced,
+  colback=greenbg, colframe=green1, arc=5pt, boxrule=1.5pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Result},
+  colbacktitle=green1!80, coltitle=white,
+  attach boxed title to top left={xshift=12pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=green1, colback=green1!70, boxrule=1pt},
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+
+% ── Custom math commands ─────────────────────────────────────────────────────
+\newcommand{\Lap}[1]{\mathcal{L}\!\left\{#1\right\}}
+\newcommand{\iLap}[1]{\mathcal{L}^{-1}\!\left\{#1\right\}}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════════════════════
+%  TITLE BANNER
+% ════════════════════════════════════════════════════════════════════════════
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=18pt, bottom=14pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  \centering
+  {\huge\bfseries\color{white} Applications of Laplace Transform}\\[4pt]
+  {\large\color{accent} Assignment --- Advanced Mathematics / Transforms}\\[6pt]
+  {\normalsize\color{lightbg}
+    Shah Abdul Latif University, Khairpur \quad\textbullet\quad Department of Mathematics}
+\end{tcolorbox}
+
+\vspace{4pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=white, colframe=white,
+  borderline north={1.5pt}{0pt}{accent!60},
+  borderline south={1.5pt}{0pt}{accent!60},
+  left=16pt, right=16pt, top=12pt, bottom=12pt,
+]
+  \begin{tabular}{p{3.8cm} p{9cm}}
+    \textcolor{primary}{\textbf{Student:}}
+      & \textbf{Nadir Ali Khan} \quad|\quad Roll No: \textbf{MT-0123-052} \\[4pt]
+    \textcolor{primary}{\textbf{Subject:}}
+      & \textbf{Advanced Mathematics / Transforms} \\[4pt]
+    \textcolor{primary}{\textbf{Submitted To:}}
+      & \textbf{Dr.\ Israr Ahmed Memon} \\[4pt]
+    \textcolor{primary}{\textbf{Department:}}
+      & \textbf{Department of Mathematics} \\
+  \end{tabular}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+% ── Table of Contents ────────────────────────────────────────────────────────
+\renewcommand{\contentsname}{\color{primary}Table of Contents}
+\tableofcontents
+
+\newpage
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Introduction to Laplace Transform}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{conceptbox}
+The \textbf{Laplace Transform} is one of the most powerful mathematical tools used in engineering,
+physics, and applied mathematics. Named after \textbf{Pierre-Simon Laplace} (1749--1827), it converts
+functions of time into functions of a complex variable $s$.
+\end{conceptbox}
+
+\medskip
+This transformation simplifies the analysis of linear time-invariant systems by turning differential
+equations into algebraic equations. Its applications span electrical engineering, mechanical
+engineering, control theory, signal processing, and mathematical physics.
+
+The Laplace Transform acts as a bridge between the \emph{time domain} and the
+\emph{frequency (complex) domain}, enabling engineers and mathematicians to solve problems that
+would be extremely difficult using classical methods alone.
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Definition and Basic Properties}
+% ════════════════════════════════════════════════════════════════════════════
+
+\subsection*{Definition}
+
+The Laplace Transform of $f(t)$, defined for $t \geq 0$, is:
+
+\begin{formulabox}
+\[
+  \Lap{f(t)} = F(s) = \int_{0}^{\infty} e^{-st}\, f(t)\, dt
+\]
+where $s = \sigma + j\omega$ is a complex number.
+\end{formulabox}
+
+\subsection*{Key Properties}
+
+\begin{conceptbox}
+\begin{tabular}{lp{8cm}}
+\textbf{Linearity:}         & $\Lap{af(t)+bg(t)} = aF(s)+bG(s)$ \\[4pt]
+\textbf{Differentiation:}   & $\Lap{f'(t)} = sF(s) - f(0)$ \\[4pt]
+\textbf{Integration:}       & $\displaystyle\Lap{\int_0^t f(\tau)\,d\tau} = \dfrac{F(s)}{s}$ \\[8pt]
+\textbf{Time Shifting:}     & $\Lap{f(t-a)\,u(t-a)} = e^{-as}F(s)$ \\[4pt]
+\textbf{Frequency Shifting:}& $\Lap{e^{at}f(t)} = F(s-a)$ \\[4pt]
+\textbf{Convolution:}       & $\Lap{(f*g)(t)} = F(s)\cdot G(s)$ \\[4pt]
+\textbf{Initial Value:}     & $\displaystyle\lim_{t\to 0^+} f(t) = \lim_{s\to\infty} sF(s)$ \\[8pt]
+\textbf{Final Value:}       & $\displaystyle\lim_{t\to\infty} f(t) = \lim_{s\to 0} sF(s)$ \\
+\end{tabular}
+\end{conceptbox}
+
+\subsection*{Common Laplace Pairs}
+
+\begin{center}
+\begin{tabular}{C{3.5cm} C{5cm} C{3cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$f(t)$} & \hcell{$F(s) = \Lap{f(t)}$} & \hcell{Region of Conv.} \\
+\midrule
+\rowcolor{lightbg!50}
+$1$            & $\dfrac{1}{s}$                     & $s > 0$ \\[6pt]
+$t$            & $\dfrac{1}{s^2}$                   & $s > 0$ \\[6pt]
+\rowcolor{lightbg!50}
+$e^{at}$       & $\dfrac{1}{s-a}$                   & $s > a$ \\[6pt]
+$\sin(\omega t)$ & $\dfrac{\omega}{s^2+\omega^2}$   & $s > 0$ \\[6pt]
+\rowcolor{lightbg!50}
+$\cos(\omega t)$ & $\dfrac{s}{s^2+\omega^2}$        & $s > 0$ \\[6pt]
+$\delta(t)$    & $1$                                & all $s$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Application in Solving Ordinary Differential Equations}
+% ════════════════════════════════════════════════════════════════════════════
+
+One of the most classical applications of the Laplace Transform is solving linear ODEs with constant
+coefficients, particularly initial value problems (IVPs). The process transforms a differential
+equation into an algebraic equation, solves it, then inverts the result.
+
+\subsection*{General Procedure}
+
+\begin{enumerate}[noitemsep]
+  \item Take the Laplace Transform of both sides of the ODE.
+  \item Apply initial conditions to simplify.
+  \item Solve the resulting algebraic equation for $F(s)$.
+  \item Apply the Inverse Laplace Transform to find $f(t)$.
+\end{enumerate}
+
+\subsection*{Example 1 --- First Order ODE}
+
+\begin{examplebox}
+Solve $y' + 3y = 6$, \quad $y(0) = 2$.
+
+\medskip
+\textbf{Step 1 --- Apply Laplace Transform:}
+\[
+  \bigl[sY(s) - y(0)\bigr] + 3Y(s) = \frac{6}{s}
+\]
+\textbf{Step 2 --- Substitute $y(0) = 2$:}
+\[
+  Y(s)(s+3) = \frac{6}{s} + 2 = \frac{6+2s}{s}
+\]
+\textbf{Step 3 --- Partial Fractions:}
+\[
+  Y(s) = \frac{6+2s}{s(s+3)} = \frac{2}{s} + \frac{0}{s+3}
+\]
+\textbf{Step 4 --- Inverse Transform:}
+\[
+  \boxed{y(t) = 2}
+\]
+\end{examplebox}
+
+\subsection*{Example 2 --- Second Order ODE}
+
+\begin{examplebox}
+Solve $y'' + 5y' + 6y = 0$, \quad $y(0)=2,\; y'(0)=-1$.
+
+\medskip
+Taking the Laplace Transform:
+\[
+  \bigl[s^2Y - 2s + 1\bigr] + 5\bigl[sY - 2\bigr] + 6Y = 0
+\]
+\[
+  Y(s^2 + 5s + 6) = 2s + 9 \implies Y(s) = \frac{2s+9}{(s+2)(s+3)}
+\]
+
+Partial fractions: $\dfrac{2s+9}{(s+2)(s+3)} = \dfrac{A}{s+2} + \dfrac{B}{s+3}$
+
+\[
+  A = \frac{2(-2)+9}{-2+3} = 5, \qquad B = \frac{2(-3)+9}{-3+2} = 3
+\]
+
+\[
+  \boxed{y(t) = 5e^{-2t} + 3e^{-3t}}
+\]
+\end{examplebox}
+
+\subsection*{Example 3 --- ODE with Heaviside Step Function}
+
+\begin{examplebox}
+Solve $y' + y = u(t-2)$, \quad $y(0) = 0$.
+
+\medskip
+Since $\Lap{u(t-2)} = \dfrac{e^{-2s}}{s}$:
+\[
+  sY + Y = \frac{e^{-2s}}{s} \implies Y(s) = \frac{e^{-2s}}{s(s+1)} = e^{-2s}\left(\frac{1}{s} - \frac{1}{s+1}\right)
+\]
+\[
+  \boxed{y(t) = \bigl[1 - e^{-(t-2)}\bigr]\,u(t-2)}
+\]
+\end{examplebox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Application in Electrical Circuit Analysis}
+% ════════════════════════════════════════════════════════════════════════════
+
+The Laplace Transform is one of the most natural tools for circuit analysis. It provides a
+systematic method to analyze RLC circuits, especially those with initial conditions (stored energy).
+
+\subsection*{Transformed Impedances in the $s$-Domain}
+
+\begin{conceptbox}
+\begin{tabular}{lp{9cm}}
+\textbf{Resistor:}   & $Z_R = R$ \\[4pt]
+\textbf{Inductor:}   & $Z_L = sL$ \quad (initial current $i(0)$ adds source $sLi(0)$) \\[4pt]
+\textbf{Capacitor:}  & $Z_C = \dfrac{1}{sC}$ \quad (initial voltage $v(0)$ adds source $v(0)/s$) \\
+\end{tabular}
+\end{conceptbox}
+
+\subsection*{Example --- Series RLC Circuit}
+
+\begin{examplebox}
+$R = 2\,\Omega$, $L = 1\,\text{H}$, $C = 0.5\,\text{F}$, driven by $v(t) = 10u(t)$, zero initial conditions.
+
+\medskip
+KVL gives: $\quad i''(t) + 2i'(t) + 2i(t) = 10\delta(t)$
+
+Taking Laplace Transform:
+\[
+  s^2 I + 2sI + 2I = 10 \implies I(s) = \frac{10}{s^2+2s+2} = \frac{10}{(s+1)^2+1}
+\]
+Inverse Transform:
+\[
+  \boxed{i(t) = 10\,e^{-t}\sin(t)\;\text{A}, \quad t \geq 0}
+\]
+This shows a damped sinusoidal response characteristic of an under-damped RLC circuit.
+\end{examplebox}
+
+\subsection*{Transfer Function}
+
+The transfer function $H(s) = V_\text{out}(s)/V_\text{in}(s)$ for an RC low-pass filter:
+\[
+  H(s) = \frac{1/sC}{R + 1/sC} = \frac{1}{1 + sRC} = \frac{1}{1+s\tau}
+\]
+where $\tau = RC$ is the time constant. The cut-off frequency is $\omega_c = 1/\tau$.
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Application in Control Systems}
+% ════════════════════════════════════════════════════════════════════════════
+
+Control systems engineering relies heavily on the Laplace Transform for analyzing and designing
+feedback systems in the $s$-domain.
+
+\subsection*{Closed-Loop Transfer Function}
+
+For a feedback system with plant $G(s)$ and controller $C(s)$:
+\[
+  T(s) = \frac{C(s)G(s)}{1 + C(s)G(s)}
+\]
+
+\subsection*{Stability via Poles}
+
+\begin{conceptbox}
+\begin{itemize}[noitemsep]
+  \item All poles in the \textbf{left half} of the $s$-plane $\Rightarrow$ \textbf{Stable}
+  \item Any pole in the \textbf{right half} $\Rightarrow$ \textbf{Unstable}
+  \item Poles on the \textbf{imaginary axis} $\Rightarrow$ \textbf{Marginally stable}
+\end{itemize}
+\end{conceptbox}
+
+\subsection*{PID Controller}
+
+A PID controller has transfer function:
+\[
+  C(s) = K_p + \frac{K_i}{s} + K_d s = \frac{K_d s^2 + K_p s + K_i}{s}
+\]
+
+\newpage
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Application in Mechanical Vibrations}
+% ════════════════════════════════════════════════════════════════════════════
+
+The Laplace Transform is extensively applied in analysing vibrating systems --- spring-mass systems,
+beams, and rotating machinery.
+
+\subsection*{Spring-Mass-Damper System}
+
+Equation of motion:
+\[
+  m\ddot{x}(t) + c\dot{x}(t) + kx(t) = f(t)
+\]
+Taking Laplace Transform (zero initial conditions):
+\[
+  (ms^2 + cs + k)X(s) = F(s) \implies H(s) = \frac{X(s)}{F(s)} = \frac{1}{ms^2+cs+k}
+\]
+
+\begin{examplebox}
+$m = 1\,\text{kg}$, $c = 2\,\text{N{\cdot}s/m}$, $k = 5\,\text{N/m}$, $f(t) = 10u(t)$.
+
+\[
+  X(s) = \frac{10}{s(s^2+2s+5)} = \frac{2}{s} - \frac{2(s+1)}{(s+1)^2+4} - \frac{2}{(s+1)^2+4}
+\]
+\[
+  \boxed{x(t) = 2 - 2e^{-t}\cos(2t) - e^{-t}\sin(2t)\;\text{ m}}
+\]
+Steady-state displacement: $x_{ss} = F/k = 10/5 = 2\,\text{m}$ \checkmark
+\end{examplebox}
+
+\subsection*{Damping Classification}
+
+\begin{conceptbox}
+Natural frequency: $\omega_n = \sqrt{k/m}$ \quad|\quad Damping ratio: $\zeta = c\,/\,(2\sqrt{mk})$
+\begin{itemize}[noitemsep, topsep=4pt]
+  \item $\zeta < 1$: \textbf{Under-damped} (oscillatory response)
+  \item $\zeta = 1$: \textbf{Critically damped} (fastest non-oscillatory)
+  \item $\zeta > 1$: \textbf{Over-damped} (slow exponential return)
+\end{itemize}
+\end{conceptbox}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Application in Signal Processing}
+% ════════════════════════════════════════════════════════════════════════════
+
+The Laplace Transform provides the mathematical foundation for analysing and designing filters,
+modulators, and communication systems. It handles transient and exponentially growing signals
+that the Fourier Transform cannot.
+
+\subsection*{Convolution Theorem}
+
+For an LTI system with impulse response $h(t)$ and input $x(t)$:
+\[
+  y(t) = x(t)*h(t) = \int_0^t x(\tau)\,h(t-\tau)\,d\tau
+\]
+
+\begin{formulabox}
+In the $s$-domain: \quad $Y(s) = X(s)\cdot H(s)$
+
+Convolution in time $\equiv$ multiplication in the $s$-domain.
+\end{formulabox}
+
+\subsection*{Filter Design}
+
+A Butterworth low-pass filter of order $n$ with cut-off $\omega_c$:
+\[
+  |H(j\omega)|^2 = \frac{1}{1 + (\omega/\omega_c)^{2n}}
+\]
+Poles lie on a circle of radius $\omega_c$ in the left half $s$-plane, ensuring stability and
+maximally flat frequency response.
+
+\newpage
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Application in Heat Conduction (PDEs)}
+% ════════════════════════════════════════════════════════════════════════════
+
+The Laplace Transform reduces PDEs to ODEs by transforming with respect to time.
+
+\subsection*{Heat Equation}
+
+The one-dimensional heat equation:
+\[
+  \frac{\partial u}{\partial t} = \alpha\,\frac{\partial^2 u}{\partial x^2}
+\]
+
+Taking $\Lap{\cdot}$ with respect to $t$ (let $U(x,s) = \Lap{u(x,t)}$):
+\[
+  sU(x,s) - u(x,0) = \alpha\,\frac{d^2U}{dx^2}
+  \qquad\Longrightarrow\qquad
+  \frac{d^2U}{dx^2} - \frac{s}{\alpha}U = -\frac{u(x,0)}{\alpha}
+\]
+
+This is now an ODE in $x$, solved by standard methods, then inverted.
+
+\subsection*{Example --- Semi-Infinite Rod}
+
+\begin{examplebox}
+Semi-infinite rod ($x \geq 0$), initially at $u=0$, surface held at $u(0,t)=T_0$.
+
+\[
+  U(x,s) = \frac{T_0}{s}\,e^{-x\sqrt{s/\alpha}}
+\]
+\[
+  \boxed{u(x,t) = T_0\,\operatorname{erfc}\!\left(\frac{x}{2\sqrt{\alpha t}}\right)}
+\]
+where $\operatorname{erfc}$ is the complementary error function. This describes heat
+penetration from the surface into the rod over time.
+\end{examplebox}
+
+\subsection*{Other PDE Applications}
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Wave equation:} Modelling vibrations in strings and membranes.
+  \item \textbf{Diffusion equation:} Mass transfer in chemical processes.
+  \item \textbf{Telegraph equation:} Signal transmission in cables.
+  \item \textbf{Beam equations:} Deflection under dynamic loads in structural engineering.
+\end{itemize}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section{Conclusion}
+% ════════════════════════════════════════════════════════════════════════════
+
+The Laplace Transform is far more than a mathematical curiosity --- it is an essential engineering
+and scientific tool. From transforming differential equations into algebra, to providing a unified
+framework for stability analysis, frequency response, mechanical damping, heat diffusion, and signal
+filtering, the Laplace Transform remains indispensable.
+
+Its elegance lies in the duality it creates: complex time-dependent behaviour becomes a static
+algebraic object in the $s$-domain. This perspective --- viewing a system's entire history
+compressed into a rational function of $s$ --- is one of the most profound insights of applied
+mathematics.
+
+\begin{answerbox}
+\textbf{Key Takeaways:}
+\begin{itemize}[noitemsep, topsep=4pt]
+  \item Converts ODEs/PDEs $\to$ algebraic equations in the $s$-domain.
+  \item Handles initial conditions automatically via differentiation property.
+  \item Convolution in time $\equiv$ multiplication in $s$-domain.
+  \item Poles of $H(s)$ determine system stability completely.
+  \item Unified framework across circuits, control, mechanics, heat, and signals.
+\end{itemize}
+\end{answerbox}
+
+\vspace{14pt}
+
+% ════════════════════════════════════════════════════════════════════════════
+\section*{References}
+% ════════════════════════════════════════════════════════════════════════════
+
+\begin{enumerate}[noitemsep]
+  \item Kreyszig, E.\ (2011). \textit{Advanced Engineering Mathematics} (10th ed.). John Wiley \& Sons.
+  \item Stroud, K.\ A., \& Booth, D.\ J.\ (2011). \textit{Engineering Mathematics} (7th ed.). Palgrave Macmillan.
+  \item Boyce, W.\ E., \& DiPrima, R.\ C.\ (2017). \textit{Elementary Differential Equations and Boundary Value Problems} (11th ed.). Wiley.
+  \item Ogata, K.\ (2010). \textit{Modern Control Engineering} (5th ed.). Prentice Hall.
+  \item Hayt, W.\ H., Kemmerly, J.\ E., \& Durbin, S.\ M.\ (2012). \textit{Engineering Circuit Analysis} (8th ed.). McGraw-Hill.
+  \item Oppenheim, A.\ V., \& Willsky, A.\ S.\ (1997). \textit{Signals and Systems} (2nd ed.). Prentice Hall.
+  \item Cengel, Y.\ A.\ (2014). \textit{Heat and Mass Transfer} (5th ed.). McGraw-Hill.
+\end{enumerate}
+
+\end{document}

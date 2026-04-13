@@ -1,0 +1,541 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+
+\tcbuselibrary{skins, breakable}
+
+\geometry{margin=1in, top=1in, bottom=1in}
+
+% ── Colour palette ──────────────────────────────────────────
+\definecolor{primary}{RGB}{27,  79, 114}
+\definecolor{accent} {RGB}{46, 134, 193}
+\definecolor{lightbg}{RGB}{234,244,251}
+\definecolor{gold}   {RGB}{183,149, 11}
+\definecolor{goldbg} {RGB}{254,249,231}
+\definecolor{softgray}{RGB}{245,247,250}
+\definecolor{darktext}{RGB}{44, 62,  80}
+
+% ── Page headers / footers ──────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Numerical Analysis -- I}\;\textcolor{accent}{|}\;Midterm Solutions}
+\fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ─────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}
+  {}
+  {0em}
+  {}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}
+  {}
+  {0em}
+  {}
+
+% ── tcolorbox styles ────────────────────────────────────────
+\newtcolorbox{formulabox}{
+  enhanced,
+  colback=goldbg, colframe=gold, arc=5pt, boxrule=1.5pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  title={\small\bfseries Formula / Key Result},
+  colbacktitle=gold!30, coltitle=darktext,
+  attach boxed title to top left={xshift=12pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=gold, colback=gold!25, boxrule=1pt},
+}
+
+\newtcolorbox{problembox}{
+  enhanced,
+  colback=lightbg, colframe=primary, arc=5pt, boxrule=2pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Question},
+  colbacktitle=primary, coltitle=white,
+}
+
+\newtcolorbox{conceptbox}{
+  enhanced,
+  borderline west={4pt}{0pt}{accent},
+  colback=lightbg!55, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newtcolorbox{observebox}{
+  enhanced,
+  colback=softgray, colframe=primary!50, arc=5pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Key Points},
+  colbacktitle=primary, coltitle=white,
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════
+%  TITLE BANNER
+% ════════════════════════════════════════════════════════════
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=18pt, bottom=14pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  \centering
+  {\huge\bfseries\color{white} Numerical Analysis -- I}\\[6pt]
+  {\large\color{lightbg} Midterm Examination --- Step-by-Step Solutions}
+\end{tcolorbox}
+
+\vspace{4pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=white, colframe=white,
+  borderline north={1.5pt}{0pt}{accent!60},
+  borderline south={1.5pt}{0pt}{accent!60},
+  left=16pt, right=16pt, top=12pt, bottom=12pt,
+]
+  \begin{tabular}{p{3.2cm} p{9.5cm}}
+    \textcolor{primary}{\textbf{Instructor:}}
+      & \textbf{Prof.\ Dr.\ Hisam Uddin Shaikh} \\
+      & {\small\color{darktext}Department of Mathematics, SALU Khairpur} \\[8pt]
+    \textcolor{primary}{\textbf{Prepared by:}}
+      & \textbf{Nadir Ali Khan} \\
+      & {\small\color{darktext}BS-IV \quad|\quad First Semester 2025} \\
+  \end{tabular}
+\end{tcolorbox}
+
+\vspace{14pt}
+
+% ════════════════════════════════════════════════════════════
+\section{Question \#1 --- Why Numerical Methods?}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Why do we choose numerical methods to solve Mathematical problems?
+Give proper justification and usage with at least two examples.
+\end{problembox}
+
+\subsection*{Answer}
+
+\begin{conceptbox}
+Many real-world mathematical problems cannot be solved analytically (i.e.\ with exact closed-form expressions). Numerical methods provide systematic algorithms to obtain highly accurate \emph{approximate} solutions using arithmetic operations that a computer can perform.
+\end{conceptbox}
+
+\vspace{6pt}
+\subsection*{Justification for Using Numerical Methods}
+
+\begin{enumerate}[noitemsep, topsep=6pt]
+  \item \textbf{No closed-form solution exists.}
+        Many equations (especially transcendental and non-linear ones) cannot be solved by algebra alone.
+        Example: $e^x = 3x$ has no algebraic solution; numerical methods find $x \approx 1.5121$.
+
+  \item \textbf{Complexity of analytical integration / differentiation.}
+        Integrals such as $\displaystyle\int_0^1 e^{-x^2}\,dx$ cannot be expressed in elementary functions;
+        numerical quadrature (Simpson's rule, etc.) gives $\approx 0.7468$.
+
+  \item \textbf{Large systems of equations.}
+        Engineering structures involve thousands of simultaneous linear equations.
+        Direct analytical inversion is infeasible; iterative numerical solvers (Gauss-Seidel, etc.) are used.
+
+  \item \textbf{Data-driven problems.}
+        When a function is known only at discrete data points (experimental measurements), numerical
+        interpolation and curve-fitting replace unknown formulas.
+
+  \item \textbf{Speed and automation.}
+        Computers execute millions of arithmetic steps per second. Numerical algorithms exploit this to
+        deliver solutions to any desired precision within seconds.
+\end{enumerate}
+
+\vspace{8pt}
+
+\begin{formulabox}
+\textbf{Two Concrete Examples}\\[6pt]
+\textbf{Example 1 --- Root of a Non-linear Equation:}\\
+$f(x)=x^3-2x-5=0$ has no simple analytical root.\\
+Newton-Raphson gives $x \approx \mathbf{2.0946}$ in just 4 iterations.\\[8pt]
+\textbf{Example 2 --- Numerical Integration:}\\
+$\displaystyle I = \int_0^{\pi} \sin(x^2)\,dx$ has no closed form.\\
+Simpson's $\tfrac{1}{3}$ Rule with $n=10$ subintervals gives $I \approx \mathbf{0.7726}$.
+\end{formulabox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Question \#3(a) --- Iterative Methods for Non-linear Equations}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Why do we use iterative methods for the solution of non-linear equations?
+Discuss especially: Bisection, Regula Falsi, Fixed-Point, and Newton-Raphson methods.
+\end{problembox}
+
+\subsection*{Why Iterative Methods?}
+
+\begin{conceptbox}
+Non-linear equations such as $x^3 - 2x - 5 = 0$ or $\cos x = x$ cannot be rearranged to give an exact solution directly.
+Iterative methods start from an initial guess and \emph{repeatedly refine} it until the answer is accurate enough.
+Each iteration applies a simple arithmetic formula, making the process suitable for computers.
+\end{conceptbox}
+
+\vspace{8pt}
+\subsection*{1.\ Bisection Method}
+
+Bracket the root in $[a,b]$ where $f(a)\cdot f(b)<0$.  Repeatedly halve the interval:
+\[
+  x_{\text{mid}} = \frac{a+b}{2}
+\]
+Select the sub-interval that still contains the sign change. \textbf{Always converges} but slowly (linear, $\mathcal{O}(1/2^n)$).
+
+\vspace{6pt}
+\subsection*{2.\ Regula Falsi (False Position) Method}
+
+Instead of the midpoint, use the $x$-intercept of the line joining $(a,f(a))$ and $(b,f(b))$:
+\[
+  x_n = \frac{a\,f(b) - b\,f(a)}{f(b) - f(a)}
+\]
+Retains a bracket like Bisection, but converges faster by exploiting the function's slope.
+
+\vspace{6pt}
+\subsection*{3.\ Fixed-Point Iteration}
+
+Rewrite $f(x)=0$ as $x = g(x)$, then iterate:
+\[
+  x_{n+1} = g(x_n)
+\]
+Converges if and only if $|g'(x)| < 1$ near the root. Simple to code; convergence depends critically on the choice of $g(x)$.
+
+\vspace{6pt}
+\subsection*{4.\ Newton-Raphson Method}
+
+Uses the tangent line at $x_n$ to find the next estimate:
+\[
+  x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}
+\]
+Converges \textbf{quadratically} (doubles correct digits each step). Requires $f'(x)$ and a good initial guess.
+
+\begin{observebox}
+\begin{tabular}{p{3.5cm} p{3.5cm} p{4cm}}
+\textbf{Method} & \textbf{Convergence} & \textbf{Requirement} \\
+\hline
+Bisection & Linear (slow) & Bracket $[a,b]$ \\
+Regula Falsi & Linear (faster) & Bracket $[a,b]$ \\
+Fixed-Point & Linear & $|g'(x)|<1$ \\
+Newton-Raphson & Quadratic (fastest) & $f'(x)$ available \\
+\end{tabular}
+\end{observebox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Question \#3(b) --- Direct vs.\ Indirect Methods}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Why and where do we use Direct and Indirect methods? Give the proper concept.
+\end{problembox}
+
+\subsection*{Direct Methods}
+
+\begin{conceptbox}
+A \textbf{direct method} produces the exact solution (up to floating-point rounding) in a \emph{finite, predetermined} number of steps, without any iteration.
+\end{conceptbox}
+
+\textbf{Examples:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Gaussian Elimination} --- systematically reduces the coefficient matrix to upper triangular form, then uses back-substitution.
+  \item \textbf{LU Decomposition} --- factors $A = LU$ and solves two triangular systems.
+  \item \textbf{Cramer's Rule} --- expresses each variable as a ratio of determinants.
+\end{itemize}
+
+\textbf{When to use:} Small to medium systems ($n \lesssim 1000$), dense matrices, when high accuracy and a definitive answer in one pass are needed.
+
+\vspace{10pt}
+\subsection*{Indirect (Iterative) Methods}
+
+\begin{conceptbox}
+An \textbf{indirect (iterative) method} starts from an initial guess and updates it repeatedly using a recurrence formula until convergence. The solution is approached but never reached in a finite number of steps.
+\end{conceptbox}
+
+\textbf{Examples:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Jacobi Method} --- updates all variables simultaneously using old values.
+  \item \textbf{Gauss-Seidel Method} --- updates each variable immediately using the most recently computed values; faster than Jacobi.
+  \item \textbf{SOR (Successive Over-Relaxation)} --- accelerated Gauss-Seidel with relaxation parameter $\omega$.
+\end{itemize}
+
+\textbf{When to use:} Large sparse systems (e.g., arising from PDEs with $n \sim 10^6$), where storing the full matrix is impractical. Convergence is guaranteed for \textbf{diagonally dominant} matrices.
+
+\begin{formulabox}
+\textbf{Summary Comparison}\\[4pt]
+\begin{tabular}{p{4cm} p{4cm} p{4cm}}
+\hline
+ & \textbf{Direct} & \textbf{Indirect} \\
+\hline
+Steps & Finite & Infinite (until converged) \\
+Storage & Full matrix & Sparse representation \\
+Best for & Small/dense systems & Large/sparse systems \\
+Accuracy & Exact (in theory) & Controlled by tolerance \\
+\hline
+\end{tabular}
+\end{formulabox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Question \#4(a) --- Diagonal Dominance \& System of Equations}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Why is diagonal dominance important for the solution of a system of linear equations?\\
+Solve the system (with $R = 0$, i.e.\ roll number zero):
+\[
+  2x + y + 6z = 9, \qquad 8x + 3y + z = 13, \qquad x + 5y + z = 7
+\]
+\end{problembox}
+
+\subsection*{Importance of Diagonal Dominance}
+
+\begin{conceptbox}
+A matrix $A$ is \textbf{strictly diagonally dominant} if for every row $i$:
+\[
+  |a_{ii}| > \sum_{j \neq i} |a_{ij}|
+\]
+\textbf{Why it matters:} Diagonal dominance \emph{guarantees convergence} of iterative methods (Jacobi, Gauss-Seidel). Without it, these methods may diverge. It also improves numerical stability in direct methods by reducing the growth of rounding errors.
+\end{conceptbox}
+
+\subsection*{Step 1 --- Check and Rearrange for Diagonal Dominance}
+
+Original system (with $R=0$):
+\[
+\begin{array}{rcl}
+  2x + y + 6z &=& 9  \quad \text{Row A}\\
+  8x + 3y + z &=& 13 \quad \text{Row B}\\
+  x + 5y + z  &=& 7  \quad \text{Row C}
+\end{array}
+\]
+
+Checking dominance in original order:
+\begin{itemize}[noitemsep]
+  \item Row A: $|2|$ vs $|1|+|6|=7$ \quad $\Rightarrow$ \textbf{NOT dominant}
+  \item Row B: $|8|$ vs $|3|+|1|=4$ \quad $\Rightarrow$ dominant $\checkmark$
+  \item Row C: $|1|$ vs $|5|+|1|=6$ \quad $\Rightarrow$ \textbf{NOT dominant}
+\end{itemize}
+
+\medskip
+\textbf{Rearrange rows} to place the largest coefficient on the diagonal:
+\[
+\begin{array}{rcl}
+  8x + 3y + z  &=& 13 \quad \Rightarrow |8|>|3|+|1|=4 \quad\checkmark\\
+  x + 5y + z   &=& 7  \quad \Rightarrow |5|>|1|+|1|=2 \quad\checkmark\\
+  2x + y + 6z  &=& 9  \quad \Rightarrow |6|>|2|+|1|=3 \quad\checkmark
+\end{array}
+\]
+The rearranged system is strictly diagonally dominant.
+
+\subsection*{Step 2 --- Gaussian Elimination}
+
+Augmented matrix:
+\[
+\left[\begin{array}{rrr|r}
+  8 & 3 & 1 & 13 \\
+  1 & 5 & 1 & 7  \\
+  2 & 1 & 6 & 9
+\end{array}\right]
+\]
+
+\medskip
+\noindent\textbf{Eliminate $x$ from Rows 2 and 3:}
+
+$R_2 \leftarrow R_2 - \dfrac{1}{8}R_1$:
+\[
+  \left[0,\; 5-\tfrac{3}{8},\; 1-\tfrac{1}{8},\; 7-\tfrac{13}{8}\right]
+  = \left[0,\; \tfrac{37}{8},\; \tfrac{7}{8},\; \tfrac{43}{8}\right]
+  \;\Rightarrow\; 37y + 7z = 43
+\]
+
+$R_3 \leftarrow R_3 - \dfrac{1}{4}R_1$:
+\[
+  \left[0,\; 1-\tfrac{3}{4},\; 6-\tfrac{1}{4},\; 9-\tfrac{13}{4}\right]
+  = \left[0,\; \tfrac{1}{4},\; \tfrac{23}{4},\; \tfrac{23}{4}\right]
+  \;\Rightarrow\; y + 23z = 23
+\]
+
+Updated system:
+\[
+\left[\begin{array}{rrr|r}
+  8 & 3  & 1  & 13 \\
+  0 & 37 & 7  & 43 \\
+  0 & 1  & 23 & 23
+\end{array}\right]
+\]
+
+\medskip
+\noindent\textbf{Eliminate $y$ from Row 3:}
+
+$R_3 \leftarrow R_3 - \dfrac{1}{37}R_2$:
+\[
+  \left[0,\;0,\;23-\tfrac{7}{37},\;23-\tfrac{43}{37}\right]
+  = \left[0,\;0,\;\tfrac{844}{37},\;\tfrac{808}{37}\right]
+  \;\Rightarrow\; 844z = 808
+\]
+
+\subsection*{Step 3 --- Back Substitution}
+
+\[
+  z = \frac{808}{844} = \frac{202}{211} \approx \mathbf{0.9573}
+\]
+
+\[
+  y = 23 - 23z = 23\!\left(1 - \tfrac{202}{211}\right) = 23\cdot\tfrac{9}{211} = \frac{207}{211} \approx \mathbf{0.9811}
+\]
+
+\[
+  8x = 13 - 3y - z = 13 - \frac{621}{211} - \frac{202}{211} = \frac{2743-823}{211} = \frac{1920}{211}
+  \;\Rightarrow\;
+  x = \frac{240}{211} \approx \mathbf{1.1374}
+\]
+
+\begin{formulabox}
+\textbf{Solution:}
+\[
+  x = \frac{240}{211} \approx 1.1374, \qquad
+  y = \frac{207}{211} \approx 0.9811, \qquad
+  z = \frac{202}{211} \approx 0.9573
+\]
+\end{formulabox}
+
+\subsection*{Verification}
+
+\begin{center}
+\begin{tabular}{C{3.5cm} C{4.5cm} C{1.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Equation} & \hcell{LHS Computed} & \hcell{RHS} \\
+\midrule
+\rowcolor{lightbg!40}
+$2x+y+6z$ & $2(1.1374)+0.9811+6(0.9573)=9.000$ & 9 $\checkmark$ \\
+$8x+3y+z$ & $8(1.1374)+3(0.9811)+0.9573=13.000$ & 13 $\checkmark$ \\
+\rowcolor{lightbg!40}
+$x+5y+z$  & $1.1374+5(0.9811)+0.9573=7.000$ & 7 $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Question \#4(b) --- Cube Root Formula and $\sqrt[3]{171}$}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Prove the iterative formula for $\sqrt[3]{N}$ (where $N$ is a natural number), then compute $\sqrt[3]{171}$.
+\end{problembox}
+
+\subsection*{Step 1 --- Proof of the Formula}
+
+We want to find $x = \sqrt[3]{N}$, i.e.\ the positive real root of:
+\[
+  f(x) = x^3 - N = 0
+\]
+
+Applying the \textbf{Newton-Raphson} method with $f'(x) = 3x^2$:
+\[
+  x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} = x_n - \frac{x_n^3 - N}{3x_n^2}
+\]
+
+Simplifying the right-hand side:
+\[
+  x_{n+1} = \frac{3x_n^3 - (x_n^3 - N)}{3x_n^2} = \frac{2x_n^3 + N}{3x_n^2}
+\]
+
+Dividing numerator and denominator by $x_n^2$:
+
+\begin{formulabox}
+\[
+  \boxed{x_{n+1} = \frac{1}{3}\!\left(2x_n + \frac{N}{x_n^2}\right)}
+\]
+This is the iterative formula for $\sqrt[3]{N}$. \quad Q.E.D.
+\end{formulabox}
+
+\subsection*{Step 2 --- Compute $\sqrt[3]{171}$}
+
+\textbf{Initial guess:} Since $5^3 = 125$ and $6^3 = 216$, choose $x_0 = 5.5$.
+
+\medskip
+\noindent\textbf{Iteration 1:}
+\[
+  x_0 = 5.5, \quad x_0^2 = 30.25, \quad \frac{171}{30.25} = 5.6529
+\]
+\[
+  x_1 = \frac{1}{3}(2 \times 5.5 + 5.6529) = \frac{16.6529}{3} = \mathbf{5.5510}
+\]
+
+\medskip
+\noindent\textbf{Iteration 2:}
+\[
+  x_1 = 5.5510, \quad x_1^2 = 30.8136, \quad \frac{171}{30.8136} = 5.5499
+\]
+\[
+  x_2 = \frac{1}{3}(2 \times 5.5510 + 5.5499) = \frac{16.6519}{3} = \mathbf{5.5506}
+\]
+
+\medskip
+\noindent\textbf{Iteration 3:}
+\[
+  x_2 = 5.5506, \quad x_2^2 = 30.8092, \quad \frac{171}{30.8092} = 5.5503
+\]
+\[
+  x_3 = \frac{1}{3}(2 \times 5.5506 + 5.5503) = \frac{16.6515}{3} = \mathbf{5.5505}
+\]
+
+\medskip
+\noindent\textbf{Iteration 4:}
+\[
+  x_4 \approx 5.5505 \quad \textbf{(converged)}
+\]
+
+\subsection*{Summary Table}
+
+\begin{center}
+\begin{tabular}{C{0.8cm} C{2.2cm} C{2.2cm} C{2.8cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$n$} & \hcell{$x_n$} & \hcell{$x_n^2$} & \hcell{$171/x_n^2$} & \hcell{$x_{n+1}$} \\
+\midrule
+\rowcolor{lightbg!40}
+0 & 5.5000 & 30.2500 & 5.6529 & 5.5510 \\
+1 & 5.5510 & 30.8136 & 5.5499 & 5.5506 \\
+\rowcolor{lightbg!40}
+2 & 5.5506 & 30.8092 & 5.5503 & 5.5505 \\
+3 & 5.5505 & 30.8081 & 5.5504 & 5.5505 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{formulabox}
+\[
+  \therefore\quad \sqrt[3]{171} \approx \mathbf{5.5505}
+\]
+\textbf{Verification:}\quad $5.5505^3 = 5.5505 \times 30.8081 = 170.999 \approx 171$ \quad $\checkmark$
+\end{formulabox}
+
+\end{document}

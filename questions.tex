@@ -1,0 +1,638 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+
+\tcbuselibrary{skins, breakable}
+
+\geometry{margin=1in, top=1in, bottom=1in}
+
+% ── Colour palette ──────────────────────────────────────────
+\definecolor{primary}{RGB}{27,  79, 114}
+\definecolor{accent} {RGB}{46, 134, 193}
+\definecolor{lightbg}{RGB}{234,244,251}
+\definecolor{gold}   {RGB}{183,149, 11}
+\definecolor{goldbg} {RGB}{254,249,231}
+\definecolor{softgray}{RGB}{245,247,250}
+\definecolor{darktext}{RGB}{44, 62,  80}
+
+% ── Page headers / footers ──────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Numerical Methods}\;\textcolor{accent}{|}\;Root Finding}
+\fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ─────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}
+  {}
+  {0em}
+  {}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}
+  {}
+  {0em}
+  {}
+
+% ── tcolorbox styles ────────────────────────────────────────
+\newtcolorbox{formulabox}{
+  enhanced,
+  colback=goldbg, colframe=gold, arc=5pt, boxrule=1.5pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  title={\small\bfseries Formula},
+  colbacktitle=gold!30, coltitle=darktext,
+  attach boxed title to top left={xshift=12pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=gold, colback=gold!25, boxrule=1pt},
+}
+
+\newtcolorbox{problembox}{
+  enhanced,
+  colback=lightbg, colframe=primary, arc=5pt, boxrule=2pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Problem Statement},
+  colbacktitle=primary, coltitle=white,
+}
+
+\newtcolorbox{conceptbox}{
+  enhanced,
+  borderline west={4pt}{0pt}{accent},
+  colback=lightbg!55, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newtcolorbox{observebox}{
+  enhanced,
+  colback=softgray, colframe=primary!50, arc=5pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Key Observations},
+  colbacktitle=primary, coltitle=white,
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ── Table header helper ─────────────────────────────────────
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════
+%  TITLE BANNER
+% ════════════════════════════════════════════════════════════
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=18pt, bottom=14pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  \centering
+  {\huge\bfseries\color{white} Numerical Methods for Root Finding}\\[8pt]
+  {\large\color{lightbg} Iterative Solutions with Step-by-Step Derivations}
+\end{tcolorbox}
+
+\vspace{4pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=white, colframe=white,
+  borderline north={1.5pt}{0pt}{accent!60},
+  borderline south={1.5pt}{0pt}{accent!60},
+  left=16pt, right=16pt, top=12pt, bottom=12pt,
+]
+  \begin{tabular}{p{3.2cm} p{9.5cm}}
+    \textcolor{primary}{\textbf{Teacher:}}
+      & \textbf{Dr.\ Hisam Uddin Shaikh} \\
+      & {\small\color{darktext}Chairman, Department of Mathematics} \\[8pt]
+    \textcolor{primary}{\textbf{Prepared by:}}
+      & \textbf{Nadir Ali Khan} \\
+      & {\small\color{darktext}BS-IV} \\
+  \end{tabular}
+\end{tcolorbox}
+
+\vspace{14pt}
+
+% ════════════════════════════════════════════════════════════
+%  PROBLEM STATEMENT
+% ════════════════════════════════════════════════════════════
+\begin{problembox}
+\textbf{Equation:}\quad $f(x) = x^3 - 2x - 5 = 0$\\[6pt]
+\textbf{Verification of initial bracket:}
+\[
+  f(2) = (2)^3 - 2(2) - 5 = -1 < 0
+  \qquad\qquad
+  f(3) = (3)^3 - 2(3) - 5 = 16 > 0
+\]
+Since $f(2) < 0$ and $f(3) > 0$, a root exists in $[2,\,3]$.
+\quad\textbf{True root} $\approx 2.09455$
+\end{problembox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Method 01 --- Bisection Method}
+% ════════════════════════════════════════════════════════════
+
+\subsection*{Concept}
+\begin{conceptbox}
+Repeatedly halve the interval $[a,b]$ containing the root. At each step pick the sub-interval where the sign change occurs.
+\end{conceptbox}
+
+\vspace{8pt}
+
+\begin{formulabox}
+\[
+  x_n = \frac{a + b}{2}
+\]
+\vspace{-4pt}
+\begin{itemize}[noitemsep, topsep=4pt]
+  \item If $f(a)\cdot f(x_n) < 0$\;: root in $[a,\,x_n]$, set $b = x_n$
+  \item If $f(x_n)\cdot f(b) < 0$\;: root in $[x_n,\,b]$, set $a = x_n$
+\end{itemize}
+\end{formulabox}
+
+\vspace{6pt}
+\subsection*{Iterations\quad{\small\normalfont\color{darktext}Initial: $a=2,\ b=3,\ f(a)=-1,\ f(b)=16$}}
+
+\medskip
+\noindent\textbf{Iteration 1:}
+\[
+  x_1 = \frac{2+3}{2} = 2.5000 \qquad f(2.5) = 15.625-5-5 = 5.625>0
+\]
+$f(a)<0,\;f(x_1)>0 \Rightarrow$ new interval $[2,\;2.5]$
+
+\medskip
+\noindent\textbf{Iteration 2:}
+\[
+  x_2 = \frac{2+2.5}{2} = 2.2500 \qquad f(2.25) = 11.3906-4.5-5 = 1.8906>0
+\]
+$f(a)<0,\;f(x_2)>0 \Rightarrow$ new interval $[2,\;2.25]$
+
+\medskip
+\noindent\textbf{Iteration 3:}
+\[
+  x_3 = \frac{2+2.25}{2} = 2.1250
+  \qquad
+  f(2.125) = 9.5957-4.25-5 = 0.3457>0
+\]
+$f(a)<0,\;f(x_3)>0 \Rightarrow$ new interval $[2,\;2.125]$
+
+\medskip
+\noindent\textbf{Iteration 4:}
+\[
+  x_4 = \frac{2+2.125}{2} = 2.0625
+  \qquad
+  f(2.0625) = 8.7737-4.125-5 = -0.3513<0
+\]
+$f(x_4)<0,\;f(b)>0 \Rightarrow$ new interval $[2.0625,\;2.125]$
+
+\medskip
+\noindent\textbf{Iteration 5:}
+\[
+  x_5 = \frac{2.0625+2.125}{2} = 2.0938
+  \qquad
+  f(2.0938) = 9.1763-4.1876-5 = -0.0113<0
+\]
+$f(x_5)<0,\;f(b)>0 \Rightarrow$ new interval $[2.0938,\;2.125]$
+
+\medskip
+\noindent\textbf{Iteration 6:}
+\[
+  x_6 = \frac{2.0938+2.125}{2} = 2.1094
+  \qquad
+  f(2.1094) = 9.3856-4.2188-5 = 0.1668>0
+\]
+$f(a)<0,\;f(x_6)>0 \Rightarrow$ new interval $[2.0938,\;2.1094]$
+
+\subsection*{Summary Table}
+\begin{center}
+\begin{tabular}{C{0.8cm} C{1.8cm} C{1.8cm} C{1.8cm} C{2.2cm} C{3.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$n$} & \hcell{$a$} & \hcell{$b$} & \hcell{$x_n$} & \hcell{$f(x_n)$} & \hcell{New Interval} \\
+\midrule
+\rowcolor{lightbg!40}
+1 & 2.0000 & 3.0000 & 2.5000 & $+5.6250$ & $[2.0000,\ 2.5000]$ \\
+2 & 2.0000 & 2.5000 & 2.2500 & $+1.8906$ & $[2.0000,\ 2.2500]$ \\
+\rowcolor{lightbg!40}
+3 & 2.0000 & 2.2500 & 2.1250 & $+0.3457$ & $[2.0000,\ 2.1250]$ \\
+4 & 2.0000 & 2.1250 & 2.0625 & $-0.3513$ & $[2.0625,\ 2.1250]$ \\
+\rowcolor{lightbg!40}
+5 & 2.0625 & 2.1250 & 2.0938 & $-0.0113$ & $[2.0938,\ 2.1250]$ \\
+6 & 2.0938 & 2.1250 & 2.1094 & $+0.1668$ & $[2.0938,\ 2.1094]$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\[
+  \therefore\quad \textbf{Root} \approx \mathbf{2.0938} \quad\text{(after 6 iterations)}
+\]
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Method 02 --- Regula Falsi Method}
+% ════════════════════════════════════════════════════════════
+
+\subsection*{Concept}
+\begin{conceptbox}
+Instead of the midpoint, draw a straight line between $(a,\,f(a))$ and $(b,\,f(b))$ and use its $x$-intercept as the next estimate. Maintains a bracket; converges more steadily than Bisection.
+\end{conceptbox}
+
+\vspace{8pt}
+
+\begin{formulabox}
+\[
+  x_n = b - f(b)\cdot\frac{b - a}{f(b) - f(a)}
+\]
+\vspace{-4pt}
+\begin{itemize}[noitemsep, topsep=4pt]
+  \item If $f(a)\cdot f(x_n)<0$\;: root in $[a,\,x_n]$, set $b=x_n$
+  \item If $f(x_n)\cdot f(b)<0$\;: root in $[x_n,\,b]$, set $a=x_n$
+\end{itemize}
+\end{formulabox}
+
+\vspace{6pt}
+\subsection*{Iterations\quad{\small\normalfont\color{darktext}Initial: $a=2,\ b=3,\ f(a)=-1,\ f(b)=16$}}
+
+\medskip
+\noindent\textbf{Iteration 1:}
+\[
+  x_1 = 3 - 16\cdot\frac{3-2}{16-(-1)} = 3 - \frac{16}{17} = 2.0588
+\]
+\[
+  f(2.0588) = 8.7265 - 4.1176 - 5 = -0.3911 < 0
+  \quad\Rightarrow\quad a = 2.0588,\; b = 3
+\]
+
+\medskip
+\noindent\textbf{Iteration 2:}
+\[
+  x_2 = 3 - 16\cdot\frac{3-2.0588}{16+0.3911} = 3 - \frac{15.0588}{16.3911} = 2.0813
+\]
+\[
+  f(2.0813) = 9.0158 - 4.1626 - 5 = -0.1468 < 0
+  \quad\Rightarrow\quad a = 2.0813,\; b = 3
+\]
+
+\medskip
+\noindent\textbf{Iteration 3:}
+\[
+  x_3 = 3 - 16\cdot\frac{3-2.0813}{16+0.1468} = 3 - \frac{14.6992}{16.1468} = 2.0897
+\]
+\[
+  f(2.0897) = 9.1254 - 4.1794 - 5 = -0.0540 < 0
+  \quad\Rightarrow\quad a = 2.0897,\; b = 3
+\]
+
+\medskip
+\noindent\textbf{Iteration 4:}
+\[
+  x_4 = 3 - 16\cdot\frac{3-2.0897}{16+0.0540} = 3 - \frac{14.5648}{16.0540} = 2.0927
+\]
+\[
+  f(2.0927) = 9.1648 - 4.1854 - 5 = -0.0206 < 0
+  \quad\Rightarrow\quad a = 2.0927,\; b = 3
+\]
+
+\medskip
+\noindent\textbf{Iteration 5:}
+\[
+  x_5 = 3 - 16\cdot\frac{3-2.0927}{16+0.0206} = 3 - \frac{14.5168}{16.0206} = 2.0939
+\]
+\[
+  f(2.0939) = 9.1894 - 4.1878 - 5 = -0.0016 \approx 0 \quad\checkmark
+\]
+
+\subsection*{Summary Table}
+\begin{center}
+\begin{tabular}{C{0.8cm} C{1.8cm} C{1.8cm} C{1.8cm} C{2.2cm} C{3cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$n$} & \hcell{$a$} & \hcell{$b$} & \hcell{$x_n$} & \hcell{$f(x_n)$} & \hcell{Update} \\
+\midrule
+\rowcolor{lightbg!40}
+1 & 2.0000 & 3.0000 & 2.0588 & $-0.3911$ & $a=2.0588$ \\
+2 & 2.0588 & 3.0000 & 2.0813 & $-0.1468$ & $a=2.0813$ \\
+\rowcolor{lightbg!40}
+3 & 2.0813 & 3.0000 & 2.0897 & $-0.0540$ & $a=2.0897$ \\
+4 & 2.0897 & 3.0000 & 2.0927 & $-0.0206$ & $a=2.0927$ \\
+\rowcolor{lightbg!40}
+5 & 2.0927 & 3.0000 & 2.0939 & $-0.0016$ & $a=2.0939$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\[
+  \therefore\quad \textbf{Root} \approx \mathbf{2.0939} \quad\text{(after 5 iterations)}
+\]
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Method 03 --- Newton-Raphson Method}
+% ════════════════════════════════════════════════════════════
+
+\subsection*{Concept}
+\begin{conceptbox}
+Uses the tangent line at the current estimate to find the next, much better estimate. Requires $f'(x)$. Converges \textbf{quadratically} — the number of correct decimal places roughly doubles each iteration.
+\end{conceptbox}
+
+\vspace{8pt}
+
+\begin{formulabox}
+\[
+  x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}
+\]
+\vspace{-2pt}
+\[
+  f(x) = x^3 - 2x - 5 \qquad f'(x) = 3x^2 - 2
+\]
+\end{formulabox}
+
+\vspace{6pt}
+\subsection*{Iterations\quad{\small\normalfont\color{darktext}Starting point: $x_0 = 3$}}
+
+\medskip
+\noindent\textbf{Iteration 1:}
+\[
+  f(3) = 16,\quad f'(3) = 25
+  \qquad
+  x_1 = 3 - \frac{16}{25} = 3 - 0.6400 = \mathbf{2.3600}
+\]
+
+\medskip
+\noindent\textbf{Iteration 2:}
+\[
+  f(2.36) = 13.1443-4.72-5 = 3.4243,\quad f'(2.36) = 3(5.5696)-2 = 14.7088
+\]
+\[
+  x_2 = 2.3600 - \frac{3.4243}{14.7088} = 2.3600 - 0.2328 = \mathbf{2.1272}
+\]
+
+\medskip
+\noindent\textbf{Iteration 3:}
+\[
+  f(2.1272) = 9.6255-4.2544-5 = 0.3711,\quad f'(2.1272) = 3(4.5250)-2 = 11.5750
+\]
+\[
+  x_3 = 2.1272 - \frac{0.3711}{11.5750} = 2.1272 - 0.0321 = \mathbf{2.0951}
+\]
+
+\medskip
+\noindent\textbf{Iteration 4:}
+\[
+  f(2.0951) = 9.1964-4.1902-5 = 0.0062,\quad f'(2.0951) = 3(4.3894)-2 = 11.1682
+\]
+\[
+  x_4 = 2.0951 - \frac{0.0062}{11.1682} = 2.0951 - 0.0006 = \mathbf{2.0945}
+\]
+
+\medskip
+\noindent\textbf{Iteration 5:}
+\[
+  f(2.0945) \approx -0.0014 \approx 0 \qquad \textbf{Converged!}
+\]
+
+\subsection*{Summary Table}
+\begin{center}
+\begin{tabular}{C{0.8cm} C{2cm} C{2.2cm} C{2.2cm} C{2cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$n$} & \hcell{$x_n$} & \hcell{$f(x_n)$} & \hcell{$f'(x_n)$} & \hcell{$x_{n+1}$} \\
+\midrule
+\rowcolor{lightbg!40}
+0 & 3.0000 & $16.0000$ & $25.0000$ & 2.3600 \\
+1 & 2.3600 & $3.4243$  & $14.7088$ & 2.1272 \\
+\rowcolor{lightbg!40}
+2 & 2.1272 & $0.3711$  & $11.5750$ & 2.0951 \\
+3 & 2.0951 & $0.0062$  & $11.1682$ & 2.0945 \\
+\rowcolor{lightbg!40}
+4 & 2.0945 & $-0.0014$ & $11.1622$ & 2.0946 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\[
+  \therefore\quad \textbf{Root} \approx \mathbf{2.0946} \quad\text{(converged in 4 iterations)}
+\]
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Method 04 --- Secant Method}
+% ════════════════════════════════════════════════════════════
+
+\subsection*{Concept}
+\begin{conceptbox}
+Similar to Newton-Raphson but avoids computing $f'(x)$ analytically. Approximates the derivative using two previous points. Does \textbf{not} require a bracket — can diverge with poor initial guesses.
+\end{conceptbox}
+
+\vspace{8pt}
+
+\begin{formulabox}
+\[
+  x_{n+1} = x_n - f(x_n)\cdot\frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})}
+\]
+\end{formulabox}
+
+\vspace{6pt}
+\subsection*{Iterations\quad{\small\normalfont\color{darktext}$x_0=2,\ f(x_0)=-1;\quad x_1=3,\ f(x_1)=16$}}
+
+\medskip
+\noindent\textbf{Iteration 1}\;(use $x_0,\,x_1$):
+\[
+  x_2 = 3 - 16\cdot\frac{3-2}{16-(-1)} = 3 - \frac{16}{17} = \mathbf{2.0588}
+  \qquad f(2.0588) = -0.3911
+\]
+
+\medskip
+\noindent\textbf{Iteration 2}\;(use $x_1,\,x_2$):
+\[
+  x_3 = 2.0588 - (-0.3911)\cdot\frac{2.0588-3}{-0.3911-16}
+      = 2.0588 + \frac{0.3680}{16.3911} \cdot(-1)^2
+\]
+\[
+  = 2.0588 - \frac{(-0.3911)(-0.9412)}{-16.3911} = 2.0588 + 0.0225 = \mathbf{2.0813}
+  \qquad f(2.0813) = -0.1468
+\]
+
+\medskip
+\noindent\textbf{Iteration 3}\;(use $x_2,\,x_3$):
+\[
+  x_4 = 2.0813 - (-0.1468)\cdot\frac{2.0813-2.0588}{-0.1468+0.3911}
+      = 2.0813 + \frac{0.003303}{0.2443} = 2.0813 + 0.0135 = \mathbf{2.0948}
+\]
+\[
+  f(2.0948) = 9.1924-4.1896-5 = 0.0028
+\]
+
+\medskip
+\noindent\textbf{Iteration 4}\;(use $x_3,\,x_4$):
+\[
+  x_5 = 2.0948 - 0.0028\cdot\frac{0.0135}{0.1496}
+      = 2.0948 - \frac{0.0000378}{0.1496} = 2.0948 - 0.000253 = \mathbf{2.0946}
+\]
+\[
+  f(2.0946)\approx -0.0003\approx 0 \qquad \textbf{Converged!}
+\]
+
+\subsection*{Summary Table}
+\begin{center}
+\begin{tabular}{C{0.8cm} C{2cm} C{2cm} C{2.2cm} C{2.2cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$n$} & \hcell{$x_{n-1}$} & \hcell{$x_n$} & \hcell{$f(x_n)$} & \hcell{$x_{n+1}$} \\
+\midrule
+\rowcolor{lightbg!40}
+1 & 2.0000 & 3.0000 & $16.0000$  & 2.0588 \\
+2 & 3.0000 & 2.0588 & $-0.3911$  & 2.0813 \\
+\rowcolor{lightbg!40}
+3 & 2.0588 & 2.0813 & $-0.1468$  & 2.0948 \\
+4 & 2.0813 & 2.0948 & $+0.0028$  & 2.0946 \\
+\rowcolor{lightbg!40}
+5 & 2.0948 & 2.0946 & $-0.0003$  & $\approx 2.0946$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\[
+  \therefore\quad \textbf{Root} \approx \mathbf{2.0946} \quad\text{(converged in 4 iterations)}
+\]
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Method 05 --- Fixed Point Iteration}
+% ════════════════════════════════════════════════════════════
+
+\subsection*{Concept}
+\begin{conceptbox}
+Rewrite $f(x)=0$ in the form $x=g(x)$, then iterate $x_{n+1}=g(x_n)$. Converges if $|g'(x)|<1$ near the root.
+\end{conceptbox}
+
+\vspace{8pt}
+
+\begin{formulabox}
+\[
+  x_{n+1} = g(x_n) \qquad\text{where}\qquad g(x) = \sqrt[3]{2x+5}
+\]
+\vspace{-4pt}
+\textbf{Derivation:}\;$x^3-2x-5=0\;\Rightarrow\;x^3=2x+5\;\Rightarrow\;x=\sqrt[3]{2x+5}$\\[4pt]
+\textbf{Convergence check:}\;
+$g'(x)=\dfrac{2}{3}(2x+5)^{-2/3}$;\;at $x\approx2.09$:\;
+$|g'|\approx0.144<1\;\checkmark$
+\end{formulabox}
+
+\vspace{6pt}
+\subsection*{Iterations\quad{\small\normalfont\color{darktext}Starting point: $x_0=3$}}
+
+\medskip
+\noindent\textbf{Iteration 1:}\quad
+$x_1 = \sqrt[3]{2(3)+5} = \sqrt[3]{11} = \mathbf{2.2240}$
+
+\medskip
+\noindent\textbf{Iteration 2:}\quad
+$x_2 = \sqrt[3]{2(2.2240)+5} = \sqrt[3]{9.4480} = \mathbf{2.1136}$
+
+\medskip
+\noindent\textbf{Iteration 3:}\quad
+$x_3 = \sqrt[3]{2(2.1136)+5} = \sqrt[3]{9.2272} = \mathbf{2.0985}$
+
+\medskip
+\noindent\textbf{Iteration 4:}\quad
+$x_4 = \sqrt[3]{2(2.0985)+5} = \sqrt[3]{9.1970} = \mathbf{2.0957}$
+
+\medskip
+\noindent\textbf{Iteration 5:}\quad
+$x_5 = \sqrt[3]{2(2.0957)+5} = \sqrt[3]{9.1914} = \mathbf{2.0951}$
+
+\medskip
+\noindent\textbf{Iteration 6:}\quad
+$x_6 = \sqrt[3]{2(2.0951)+5} = \sqrt[3]{9.1902} = \mathbf{2.0949}$
+
+\medskip
+\noindent\textbf{Iteration 7:}\quad
+$x_7 = \sqrt[3]{2(2.0949)+5} = \sqrt[3]{9.1898} = \mathbf{2.0948}$
+
+\medskip
+\noindent\textbf{Iteration 8:}\quad
+$x_8 = \sqrt[3]{2(2.0948)+5} = \sqrt[3]{9.1896} = \mathbf{2.0947}\quad(\to 2.0946)$
+
+\subsection*{Summary Table}
+\begin{center}
+\begin{tabular}{C{0.8cm} C{2.5cm} C{3.5cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$n$} & \hcell{$x_n$} & \hcell{$2x_n+5$} & \hcell{$x_{n+1}$} \\
+\midrule
+\rowcolor{lightbg!40}
+0 & 3.0000 & 11.0000 & 2.2240 \\
+1 & 2.2240 &  9.4480 & 2.1136 \\
+\rowcolor{lightbg!40}
+2 & 2.1136 &  9.2272 & 2.0985 \\
+3 & 2.0985 &  9.1970 & 2.0957 \\
+\rowcolor{lightbg!40}
+4 & 2.0957 &  9.1914 & 2.0951 \\
+5 & 2.0951 &  9.1902 & 2.0949 \\
+\rowcolor{lightbg!40}
+6 & 2.0949 &  9.1898 & 2.0948 \\
+7 & 2.0948 &  9.1896 & 2.0947 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\[
+  \therefore\quad \textbf{Root} \approx \mathbf{2.0946} \quad\text{(converging, slower than Newton-Raphson)}
+\]
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section*{Comparison of All Methods}
+% ════════════════════════════════════════════════════════════
+
+\begin{center}
+{\footnotesize\setlength{\tabcolsep}{5pt}
+\begin{tabular}{C{0.8cm} p{3cm} C{1.6cm} C{1.3cm} C{2.4cm} p{3.2cm}}
+\toprule
+\rowcolor{primary}
+\hcell{\#} & \hcell{Method} & \hcell{Root} & \hcell{Iters} & \hcell{Convergence} & \hcell{Requirement} \\
+\midrule
+\rowcolor{lightbg!40}
+01 & Bisection      & 2.0938 & 6 & Linear      & Bracket $[a,b]$ \\
+02 & Regula Falsi   & 2.0939 & 5 & Linear      & Bracket $[a,b]$ \\
+\rowcolor{lightbg!40}
+03 & Newton-Raphson & 2.0946 & 4 & Quadratic   & $f'(x)$ required \\
+04 & Secant         & 2.0946 & 4 & Superlinear & Two initial points \\
+\rowcolor{lightbg!40}
+05 & Fixed Point    & 2.0947 & 8 & Linear      & $|g'(x)|<1$ \\
+\midrule
+\rowcolor{primary!10}
+   & \textbf{True Root} & \textbf{2.09455} & — & — & — \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+
+\vspace{10pt}
+
+\begin{observebox}
+\begin{enumerate}[noitemsep, topsep=4pt]
+  \item \textbf{Newton-Raphson} is the fastest (quadratic convergence) but requires $f'(x)$.
+  \item \textbf{Secant Method} is nearly as fast without needing $f'(x)$, but can diverge.
+  \item \textbf{Bisection \& Regula Falsi} always converge with a valid bracket, but are slow.
+  \item \textbf{Fixed Point Iteration} convergence depends critically on the choice of $g(x)$.
+\end{enumerate}
+\end{observebox}
+
+\end{document}

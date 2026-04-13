@@ -1,0 +1,803 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+
+\tcbuselibrary{skins, breakable}
+
+\geometry{margin=1in, top=1in, bottom=1in}
+
+% ── Colour palette ──────────────────────────────────────────
+\definecolor{primary}{RGB}{74,  35,  90}   % deep royal purple
+\definecolor{accent} {RGB}{22, 160, 133}   % muted teal
+\definecolor{lightbg}{RGB}{245,238,248}    % light lavender
+\definecolor{gold}   {RGB}{211, 84,   0}   % burnt orange
+\definecolor{goldbg} {RGB}{254,245,232}    % warm cream
+\definecolor{softgray}{RGB}{248,244,252}   % faint purple-grey
+\definecolor{darktext}{RGB}{44,  62,  80}
+\definecolor{green1}{RGB}{22, 160, 133}    % teal (= accent)
+\definecolor{greenbg}{RGB}{232,247,243}    % light teal
+
+% ── Page headers / footers ──────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Numerical Analysis -- I}\;\textcolor{accent}{|}\;Mid Term Solutions}
+\fancyhead[R]{\small\color{darktext}BS P-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ─────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}
+  {}
+  {0em}
+  {}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}
+  {}
+  {0em}
+  {}
+
+% ── tcolorbox styles ────────────────────────────────────────
+\newtcolorbox{formulabox}{
+  enhanced,
+  colback=goldbg, colframe=gold, arc=5pt, boxrule=1.5pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  title={\small\bfseries Formula / Key Result},
+  colbacktitle=gold!30, coltitle=darktext,
+  attach boxed title to top left={xshift=12pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=gold, colback=gold!25, boxrule=1pt},
+}
+
+\newtcolorbox{problembox}{
+  enhanced,
+  colback=lightbg, colframe=primary, arc=5pt, boxrule=2pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Question},
+  colbacktitle=primary, coltitle=white,
+}
+
+\newtcolorbox{conceptbox}{
+  enhanced,
+  borderline west={4pt}{0pt}{accent},
+  colback=lightbg!55, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newtcolorbox{observebox}{
+  enhanced,
+  colback=softgray, colframe=primary!50, arc=5pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Key Points},
+  colbacktitle=primary, coltitle=white,
+}
+
+\newtcolorbox{answerbox}{
+  enhanced,
+  colback=greenbg, colframe=green1, arc=5pt, boxrule=1.5pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Answer},
+  colbacktitle=green1!80, coltitle=white,
+  attach boxed title to top left={xshift=12pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=green1, colback=green1!70, boxrule=1pt},
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════
+%  TITLE BANNER
+% ════════════════════════════════════════════════════════════
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=18pt, bottom=14pt,
+  borderline south={4pt}{0pt}{gold},
+]
+  \centering
+  {\small\color{gold}\bfseries SHAH ABDUL LATIF UNIVERSITY, KHAIRPUR}\\[2pt]
+  {\small\color{lightbg} Department of Mathematics \quad $\cdot$ \quad BS P-IV}\\[8pt]
+  {\huge\bfseries\color{white} Numerical Analysis -- I}\\[6pt]
+  {\large\color{lightbg} Mid Term Examination --- Step-by-Step Solutions}\\[6pt]
+  {\small\color{gold} First Semester \& 2026 \quad $\cdot$ \quad Date: 10-03-2026 \quad $\cdot$ \quad Max Marks: 30}
+\end{tcolorbox}
+
+\vspace{4pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=white, colframe=white,
+  borderline north={1.5pt}{0pt}{accent!60},
+  borderline south={1.5pt}{0pt}{accent!60},
+  left=16pt, right=16pt, top=12pt, bottom=12pt,
+]
+  \begin{tabular}{p{3.2cm} p{9.5cm}}
+    \textcolor{primary}{\textbf{Instructor:}}
+      & \textbf{Prof.\ Dr.\ Hisam uddin Shaikh} \\
+      & {\small\color{darktext}Department of Mathematics, Shah Abdul Latif University, Khairpur} \\[8pt]
+    \textcolor{primary}{\textbf{Student:}}
+      & \textbf{Nadir Ali Khan} \quad \textcolor{primary}{\textbf{Roll No:}} \textbf{52} \\
+      & {\small\color{darktext}BS P-IV \quad|\quad First Semester 2026} \\
+  \end{tabular}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{observebox}
+\textbf{Instructions:} Attempt any \textbf{TWO} questions. All three questions are solved below for complete coverage. Each question carries \textbf{15 marks}.
+\end{observebox}
+
+\vspace{6pt}
+
+% ════════════════════════════════════════════════════════════
+\section{Q No.\ 1(a) --- Importance of Numerical Methods (CS / Algorithm Engineering Perspective)}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Discuss the importance of numerical methods for real-life problems, especially from the perspective of Computer Systems and Algorithm Engineering.
+\end{problembox}
+
+\subsection*{Definition and Motivation}
+
+\begin{conceptbox}
+\textbf{Numerical Methods} are systematic mathematical techniques for obtaining approximate solutions to problems that cannot be solved analytically (i.e.\ with exact closed-form expressions). They reduce complex mathematical operations to simple arithmetic steps---addition, subtraction, multiplication, division---that a digital computer can execute at high speed and with controllable precision.
+
+The fundamental motivation is that the vast majority of real-world engineering and scientific problems involve equations, integrals, or systems that resist exact algebraic manipulation. Numerical methods bridge the gap between mathematical theory and practical computation.
+\end{conceptbox}
+
+\vspace{8pt}
+\subsection*{Importance from a Computer Science / Algorithm Engineering Perspective}
+
+\begin{enumerate}[noitemsep, topsep=6pt, leftmargin=*, label=\textbf{\arabic*.}]
+
+  \item \textbf{Algorithm Optimisation and Systems Programming.}\\
+        The legendary \emph{fast inverse square root} in \texttt{Quake III Arena} uses a Newton-Raphson iteration to compute $1/\!\sqrt{x}$ in two steps without calling \texttt{sqrt()}:
+        \[
+          x_{n+1} = x_n\!\left(\frac{3}{2} - \frac{v}{2}\,x_n^2\right)
+        \]
+        where $v$ is the input. This single NR refinement gives four-decimal accuracy---critical in real-time 3-D graphics where calling a transcendental function is too slow.
+
+  \item \textbf{Machine Learning and Artificial Intelligence.}\\
+        \textbf{Gradient Descent} is an iterative numerical method for minimising the loss function $\mathcal{L}(\theta)$:
+        \[
+          \theta_{n+1} = \theta_n - \alpha\,\nabla_\theta \mathcal{L}(\theta_n)
+        \]
+        Every training step of a neural network---whether SGD, Adam, or RMSProp---is an application of a numerical optimisation method. \textbf{Back-propagation} itself relies on numerical differentiation (chain rule applied iteratively). Without numerical methods, modern AI would be impossible.
+
+  \item \textbf{Computer Graphics and Physical Simulation.}\\
+        Ray-tracing must find where a ray $\mathbf{r}(t) = \mathbf{o} + t\,\mathbf{d}$ intersects an implicit surface $f(\mathbf{r}) = 0$---a non-linear equation solved by Newton-Raphson. Physics engines (Unreal, Unity, Bullet) integrate rigid-body ODEs numerically (Runge-Kutta, Verlet) every frame. Real-time fluid simulation uses finite-difference schemes on the Navier-Stokes equations.
+
+  \item \textbf{Compiler Optimisation and Scheduling.}\\
+        Register allocation reduces to a graph-colouring problem; iterative approximation algorithms (e.g.\ iterative liveness analysis, belief propagation) are used. Instruction scheduling employs heuristic numerical scoring functions refined iteratively. JIT compilers (JVM, V8) use numerical cost models to decide inlining budgets.
+
+  \item \textbf{Cryptography.}\\
+        \textbf{Miller-Rabin primality testing} is an iterative probabilistic algorithm central to RSA key generation. \textbf{Elliptic Curve Cryptography} requires modular arithmetic with iterative point multiplication. Hash functions and pseudo-random number generators are iterative numerical processes.
+
+  \item \textbf{Signal Processing and Communications.}\\
+        The \textbf{Fast Fourier Transform (FFT)} computes the DFT in $O(n\log n)$ operations by recursively applying butterfly arithmetic---a precise numerical algorithm. Equalisation, compression (JPEG, MP3), and speech recognition all rely on FFT and numerical linear algebra.
+
+  \item \textbf{Network Routing and Graph Algorithms.}\\
+        Dijkstra's shortest-path algorithm converges iteratively by relaxing edge weights. PageRank (Google) solves a large eigenvalue problem by \emph{power iteration}---repeatedly multiplying a matrix by a vector until it converges. These are numerical fixed-point iterations on graphs.
+
+\end{enumerate}
+
+\vspace{8pt}
+
+\subsection*{Why Non-Linear Equations Specifically Require Numerical Methods}
+
+\begin{conceptbox}
+Non-linear equations such as $e^x = 3x$ or $x\sin x = 1$ cannot be rearranged algebraically to isolate $x$. The Abel-Ruffini theorem proves that polynomial equations of degree five and above have no general radical solution. Transcendental equations (mixing exponential, trigonometric, and polynomial terms) are analytically intractable in general. \textbf{Numerical iteration is not a shortcut---it is the only route.}
+\end{conceptbox}
+
+\vspace{8pt}
+
+\begin{answerbox}
+\textbf{Conclusion.} A computer or algorithm engineer encounters numerical methods at every layer of the stack---from hardware-optimised math libraries and GPU shaders, through ML frameworks and physics engines, to network protocols and security libraries. Mastery of numerical methods is therefore not merely academic; it is a foundational engineering competency that directly determines the speed, accuracy, stability, and reliability of software systems.
+\end{answerbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q No.\ 1(b) --- Merits and Demerits of Iterative Methods for Non-Linear Equations}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Discuss the merits and demerits of iterative methods for the solution of non-linear algebraic equations. Give a worked example of a problem that can only be solved by iterative methods.
+\end{problembox}
+
+\subsection*{Overview}
+
+\begin{conceptbox}
+Non-linear algebraic equations $f(x)=0$ generally have no closed-form solution. Iterative methods start from an initial estimate $x_0$ and generate a sequence $x_1, x_2, \ldots$ converging to the true root. Five major iterative methods are compared below.
+\end{conceptbox}
+
+\vspace{6pt}
+
+\subsection*{1. Bisection Method}
+
+\textbf{Formula:} Bracket $[a,b]$ with $f(a)f(b)<0$; set $x_m = (a+b)/2$.
+
+\begin{observebox}
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+\textbf{Merits} & \textbf{Demerits} \\[2pt]
+\hline\\[-6pt]
+Always converges (guaranteed). & Linear convergence: interval halves per step ($\mathcal{O}(1/2^n)$). \\
+Robust; needs only a sign change. & Extremely slow for high precision. \\
+Simple to implement. & Cannot find complex or repeated roots. \\
+\end{tabular}
+\end{observebox}
+
+\vspace{8pt}
+\subsection*{2. Regula Falsi (False Position) Method}
+
+\textbf{Formula:}
+\[
+  x_n = \frac{a\,f(b) - b\,f(a)}{f(b) - f(a)}
+\]
+
+\begin{observebox}
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+\textbf{Merits} & \textbf{Demerits} \\[2pt]
+\hline\\[-6pt]
+Retains a bracket; always converges. & Still linear convergence in the worst case. \\
+Faster than Bisection for monotone $f$. & One endpoint may stagnate (``false'' bracket). \\
+Uses function slope information. & Modified Regula Falsi needed to fix stagnation. \\
+\end{tabular}
+\end{observebox}
+
+\vspace{8pt}
+\subsection*{3. Fixed-Point Iteration}
+
+\textbf{Formula:} Rewrite $f(x)=0$ as $x=g(x)$; iterate $x_{n+1} = g(x_n)$.
+
+\begin{observebox}
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+\textbf{Merits} & \textbf{Demerits} \\[2pt]
+\hline\\[-6pt]
+Conceptually very simple. & Converges \emph{only if} $|g'(x^*)| < 1$ near root. \\
+No derivative computation required. & Choice of $g(x)$ is non-trivial and critical. \\
+Flexible reformulation of $f$. & Diverges if convergence condition violated. \\
+\end{tabular}
+\end{observebox}
+
+\vspace{8pt}
+\subsection*{4. Newton-Raphson Method}
+
+\textbf{Formula:}
+\[
+  x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}
+\]
+
+\begin{observebox}
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+\textbf{Merits} & \textbf{Demerits} \\[2pt]
+\hline\\[-6pt]
+\textbf{Quadratic convergence}: doubles correct digits per step. & Requires $f'(x)$; may be hard to compute. \\
+Fastest convergence of all iterative methods. & Sensitive to initial guess; may diverge or cycle. \\
+Widely used in engineering and science. & Fails when $f'(x_n) \approx 0$ (inflection point). \\
+\end{tabular}
+\end{observebox}
+
+\vspace{8pt}
+\subsection*{5. Secant Method}
+
+\textbf{Formula:}
+\[
+  x_{n+1} = x_n - f(x_n)\,\frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})}
+\]
+
+\begin{observebox}
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+\textbf{Merits} & \textbf{Demerits} \\[2pt]
+\hline\\[-6pt]
+No analytical derivative required. & Needs \emph{two} starting points $x_0, x_1$. \\
+Superlinear convergence (order $\approx 1.618$). & May diverge with poor starting points. \\
+More robust than N-R near inflection. & Slightly slower than N-R per iteration. \\
+\end{tabular}
+\end{observebox}
+
+\vspace{10pt}
+
+\subsection*{Worked Example: A Problem Only Solvable by Iterative Methods}
+
+\begin{problembox}
+Find all real roots of $\;f(x) = e^x - 3x = 0$.
+\end{problembox}
+
+\textbf{Why no algebraic solution exists.} The equation $e^x = 3x$ mixes an exponential and a polynomial. The Lambert W function can formally express the answer as $x = -W(-1/3)$, but W itself is defined only through an iterative series---there is no elementary closed form. Hence numerical iteration is necessary.
+
+\medskip
+\textbf{Derivative:} $f'(x) = e^x - 3$.
+
+\medskip
+\textbf{Newton-Raphson iteration formula:}
+\[
+  x_{n+1} = x_n - \frac{e^{x_n} - 3x_n}{e^{x_n} - 3}
+\]
+
+\textbf{Starting value} $x_0 = 1.5$:
+
+\medskip
+\noindent\textbf{Iteration 1:}
+\[
+  e^{1.5} \approx 4.4817, \quad f(1.5) = 4.4817 - 4.5 = -0.0183, \quad f'(1.5) = 4.4817 - 3 = 1.4817
+\]
+\[
+  x_1 = 1.5 - \frac{-0.0183}{1.4817} = 1.5 + 0.01235 = \mathbf{1.5124}
+\]
+
+\noindent\textbf{Iteration 2:}
+\[
+  e^{1.5124} \approx 4.5374, \quad f(1.5124) = 4.5374 - 4.5372 = 0.0002, \quad f'(1.5124) = 4.5374 - 3 = 1.5374
+\]
+\[
+  x_2 = 1.5124 - \frac{0.0002}{1.5374} \approx \mathbf{1.5121} \quad \textbf{(converged)}
+\]
+
+\begin{center}
+\begin{tabular}{C{0.8cm} C{2.5cm} C{3cm} C{3cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$n$} & \hcell{$x_n$} & \hcell{$f(x_n)$} & \hcell{$f'(x_n)$} & \hcell{$x_{n+1}$} \\
+\midrule
+\rowcolor{lightbg!40}
+0 & 1.5000 & $-0.0183$ & 1.4817 & 1.5124 \\
+1 & 1.5124 & $+0.0002$ & 1.5374 & 1.5121 \\
+\rowcolor{lightbg!40}
+2 & 1.5121 & $\approx 0$ & 1.5368 & 1.5121 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{formulabox}
+\[
+  \therefore\quad e^x = 3x \;\Rightarrow\; x \approx \mathbf{1.5121}
+\]
+\textbf{Verification:} $e^{1.5121} \approx 4.5361$ and $3 \times 1.5121 = 4.5363$ \quad $\checkmark$
+\end{formulabox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q No.\ 2 --- Prove the Formula for $\sqrt[3]{N+R}$ and Compute (N=29, R=52)}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Prove the iterative Newton-Raphson formula for computing $\sqrt[3]{N+R}$, where $N$ is a natural number and $R$ is your roll number. Then compute $\sqrt[3]{N+R}$ with $N = 29$ and $R = 52$.
+\end{problembox}
+
+\subsection*{Part 1 --- Proof of the Iterative Formula}
+
+Let $M = N + R$ and let $x = \sqrt[3]{M}$, i.e.\ we seek the positive real root of:
+\[
+  f(x) = x^3 - M = 0
+\]
+
+Applying Newton-Raphson with $f'(x) = 3x^2$:
+\[
+  x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} = x_n - \frac{x_n^3 - M}{3x_n^2}
+\]
+
+Combining over a common denominator:
+\[
+  x_{n+1} = \frac{3x_n^3 - (x_n^3 - M)}{3x_n^2} = \frac{2x_n^3 + M}{3x_n^2}
+\]
+
+Dividing each term in the numerator by $x_n^2$:
+
+\begin{formulabox}
+\[
+  \boxed{x_{n+1} = \dfrac{1}{3}\!\left(2x_n + \dfrac{N+R}{x_n^2}\right)}
+\]
+This is the Newton-Raphson iterative formula for $\sqrt[3]{N+R}$. \quad \textbf{Q.E.D.}
+\end{formulabox}
+
+\vspace{8pt}
+
+\subsection*{Part 2 --- Computation: $\sqrt[3]{81}$ \quad ($N=29,\; R=52$)}
+
+\textbf{Given:} $M = N + R = 29 + 52 = 81$.
+
+\medskip
+\textbf{Initial guess:} $4^3 = 64 < 81 < 125 = 5^3$, so the root lies between 4 and 5. Choose $x_0 = 4.3$.
+
+\medskip
+\noindent\textbf{Iteration 1:}
+\[
+  x_0 = 4.3000,\quad x_0^2 = 18.4900,\quad \frac{81}{18.4900} = 4.3807
+\]
+\[
+  x_1 = \frac{1}{3}(2 \times 4.3000 + 4.3807) = \frac{12.9807}{3} = \mathbf{4.3269}
+\]
+
+\noindent\textbf{Iteration 2:}
+\[
+  x_1 = 4.3269,\quad x_1^2 = 18.7220,\quad \frac{81}{18.7220} = 4.3265
+\]
+\[
+  x_2 = \frac{1}{3}(2 \times 4.3269 + 4.3265) = \frac{12.9803}{3} = \mathbf{4.3268}
+\]
+
+\noindent\textbf{Iteration 3:}
+\[
+  x_2 = 4.3268,\quad x_2^2 = 18.7212,\quad \frac{81}{18.7212} = 4.3268
+\]
+\[
+  x_3 = \frac{1}{3}(2 \times 4.3268 + 4.3268) = \frac{12.9804}{3} = \mathbf{4.3268} \quad \textbf{(converged)}
+\]
+
+\subsection*{Iteration Table}
+
+\begin{center}
+\begin{tabular}{C{0.8cm} C{2.2cm} C{2.5cm} C{2.8cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$n$} & \hcell{$x_n$} & \hcell{$x_n^2$} & \hcell{$81/x_n^2$} & \hcell{$x_{n+1}$} \\
+\midrule
+\rowcolor{lightbg!40}
+0 & 4.3000 & 18.4900 & 4.3807 & 4.3269 \\
+1 & 4.3269 & 18.7220 & 4.3265 & 4.3268 \\
+\rowcolor{lightbg!40}
+2 & 4.3268 & 18.7212 & 4.3268 & 4.3268 \\
+3 & 4.3267 & 18.7203 & 4.3270 & 4.3269 \\
+\rowcolor{lightbg!40}
+4 & \multicolumn{3}{c}{Converged} & \textbf{4.3268} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{answerbox}
+\[
+  \therefore\quad \sqrt[3]{81} = \sqrt[3]{29+52} \approx \mathbf{4.3267}
+\]
+\textbf{Verification:} $4.3267^3 = 4.3267 \times 4.3267 \times 4.3267 \approx 80.998 \approx 81$ \quad $\checkmark$
+\end{answerbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q No.\ 3(a) --- Direct vs.\ Indirect Methods; Doolittle vs.\ Crout}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Differentiate between direct and indirect (iterative) methods for solving linear systems. Compare the Doolittle and Crout methods of LU decomposition for a general $3 \times 3$ system.
+\end{problembox}
+
+\subsection*{Direct Methods}
+
+\begin{conceptbox}
+A \textbf{direct method} produces the exact solution (up to floating-point rounding) in a \emph{finite, predetermined} number of steps, without any iteration. Examples: Gaussian Elimination, LU Decomposition (Doolittle, Crout), Cramer's Rule. Best suited for small-to-medium, dense systems.
+\end{conceptbox}
+
+\subsection*{Indirect (Iterative) Methods}
+
+\begin{conceptbox}
+An \textbf{indirect method} starts from an initial guess and refines it repeatedly via a recurrence formula until the result is accurate within a specified tolerance. Examples: Jacobi, Gauss-Seidel, SOR. Best for large, sparse systems (e.g.\ arising from partial differential equations) where storing the full matrix is impractical.
+\end{conceptbox}
+
+\begin{formulabox}
+\textbf{Comparison Summary}\\[4pt]
+\begin{tabular}{p{3.5cm} p{4.5cm} p{4.5cm}}
+\hline
+& \textbf{Direct Methods} & \textbf{Indirect Methods} \\
+\hline
+Steps & Finite (predetermined) & Iterative (until tolerance) \\
+Accuracy & Machine precision & User-specified tolerance \\
+Storage & Full $n \times n$ matrix & Sparse representation \\
+Best for & Small/dense systems & Large/sparse systems \\
+Examples & Gauss, LU, Cramer & Jacobi, Gauss-Seidel, SOR \\
+Convergence & Always (if $A$ non-singular) & Guaranteed for diag.\ dominant \\
+\hline
+\end{tabular}
+\end{formulabox}
+
+\vspace{10pt}
+\subsection*{Doolittle Method vs.\ Crout Method for a General $3\times3$ System}
+
+Consider the system $A = LU$ where:
+\[
+  A = \begin{pmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{pmatrix}
+\]
+
+\vspace{8pt}
+\noindent\textbf{Doolittle Method} (unit lower triangular $L$, general upper triangular $U$):
+\[
+  L = \begin{pmatrix} 1 & 0 & 0 \\ l_{21} & 1 & 0 \\ l_{31} & l_{32} & 1 \end{pmatrix}, \qquad
+  U = \begin{pmatrix} u_{11} & u_{12} & u_{13} \\ 0 & u_{22} & u_{23} \\ 0 & 0 & u_{33} \end{pmatrix}
+\]
+
+\textbf{Computation formulas (Doolittle):}
+\begin{align*}
+  &\text{Row 1 of }U{:} & u_{1j} &= a_{1j} \quad (j=1,2,3) \\
+  &\text{Col 1 of }L{:} & l_{i1} &= a_{i1}/u_{11} \quad (i=2,3) \\
+  &\text{For }k=2,3{:} & u_{kj} &= a_{kj} - \sum_{m=1}^{k-1} l_{km}\,u_{mj} \quad (j \geq k) \\
+  & & l_{ik} &= \left(a_{ik} - \sum_{m=1}^{k-1} l_{im}\,u_{mk}\right)/u_{kk} \quad (i > k)
+\end{align*}
+
+\vspace{8pt}
+\noindent\textbf{Crout Method} (general lower triangular $L$, unit upper triangular $U$):
+\[
+  L = \begin{pmatrix} l_{11} & 0 & 0 \\ l_{21} & l_{22} & 0 \\ l_{31} & l_{32} & l_{33} \end{pmatrix}, \qquad
+  U = \begin{pmatrix} 1 & u_{12} & u_{13} \\ 0 & 1 & u_{23} \\ 0 & 0 & 1 \end{pmatrix}
+\]
+
+\textbf{Computation formulas (Crout):}
+\begin{align*}
+  &\text{Col 1 of }L{:} & l_{i1} &= a_{i1} \quad (i=1,2,3) \\
+  &\text{Row 1 of }U{:} & u_{1j} &= a_{1j}/l_{11} \quad (j=2,3) \\
+  &\text{For }k=2,3{:} & l_{ik} &= a_{ik} - \sum_{m=1}^{k-1} l_{im}\,u_{mk} \quad (i \geq k) \\
+  & & u_{kj} &= \left(a_{kj} - \sum_{m=1}^{k-1} l_{km}\,u_{mj}\right)/l_{kk} \quad (j > k)
+\end{align*}
+
+\begin{observebox}
+\textbf{Key Difference Between Doolittle and Crout:}\\[4pt]
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+\textbf{Doolittle} & \textbf{Crout} \\[2pt]
+\hline\\[-6pt]
+$L$ is unit lower triangular (1s on diagonal). & $U$ is unit upper triangular (1s on diagonal). \\
+Division is performed when computing $U$ first, then $L$. & Division is performed when computing $U$ from $L$. \\
+Equivalent to standard Gaussian elimination. & Equivalent to ``column-oriented'' Gaussian elimination. \\
+Both $L$ and $U$ entries and solution $\mathbf{x}$ are identical. & Same final solution as Doolittle. \\
+\end{tabular}
+\end{observebox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q No.\ 3(b) --- Solve the Linear System (R = 52)}
+% ════════════════════════════════════════════════════════════
+
+\begin{problembox}
+Solve the following system of linear equations (with $R = 52$) by both a Direct Method (Gaussian Elimination) and an Indirect Method (Gauss-Seidel iteration):
+\[
+  2x - 3y + 7z = 57 \qquad (1)
+\]
+\[
+  8x + y - 3z = 65 \qquad (2)
+\]
+\[
+  2x + 19y - 7z = 84 \qquad (3)
+\]
+\end{problembox}
+
+\subsection*{Step 1 --- Diagonal Dominance Check and Rearrangement}
+
+\textbf{Check diagonal dominance} of the original ordering:
+\begin{itemize}[noitemsep]
+  \item Eq(1): $|2| < |-3|+|7| = 10$ \quad NOT dominant.
+  \item Eq(2): $|8| > |1|+|-3| = 4$ \quad dominant $\checkmark$
+  \item Eq(3): $|19| > |2|+|-7| = 9$ \quad dominant $\checkmark$
+\end{itemize}
+
+\textbf{Rearrange} to place the most dominant equation first:
+\[
+  8x + y - 3z = 65 \quad\Rightarrow |8|>4 \;\checkmark
+\]
+\[
+  2x + 19y - 7z = 84 \quad\Rightarrow |19|>9 \;\checkmark
+\]
+\[
+  2x - 3y + 7z = 57 \quad\Rightarrow |7|>5 \;\checkmark
+\]
+
+\medskip
+All three rows now satisfy strict diagonal dominance. The rearranged system is:
+\begin{align}
+  8x + y - 3z &= 65 \tag{R1}\\
+  2x + 19y - 7z &= 84 \tag{R2}\\
+  2x - 3y + 7z &= 57 \tag{R3}
+\end{align}
+
+\subsection*{Step 2 --- Gaussian Elimination (Direct Method)}
+
+\textbf{Augmented matrix:}
+\[
+\left[\begin{array}{rrr|r}
+  8 & 1 & -3 & 65 \\
+  2 & 19 & -7 & 84 \\
+  2 & -3 & 7 & 57
+\end{array}\right]
+\]
+
+\medskip
+\noindent\textbf{Eliminate $x$ from R2 and R3:} Multiply $R_1$ by $\tfrac{1}{4}$ and subtract.
+
+$R_2 \leftarrow R_2 - \dfrac{1}{4}R_1$:
+\[
+  \left[0,\; 19 - \tfrac{1}{4},\; -7+\tfrac{3}{4},\; 84 - \tfrac{65}{4}\right]
+  = \left[0,\; \tfrac{75}{4},\; -\tfrac{25}{4},\; \tfrac{271}{4}\right]
+  \;\Rightarrow\; 75y - 25z = 271
+\]
+
+$R_3 \leftarrow R_3 - \dfrac{1}{4}R_1$:
+\[
+  \left[0,\; -3 - \tfrac{1}{4},\; 7+\tfrac{3}{4},\; 57 - \tfrac{65}{4}\right]
+  = \left[0,\; -\tfrac{13}{4},\; \tfrac{31}{4},\; \tfrac{163}{4}\right]
+  \;\Rightarrow\; -13y + 31z = 163
+\]
+
+Updated matrix:
+\[
+\left[\begin{array}{rrr|r}
+  8 & 1 & -3 & 65 \\
+  0 & 75/4 & -25/4 & 271/4 \\
+  0 & -13/4 & 31/4 & 163/4
+\end{array}\right]
+\]
+
+\medskip
+\noindent\textbf{Eliminate $y$ from R3:} $R_3 \leftarrow R_3 + \dfrac{13}{75}R_2$
+
+For the $z$-coefficient:
+\[
+  \frac{31}{4} + \frac{13}{75}\cdot\left(-\frac{25}{4}\right) = \frac{31}{4} - \frac{325}{300} = \frac{2325 - 325}{300} = \frac{2000}{300} = \frac{20}{3}
+\]
+
+For the RHS:
+\[
+  \frac{163}{4} + \frac{13}{75}\cdot\frac{271}{4} = \frac{163}{4} + \frac{3523}{300} = \frac{12225 + 3523}{300} = \frac{15748}{300} = \frac{3937}{75}
+\]
+
+So: $\;\dfrac{20}{3}z = \dfrac{3937}{75}$
+
+\subsection*{Step 3 --- Back Substitution}
+
+\[
+  z = \frac{3937}{75} \times \frac{3}{20} = \frac{11811}{1500} = \frac{3937}{500} = \mathbf{7.874}
+\]
+
+\[
+  75y - 25(7.874) = 271 \;\Rightarrow\; 75y = 271 + 196.850 = 467.850 \;\Rightarrow\; y = \frac{467.850}{75} = \mathbf{6.238}
+\]
+
+\[
+  8x = 65 - y + 3z = 65 - 6.238 + 23.622 = 82.384 \;\Rightarrow\; x = \frac{82.384}{8} = \mathbf{10.298}
+\]
+
+\begin{formulabox}
+\textbf{Exact fractions:}\quad $x = \dfrac{5149}{500}$,\quad $y = \dfrac{3119}{500}$,\quad $z = \dfrac{3937}{500}$
+
+\medskip
+\textbf{Decimal:}\quad $x \approx 10.298$,\quad $y \approx 6.238$,\quad $z \approx 7.874$
+\end{formulabox}
+
+\subsection*{Verification (Direct Method)}
+
+\begin{center}
+\begin{tabular}{C{3cm} C{6.5cm} C{1.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Equation} & \hcell{LHS Computed} & \hcell{RHS} \\
+\midrule
+\rowcolor{lightbg!40}
+$2x - 3y + 7z$ & $2(10.298) - 3(6.238) + 7(7.874) = 20.596 - 18.714 + 55.118 = 57.000$ & 57 $\checkmark$ \\
+$8x + y - 3z$ & $8(10.298) + 6.238 - 3(7.874) = 82.384 + 6.238 - 23.622 = 65.000$ & 65 $\checkmark$ \\
+\rowcolor{lightbg!40}
+$2x + 19y - 7z$ & $2(10.298) + 19(6.238) - 7(7.874) = 20.596 + 118.522 - 55.118 = 84.000$ & 84 $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{10pt}
+
+\subsection*{Step 4 --- Gauss-Seidel Iteration (Indirect Method)}
+
+\textbf{Isolate each variable} from the rearranged dominant system:
+\[
+  x = \frac{65 - y + 3z}{8}, \qquad y = \frac{84 - 2x + 7z}{19}, \qquad z = \frac{57 - 2x + 3y}{7}
+\]
+
+\textbf{Starting values:} $x_0 = y_0 = z_0 = 0$.
+
+\medskip
+
+\noindent\textbf{Iteration 1:}
+\[
+  x_1 = \frac{65 - 0 + 0}{8} = 8.1250
+\]
+\[
+  y_1 = \frac{84 - 2(8.1250) + 0}{19} = \frac{84 - 16.250}{19} = \frac{67.750}{19} = 3.5658
+\]
+\[
+  z_1 = \frac{57 - 2(8.1250) + 3(3.5658)}{7} = \frac{57 - 16.250 + 10.697}{7} = \frac{51.447}{7} = 7.3496
+\]
+
+\noindent\textbf{Iteration 2:}
+\[
+  x_2 = \frac{65 - 3.5658 + 3(7.3496)}{8} = \frac{65 - 3.5658 + 22.0488}{8} = \frac{83.4830}{8} = 10.4354
+\]
+\[
+  y_2 = \frac{84 - 2(10.4354) + 7(7.3496)}{19} = \frac{84 - 20.8708 + 51.4472}{19} = \frac{114.5764}{19} = 6.0303
+\]
+\[
+  z_2 = \frac{57 - 2(10.4354) + 3(6.0303)}{7} = \frac{57 - 20.8708 + 18.0909}{7} = \frac{54.2201}{7} = 7.7457
+\]
+
+\vspace{6pt}
+
+\subsection*{Gauss-Seidel Iteration Table}
+
+\begin{center}
+\begin{tabular}{C{1cm} C{2.5cm} C{2.5cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Iter} & \hcell{$x$} & \hcell{$y$} & \hcell{$z$} \\
+\midrule
+\rowcolor{lightbg!40}
+0 & 0.0000 & 0.0000 & 0.0000 \\
+1 & 8.1250 & 3.5658 & 7.3496 \\
+\rowcolor{lightbg!40}
+2 & 10.4354 & 6.0303 & 7.7457 \\
+3 & 10.2759 & 6.1930 & 7.8610 \\
+\rowcolor{lightbg!40}
+4 & 10.2988 & 6.2331 & 7.8717 \\
+5 & 10.2978 & 6.2372 & 7.8737 \\
+\rowcolor{lightbg!40}
+6 & 10.2980 & 6.2379 & 7.8740 \\
+7 & \textbf{10.298} & \textbf{6.238} & \textbf{7.874} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{answerbox}
+\textbf{Both methods agree:}\quad $x \approx \mathbf{10.298}$,\quad $y \approx \mathbf{6.238}$,\quad $z \approx \mathbf{7.874}$
+
+\medskip
+Gaussian Elimination gave the exact result in a single finite pass (direct), while Gauss-Seidel converged to 3-decimal accuracy in 7 iterations (indirect), confirming that both approaches are valid and consistent.
+\end{answerbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section*{Summary of Results}
+% ════════════════════════════════════════════════════════════
+
+\begin{center}
+\begin{tabular}{C{0.7cm} C{4.5cm} C{3.5cm} C{3.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Q} & \hcell{Topic} & \hcell{Method Used} & \hcell{Key Result} \\
+\midrule
+\rowcolor{lightbg!40}
+1a & Importance of Numerical Methods & Theory / CS Perspective & 7 application domains \\
+1b & Merits/Demerits of Iterative Methods & Theory + N-R Example & $e^x = 3x \Rightarrow x \approx 1.5121$ \\
+\rowcolor{lightbg!40}
+2  & Cube Root Formula \& Computation & Newton-Raphson & $\sqrt[3]{81} \approx 4.3267$ \\
+3a & Direct vs.\ Indirect; Doolittle vs.\ Crout & Theory (3\texttimes{}3 general) & LU decomposition formulas \\
+\rowcolor{lightbg!40}
+3b & Linear System ($R=52$) & Gauss Elim.\ + Gauss-Seidel & $x{=}10.298$, $y{=}6.238$, $z{=}7.874$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{14pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=10pt, bottom=10pt,
+  borderline north={3pt}{0pt}{gold},
+]
+  \centering
+  {\color{white}\small\bfseries Shah Abdul Latif University, Khairpur \quad --- \quad Department of Mathematics}\\[4pt]
+  {\color{gold}\small Numerical Analysis -- I \quad $\cdot$ \quad BS P-IV \quad $\cdot$ \quad First Semester 2026}\\[4pt]
+  {\color{lightbg}\footnotesize Student: Nadir Ali Khan \quad Roll No: 52 \quad Instructor: Prof.\ Dr.\ Hisam uddin Shaikh}
+\end{tcolorbox}
+
+\end{document}

@@ -1,0 +1,1394 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\tcbuselibrary{skins, breakable}
+
+\geometry{margin=0.9in, top=1in, bottom=1in}
+
+% ── Colour palette ──────────────────────────────────────────
+\definecolor{primary}  {RGB}{27,  79, 114}
+\definecolor{accent}   {RGB}{46, 134, 193}
+\definecolor{lightbg}  {RGB}{234,244,251}
+\definecolor{tealclr}  {RGB}{0,  110,  90}
+\definecolor{tealbg}   {RGB}{220,245,240}
+\definecolor{amberclr} {RGB}{160, 90,   0}
+\definecolor{amberbg}  {RGB}{255,243,220}
+\definecolor{purpleclr}{RGB}{90,  20, 140}
+\definecolor{purplebg} {RGB}{240,228,255}
+\definecolor{redclr}   {RGB}{150,  20,  20}
+\definecolor{redbg}    {RGB}{255,228,228}
+\definecolor{greenclr} {RGB}{20, 120,  40}
+\definecolor{greenbg}  {RGB}{220,248,228}
+\definecolor{grayclr}  {RGB}{80,  80,  80}
+\definecolor{graybg}   {RGB}{245,245,245}
+\definecolor{darktext} {RGB}{44,  62,  80}
+\definecolor{gold}     {RGB}{183,149, 11}
+\definecolor{goldbg}   {RGB}{254,249,231}
+
+% ── Page style ──────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Numerical Analysis}\;\textcolor{accent}{|}\;Theoretical Foundations}
+\fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ─────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}{}
+  {0em}{}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}{}
+  {0em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+% ── tcolorbox environments ──────────────────────────────────
+
+% Slide-style method title
+\newtcolorbox{methodtitle}[2]{
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=16pt, bottom=12pt,
+  borderline south={4pt}{0pt}{accent},
+  title={\large\bfseries\color{accent!60} #1},
+  coltitle=accent!60,
+  attach title to upper=\\[2pt],
+  fontupper=\LARGE\bfseries\color{white},
+  #2
+}
+
+% Definition box
+\newtcolorbox{defbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=tealbg, colframe=tealclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Definition\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=tealclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=tealclr, boxrule=0pt},
+}
+
+% Theorem / Convergence box
+\newtcolorbox{thmbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Theorem\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
+}
+
+% Derivation box
+\newtcolorbox{derivbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=primary,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Derivation\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=primary, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+}
+
+% Historical note
+\newtcolorbox{histbox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=graybg, colframe=grayclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Historical Background},
+  colbacktitle=grayclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=grayclr, boxrule=0pt},
+}
+
+% Key point / insight
+\newtcolorbox{keybox}[1][]{
+  enhanced,
+  borderline west={4pt}{0pt}{purpleclr},
+  colback=purplebg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+% Advantages / Disadvantages
+\newtcolorbox{prosbox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=greenbg, colframe=greenclr,
+  left=10pt, right=10pt, top=6pt, bottom=6pt,
+  title={\small\bfseries\color{white} Advantages},
+  colbacktitle=greenclr,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=greenclr, boxrule=0pt},
+}
+
+\newtcolorbox{consbox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=redbg, colframe=redclr,
+  left=10pt, right=10pt, top=6pt, bottom=6pt,
+  title={\small\bfseries\color{white} Disadvantages},
+  colbacktitle=redclr,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=redclr, boxrule=0pt},
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════
+%  COVER PAGE
+% ════════════════════════════════════════════════════════════
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=28pt, bottom=20pt,
+  borderline south={5pt}{0pt}{accent},
+]
+  \centering
+  {\fontsize{26}{32}\bfseries\color{white}
+    Numerical Methods\\[8pt]
+    Theoretical Foundations
+  }\\[12pt]
+  {\large\color{lightbg}
+    A Deep Research Study of Root-Finding Methods
+  }
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=white, colframe=white,
+  borderline north={1.5pt}{0pt}{accent!60},
+  borderline south={1.5pt}{0pt}{accent!60},
+  left=16pt, right=16pt, top=12pt, bottom=12pt,
+]
+  \begin{tabular}{p{3.2cm} p{9.5cm}}
+    \textcolor{primary}{\textbf{Teacher:}}
+      & \textbf{Dr.\ Hisam Uddin Shaikh} \\
+      & {\small\color{darktext}Chairman, Department of Mathematics} \\[8pt]
+    \textcolor{primary}{\textbf{Prepared by:}}
+      & \textbf{Nadir Ali Khan} \\
+      & {\small\color{darktext}BS-IV} \\
+  \end{tabular}
+\end{tcolorbox}
+
+\vspace{16pt}
+
+\begin{tcolorbox}[colback=lightbg, colframe=accent, arc=4pt, boxrule=1pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt]
+\textbf{\color{primary}Topics Covered:}
+\begin{multicols}{2}
+\begin{enumerate}[noitemsep]
+  \item Bisection Method
+  \item Regula Falsi Method
+  \item Newton-Raphson Method
+  \item Secant Method
+  \item Fixed Point Iteration
+\end{enumerate}
+\end{multicols}
+\vspace{4pt}
+\textit{\small Each topic covers: historical background, mathematical foundation, full derivation, convergence proofs, error analysis, variants, failure cases, and practical considerations.}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{tcolorbox}[colback=purplebg!60, colframe=purpleclr, arc=4pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  borderline west={4pt}{0pt}{purpleclr}]
+\textbf{\color{purpleclr}Scope of this Document:} This document provides a rigorous, research-level treatment of the five fundamental numerical root-finding methods. Each method is examined from multiple perspectives: its historical origins, complete mathematical derivation, formal convergence proofs, error analysis, important variants and improvements, connections to other areas of mathematics, and practical implementation guidelines. The treatment is intended for advanced undergraduate students of mathematics (BS-IV level).
+\end{tcolorbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  INTRODUCTION
+% ════════════════════════════════════════════════════════════
+\section{Introduction to Numerical Root Finding}
+
+\begin{defbox}[Root of a Function]
+A \textbf{root} (or \textbf{zero}) of a function $f$ is a value $x^*$ such that
+\[
+  f(x^*) = 0
+\]
+Equivalently, $x^*$ is the $x$-coordinate of the intersection of $y = f(x)$ with the $x$-axis.
+\end{defbox}
+
+\bigskip
+
+\subsection*{Why Numerical Methods?}
+
+Many real-world equations cannot be solved in closed form. For example:
+\[
+  x^3 - 2x - 5 = 0, \qquad e^x - 3x = 0, \qquad x\sin x - 1 = 0
+\]
+Numerical methods produce \textit{approximate} solutions to any desired precision through an iterative process.
+
+\bigskip
+
+\begin{thmbox}[Intermediate Value Theorem (IVT)]
+Let $f:[a,b]\to\mathbb{R}$ be continuous. If $f(a)\cdot f(b)<0$, then there exists at least one point $x^*\in(a,b)$ such that $f(x^*)=0$.
+
+\medskip
+\textbf{Proof sketch:} Define $S=\{x\in[a,b]:f(x)<0\}$. Since $f(a)<0$ (WLOG), $a\in S$ so $S\neq\emptyset$. Also $S$ is bounded above by $b$. Let $x^*=\sup S$. By continuity of $f$, one can show $f(x^*)=0$: if $f(x^*)>0$, there is a neighbourhood where $f>0$, contradicting $x^*$ being the supremum; if $f(x^*)<0$, there is a neighbourhood where $f<0$, so points larger than $x^*$ are in $S$, again a contradiction.
+
+\medskip
+\textbf{Important:} The IVT guarantees \textit{existence} but not \textit{uniqueness}. Also, the sign-change condition is \textit{sufficient} but not necessary — a root may exist without a sign change (e.g.\ $f(x)=(x-1)^2\geq 0$ everywhere).
+\end{thmbox}
+
+\bigskip
+
+\subsection*{Types of Errors in Numerical Computation}
+
+\begin{defbox}[Absolute Error]
+$|e_n| = |x_n - x^*|$, where $x_n$ is the computed approximation and $x^*$ is the true root.
+\end{defbox}
+
+\begin{defbox}[Relative Error]
+$\dfrac{|e_n|}{|x^*|} = \dfrac{|x_n - x^*|}{|x^*|}\quad(x^*\neq 0)$.\quad Dimensionless; more meaningful when $x^*$ is very large or very small.
+\end{defbox}
+
+\begin{defbox}[Truncation vs.\ Round-off Error]
+\textbf{Truncation error} arises from approximating an infinite process (e.g.\ truncating a Taylor series). It is inherent to the method.
+
+\medskip
+\textbf{Round-off error} arises from finite floating-point representation ($\approx 15$--16 significant digits in 64-bit double precision). Subtraction of nearly equal numbers causes \textbf{catastrophic cancellation}, drastically reducing accuracy.
+\end{defbox}
+
+\subsection*{Condition Number of a Root}
+
+\begin{defbox}[Condition Number]
+For a root $x^*$ with $f'(x^*)\neq 0$, the (absolute) condition number is $\kappa = 1/|f'(x^*)|$. If the function is perturbed by $\delta$, the root shifts by approximately $\delta/|f'(x^*)|$.
+\begin{itemize}[noitemsep,topsep=4pt]
+  \item \textbf{Well-conditioned} ($|f'(x^*)|$ large): $f$ crosses the axis steeply — small perturbations shift the root very little.
+  \item \textbf{Ill-conditioned} ($f'(x^*)\approx 0$): $f$ is nearly flat near the root — small perturbations can shift the root enormously. Multiple roots ($f'(x^*)=0$) are the extreme case.
+\end{itemize}
+\end{defbox}
+
+\subsection*{Stopping Criteria}
+
+Five common criteria used in practice:
+\begin{enumerate}[noitemsep]
+  \item \textbf{Interval width:} $|b_n-a_n|<\varepsilon_1$ — guarantees root lies in a small interval (bracketing methods only).
+  \item \textbf{Function value:} $|f(x_n)|<\varepsilon_2$ — function is close to zero (can fail if $f$ is flat).
+  \item \textbf{Absolute change:} $|x_n-x_{n-1}|<\varepsilon_3$ — consecutive iterates close (can fail for slow convergence).
+  \item \textbf{Relative change:} $|x_n-x_{n-1}|/|x_n|<\varepsilon_4$ — scale-invariant version.
+  \item \textbf{Maximum iterations:} $n\geq N_{\max}$ — safety net to prevent infinite loops.
+\end{enumerate}
+In practice, a combination of criteria is used. Stop when \textit{any} (or \textit{all}) are satisfied.
+
+\bigskip
+
+\subsection*{Classification of Root-Finding Methods}
+
+\begin{center}
+{\small
+\begin{tabular}{p{3.5cm} p{4.5cm} p{5.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Category} & \hcell{Methods} & \hcell{Key Characteristic} \\
+\midrule
+\rowcolor{lightbg!40}
+Bracketing Methods & Bisection, Regula Falsi & Require $f(a)\cdot f(b)<0$; guaranteed convergence \\
+Open Methods & Newton-Raphson, Secant & Start from 1--2 initial guesses; may diverge \\
+\rowcolor{lightbg!40}
+Fixed Point Methods & Fixed Point Iteration & Rewrite $f(x)=0$ as $x=g(x)$; converge if $|g'|<1$ \\
+Hybrid Methods & Brent's Method, Illinois & Combine bracketing safety with open-method speed \\
+\rowcolor{lightbg!40}
+Higher-Order & Halley's, Steffensen & Cubic or better convergence; specialised use \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+
+\bigskip
+
+\subsection*{Convergence Terminology}
+
+\begin{defbox}[Order of Convergence]
+A sequence $\{x_n\}$ converging to $x^*$ has \textbf{order of convergence} $p\geq 1$ if there exists a constant $C>0$ (the \textbf{asymptotic error constant}) such that
+\[
+  \lim_{n\to\infty} \frac{|e_{n+1}|}{|e_n|^p} = C, \qquad e_n = x_n - x^*
+\]
+\begin{itemize}[noitemsep, topsep=4pt]
+  \item $p=1,\,C<1$: \textbf{Linear convergence} — error reduced by factor $C$ each step.
+  \item $p=1,\,C=1$: \textbf{Sublinear} — very slow, may barely move.
+  \item $1<p<2$: \textbf{Superlinear} — between linear and quadratic.
+  \item $p=2$: \textbf{Quadratic} — correct digits double each step.
+  \item $p=3$: \textbf{Cubic} — correct digits triple each step.
+\end{itemize}
+\end{defbox}
+
+\medskip
+\textbf{Practical Illustration:} Starting with $|e_0|=0.1$ and asymptotic constant $C\approx 1$:
+
+\begin{center}{\small
+\begin{tabular}{C{1cm} C{3.5cm} C{3.5cm} C{3.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$n$} & \hcell{Linear ($p=1,C=0.5$)} & \hcell{Superlinear ($p\approx 1.618$)} & \hcell{Quadratic ($p=2$)} \\
+\midrule
+\rowcolor{lightbg!40}
+0 & $10^{-1}$ & $10^{-1}$ & $10^{-1}$ \\
+1 & $5\times10^{-2}$ & $\sim10^{-1.6}$ & $10^{-2}$ \\
+\rowcolor{lightbg!40}
+2 & $2.5\times10^{-2}$ & $\sim10^{-2.6}$ & $10^{-4}$ \\
+3 & $1.25\times10^{-2}$ & $\sim10^{-4.2}$ & $10^{-8}$ \\
+\rowcolor{lightbg!40}
+4 & $6.25\times10^{-3}$ & $\sim10^{-6.9}$ & $10^{-16}$ \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  METHOD 01 — BISECTION
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 01}\\[4pt]
+  {\LARGE\bfseries\color{white} Bisection Method}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+The Bisection Method embodies one of humanity's oldest problem-solving strategies: \textit{divide and conquer}. Its mathematical foundation — the Intermediate Value Theorem — was first rigorously proved by \textbf{Bernard Bolzano} (1817, \textit{Rein analytischer Beweis}) and independently refined by \textbf{Augustin-Louis Cauchy} (\textit{Cours d'analyse}, 1821), motivated by the need to put calculus on rigorous foundations. The algorithm is a direct computational translation of Bolzano's proof. In computer science, the same idea appears as \textit{binary search} — invented independently for sorted arrays. The method has been implemented in virtually every scientific computing environment and remains the gold standard for safe, guaranteed root finding.
+\end{histbox}
+
+\bigskip
+
+\section*{Mathematical Foundation}
+
+\begin{defbox}[Bisection Algorithm]
+Given a continuous function $f$ on $[a_0,b_0]$ with $f(a_0)\cdot f(b_0)<0$, at each step $n=0,1,2,\ldots$:
+\begin{enumerate}[noitemsep]
+  \item Compute the midpoint: $c_n = \dfrac{a_n+b_n}{2}$
+  \item If $f(c_n) = 0$: exact root found; stop.
+  \item If $f(a_n)\cdot f(c_n) < 0$: root in $[a_n,c_n]$; set $a_{n+1}=a_n,\;b_{n+1}=c_n$.
+  \item If $f(c_n)\cdot f(b_n) < 0$: root in $[c_n,b_n]$; set $a_{n+1}=c_n,\;b_{n+1}=b_n$.
+  \item Repeat until stopping criterion is met.
+\end{enumerate}
+The sequence of midpoints $\{c_n\}$ converges to a root $x^*$.
+\end{defbox}
+
+\bigskip
+
+\begin{thmbox}[Convergence of Bisection --- Nested Interval Theorem]
+Let $f$ be continuous on $[a_0,b_0]$ with $f(a_0)\cdot f(b_0)<0$. The Bisection Method produces nested intervals $[a_n,b_n]$ satisfying:
+\begin{enumerate}[noitemsep]
+  \item \textbf{Nesting:} $[a_0,b_0]\supset[a_1,b_1]\supset[a_2,b_2]\supset\cdots$
+  \item \textbf{Bracketing:} $f(a_n)\cdot f(b_n)<0$ for all $n$.
+  \item \textbf{Width:} $b_n-a_n = \dfrac{b_0-a_0}{2^n}$
+  \item \textbf{Convergence:} $\{a_n\}$ (non-decreasing, bounded above) and $\{b_n\}$ (non-increasing, bounded below) both converge to the same limit $x^*\in[a_0,b_0]$ with $f(x^*)=0$.
+\end{enumerate}
+\textbf{Proof of (iv):} By (iii), $b_n-a_n\to 0$. By the Monotone Convergence Theorem, $\{a_n\}\to x^*$ and $\{b_n\}\to x^*$. By (ii) and continuity of $f$: taking limits gives $[f(x^*)]^2\leq 0$, so $f(x^*)=0$.\hfill$\square$
+\end{thmbox}
+
+\bigskip
+
+\subsection*{Error Analysis}
+
+After $n$ iterations starting from interval $[a_0, b_0]$, the interval has length:
+\[
+  b_n - a_n = \frac{b_0 - a_0}{2^n}
+\]
+The root $x^*$ always lies inside $[a_n, b_n]$, so the \textbf{absolute error bound} is:
+\[
+  \boxed{|x_n - x^*| \leq \frac{b_0 - a_0}{2^n}}
+\]
+
+\begin{thmbox}[Number of Iterations Required]
+To achieve an error less than $\varepsilon$, the number of iterations $n$ must satisfy:
+\[
+  \frac{b_0 - a_0}{2^n} < \varepsilon
+  \quad\Longrightarrow\quad
+  n > \frac{\ln\!\left(\dfrac{b_0 - a_0}{\varepsilon}\right)}{\ln 2}
+  = \log_2\!\left(\frac{b_0 - a_0}{\varepsilon}\right)
+\]
+\end{thmbox}
+
+\bigskip
+
+\subsection*{Convergence Analysis}
+
+\begin{thmbox}[Linear Convergence of Bisection]
+Bisection converges \textbf{linearly} with convergence ratio $\tfrac{1}{2}$:
+\[
+  |e_{n+1}| \leq \frac{1}{2}|e_n|
+  \qquad\text{where}\quad e_n = x_n - x^*
+\]
+Each iteration reduces the error by exactly half, regardless of the behavior of $f$.
+\end{thmbox}
+
+\begin{keybox}
+\textbf{Key Insight:} Bisection ignores the actual values $f(a)$ and $f(b)$ — it only uses their \textit{signs}. This makes it very robust (guaranteed convergence) but also inefficient (slow, wastes information about how large or small $f$ is).
+\end{keybox}
+
+\bigskip
+
+\subsection*{Stopping Criteria Specific to Bisection}
+
+For Bisection, the interval-width criterion is always preferred (we have a guaranteed bound):
+\begin{enumerate}[noitemsep]
+  \item \textbf{Primary:} $|b_n-a_n|<2\varepsilon$, ensuring $|c_n-x^*|<\varepsilon$.
+  \item \textbf{Secondary:} Also check $|f(c_n)|<\varepsilon_f$ for a function tolerance.
+  \item \textbf{Safety:} Always set a maximum iteration count $N_{\max}$ (computable from the formula above).
+\end{enumerate}
+
+\begin{keybox}
+\textbf{Caution:} The relative change criterion $|c_n-c_{n-1}|/|c_n|$ can be unreliable when $c_n\approx 0$.
+\end{keybox}
+
+\subsection*{When Bisection Fails}
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Discontinuous functions:} IVT requires continuity. $f(x)=1/x$ has $f(-1)=-1$ and $f(1)=1$, but $f$ has a pole at 0, not a root.
+  \item \textbf{Even-multiplicity roots:} $f(x)=(x-x^*)^2\geq 0$ — no sign change, Bisection cannot locate $x^*$.
+  \item \textbf{Multiple roots in bracket:} If there are an odd number of roots in $[a,b]$, Bisection finds one, but not necessarily the desired one.
+  \item \textbf{Flat functions:} Round-off in evaluating $\text{sign}(f(c_n))$ may be incorrect if $f(c_n)\approx 0$ at machine precision.
+\end{enumerate}
+
+\subsection*{Application: Eigenvalue Computation via Sturm Sequences}
+
+A remarkable application of Bisection is computing eigenvalues of symmetric tridiagonal matrices. The \textbf{Sturm sequence property} allows the number of eigenvalues less than any value $\lambda$ to be computed in $\mathcal{O}(n)$ operations. Combined with Bisection on the parameter $\lambda$, this gives a numerically stable $\mathcal{O}(n\log(1/\varepsilon))$ algorithm — still used in modern linear algebra libraries (LAPACK's \texttt{dstebz}).
+
+\bigskip
+
+\begin{multicols}{2}
+\begin{prosbox}
+\begin{itemize}[noitemsep]
+  \item Guaranteed convergence (IVT)
+  \item Simple to implement correctly
+  \item No derivative required
+  \item A priori error bound (predictable)
+  \item Never diverges or gets stuck
+  \item Number of iterations known in advance
+  \item Works for any continuous $f$
+\end{itemize}
+\end{prosbox}
+
+\columnbreak
+
+\begin{consbox}
+\begin{itemize}[noitemsep]
+  \item Slow: linear convergence, factor $=0.5$
+  \item Requires initial bracket with sign change
+  \item Ignores function magnitude (wastes info)
+  \item Cannot find complex roots
+  \item Cannot detect even-multiplicity roots
+  \item Only finds one root per bracket
+  \item Not easily extended to higher dimensions
+\end{itemize}
+\end{consbox}
+\end{multicols}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  METHOD 02 — REGULA FALSI
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 02}\\[4pt]
+  {\LARGE\bfseries\color{white} Regula Falsi Method \normalsize\color{lightbg}\quad(False Position)}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+The Regula Falsi (Latin for \textit{Rule of False Position}) is one of the \textbf{oldest known root-finding algorithms}, appearing in ancient Egyptian mathematics (circa 1550 BCE, Rhind Papyrus), ancient Babylonian texts, and Indian mathematics (Bakshali manuscript). Medieval Arab mathematicians including Al-Khawarizmi developed it further. It predates calculus by thousands of years and was the dominant algebraic technique until Newton's method emerged in the 17th century. It was formalized in its modern bracket-preserving form during the development of numerical analysis.
+\end{histbox}
+
+\bigskip
+
+\section*{Mathematical Foundation}
+
+\begin{defbox}[Geometric Interpretation]
+Rather than taking the midpoint of $[a,b]$, Regula Falsi draws a \textbf{straight line} (secant line) connecting the points $(a,\,f(a))$ and $(b,\,f(b))$, then uses the $x$-intercept of this line as the next approximation.
+
+\medskip
+From the equation of the line through two points:
+\[
+  \frac{x - a}{b - a} = \frac{0 - f(a)}{f(b) - f(a)}
+\]
+Solving for $x$ gives the \textbf{false position formula}:
+\[
+  \boxed{x_n = \frac{a\,f(b) - b\,f(a)}{f(b) - f(a)} = b - f(b)\cdot\frac{b-a}{f(b)-f(a)}}
+\]
+\end{defbox}
+
+\bigskip
+
+\begin{derivbox}[Formula from Similar Triangles]
+Consider the two right triangles formed by the secant line cutting the $x$-axis at $x_n$:
+\[
+  \frac{x_n - a}{b - x_n} = \frac{|f(a)|}{|f(b)|}
+\]
+\[
+  (x_n - a)|f(b)| = (b - x_n)|f(a)|
+\]
+\[
+  x_n\bigl[|f(b)| + |f(a)|\bigr] = b|f(a)| + a|f(b)|
+\]
+When $f(a) < 0$ and $f(b) > 0$, accounting for signs gives the standard formula.
+\end{derivbox}
+
+\bigskip
+
+\subsection*{The Algorithm}
+
+\begin{defbox}[Regula Falsi Algorithm]
+Given $[a_0,b_0]$ with $f(a_0)\cdot f(b_0)<0$:
+\begin{enumerate}[noitemsep]
+  \item Compute: $c_n = \dfrac{a_n f(b_n)-b_n f(a_n)}{f(b_n)-f(a_n)}$
+  \item If $f(c_n)=0$: root found; stop.
+  \item If $f(a_n)\cdot f(c_n)<0$: set $b_{n+1}=c_n,\;a_{n+1}=a_n$.
+  \item Else: set $a_{n+1}=c_n,\;b_{n+1}=b_n$.
+  \item Repeat until $|f(c_n)|<\varepsilon$ or $|b_n-a_n|<\delta$.
+\end{enumerate}
+\end{defbox}
+
+\subsection*{Convergence Analysis and Stagnation}
+
+Regula Falsi always converges (bracket maintained). However, it suffers from a well-known pathology:
+
+\begin{thmbox}[One-Sided Convergence --- Stagnation Theorem]
+If $f$ is convex ($f''>0$) on $[a,b]$ with root $x^*\in(a,b)$ and $f(a)<0<f(b)$, then $b$ is retained at every step: $b_n=b_0$ for all $n$. Only the left endpoint $a_n\to x^*$. Convergence is linear with rate:
+\[
+  \lim_{n\to\infty}\frac{|e_{n+1}|}{|e_n|} = 1 - \frac{f'(x^*)}{f'(x^*)+K} < 1
+\]
+where $K$ is related to the curvature of $f$ at $x^*$. This ratio can be very close to 1, making convergence extremely slow for highly curved functions.
+
+\medskip
+\textbf{Intuition:} Since $f$ is convex, the chord lies above the curve, so its $x$-intercept is always to the right of $x^*$ — the right bracket never tightens.
+\end{thmbox}
+
+\subsection*{Improved Variants}
+
+\begin{defbox}[Illinois Algorithm --- Dowell \& Jarratt, 1971]
+If the same endpoint (say $b$) is retained for two consecutive iterations, replace its function value with half:
+\[
+  \tilde{f}(b) \leftarrow \tfrac{f(b)}{2}
+\]
+This artificially reduces the weight given to the stagnant endpoint, forcing $c$ to move further into the bracket. Achieves \textbf{superlinear convergence} (order $\approx 1.44$) while maintaining the bracket guarantee.
+\end{defbox}
+
+\begin{defbox}[Pegasus Method --- Dowell \& Jarratt, 1972]
+When the same endpoint $b$ is retained, replace:
+\[
+  \tilde{f}(b) \leftarrow f(b)\cdot\frac{f(b_\text{old})}{f(b_\text{old})+f(c)}
+\]
+A more sophisticated weighting than Illinois, achieving convergence order $\approx 1.64$ — very close to the Secant Method's golden-ratio order.
+\end{defbox}
+
+\begin{defbox}[Anderson-Björck Method --- 1973]
+Adapts the weight dynamically:
+\[
+  \tilde{f}(b) \leftarrow f(b)\cdot\max\!\left(\tfrac{1}{2},\;1-\tfrac{f(c)}{f(b)}\right)
+\]
+Also achieves order $\approx 1.64$ and adapts based on current function values.
+\end{defbox}
+
+\begin{center}{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{3.5cm} C{2.2cm} C{2.4cm} C{2.4cm} C{2.8cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Method} & \hcell{Conv.\ Order} & \hcell{Bracket?} & \hcell{Extra Cost} & \hcell{Note} \\
+\midrule
+\rowcolor{lightbg!40}
+Regula Falsi (plain) & 1 (stagnates) & Yes & None & May be very slow \\
+Illinois & $\approx 1.44$ & Yes & One test/step & Simple fix \\
+\rowcolor{lightbg!40}
+Pegasus & $\approx 1.64$ & Yes & One multiply & Best of variants \\
+Anderson-Björck & $\approx 1.64$ & Yes & One comparison & Adaptive \\
+\rowcolor{lightbg!40}
+Brent's Method & up to $\approx 1.618$ & Yes & Moderate & Production gold standard \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\subsection*{Engineering Applications}
+
+Regula Falsi and its variants are widely used because they guarantee convergence without requiring derivatives:
+\begin{itemize}[noitemsep]
+  \item \textbf{Pipe-flow:} Colebrook--White equation for friction factor (transcendental in $f$).
+  \item \textbf{Thermodynamics:} Van der Waals equation of state for $V$.
+  \item \textbf{Circuit analysis:} Diode equations with exponential nonlinearities.
+  \item \textbf{Structural mechanics:} Buckling load equations.
+\end{itemize}
+
+\bigskip
+
+\begin{multicols}{2}
+\begin{prosbox}
+\begin{itemize}[noitemsep]
+  \item Bracket always maintained (safe)
+  \item Uses slope information (smarter than bisection)
+  \item Faster than bisection in most cases
+  \item Guaranteed convergence
+  \item No derivative required
+\end{itemize}
+\end{prosbox}
+
+\columnbreak
+
+\begin{consbox}
+\begin{itemize}[noitemsep]
+  \item One endpoint may stagnate (slow)
+  \item Still only linear convergence
+  \item Slower than Newton-Raphson / Secant
+  \item Requires initial bracket
+  \item Poor for nearly flat $f$ near root
+\end{itemize}
+\end{consbox}
+\end{multicols}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  METHOD 03 — NEWTON-RAPHSON
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 03}\\[4pt]
+  {\LARGE\bfseries\color{white} Newton-Raphson Method}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+\textbf{Isaac Newton} (1669, \textit{De analysi}) introduced a version of this method for polynomials. \textbf{Joseph Raphson} (1690) independently published a simplified, more general algebraic form. The modern calculus-based form using $f'(x)$ was developed by \textbf{Thomas Simpson} (1740). The method is now considered the cornerstone of computational root finding and is the basis of numerical solvers in MATLAB, Python's \texttt{scipy.optimize}, and virtually every scientific computing library.
+\end{histbox}
+
+\bigskip
+
+\section*{Derivation}
+
+\begin{derivbox}[From Taylor Series Expansion]
+Expand $f(x)$ in a Taylor series about the current estimate $x_n$:
+\[
+  f(x) = f(x_n) + (x - x_n)f'(x_n) + \frac{(x-x_n)^2}{2!}f''(x_n) + \cdots
+\]
+Truncate after the \textbf{linear term} (linear approximation):
+\[
+  f(x) \approx f(x_n) + (x - x_n)f'(x_n)
+\]
+Set $f(x) = 0$ and solve for $x$:
+\[
+  0 = f(x_n) + (x_{n+1} - x_n)f'(x_n)
+\]
+\[
+  \boxed{x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}}
+\]
+\end{derivbox}
+
+\bigskip
+
+\begin{defbox}[Geometric Interpretation]
+At each step, draw the \textbf{tangent line} to the curve $y = f(x)$ at the point $(x_n,\,f(x_n))$. The tangent line has equation:
+\[
+  y - f(x_n) = f'(x_n)(x - x_n)
+\]
+Setting $y = 0$ gives $x_{n+1}$. The method thus ``slides down the slope'' toward the root. This is why the method fails when $f'(x_n) = 0$ (horizontal tangent).
+\end{defbox}
+
+\bigskip
+
+\subsection*{Convergence Analysis}
+
+\begin{thmbox}[Quadratic Convergence]
+Assume $f$ has a \textbf{simple root} $x^*$ (i.e., $f(x^*) = 0$ and $f'(x^*) \neq 0$), and that $f''$ is continuous near $x^*$. Then Newton-Raphson converges \textbf{quadratically}:
+\[
+  |e_{n+1}| \approx \frac{|f''(x^*)|}{2|f'(x^*)|}|e_n|^2
+  \qquad\text{where}\quad e_n = x_n - x^*
+\]
+The constant $C = \dfrac{|f''(x^*)|}{2|f'(x^*)|}$ is called the \textbf{asymptotic error constant}.
+
+\medskip
+\textbf{Practical consequence:} If $|e_n| = 10^{-3}$, then $|e_{n+1}| \approx C \times 10^{-6}$ --- the number of correct decimal digits approximately \textit{doubles} at each step.
+\end{thmbox}
+
+\bigskip
+
+\subsection*{Convergence Theorems}
+
+\begin{thmbox}[Local Convergence Theorem]
+Suppose $f:[a,b]\to\mathbb{R}$ is twice continuously differentiable, $f(x^*)=0$, and $f'(x^*)\neq 0$. Then there exists $\delta>0$ such that for any $x_0$ with $|x_0-x^*|<\delta$, Newton-Raphson converges quadratically to $x^*$.
+
+\medskip
+\textbf{Proof sketch:} Since $f'$ is continuous and $f'(x^*)\neq 0$, there exists $\delta>0$ with $|f'(x)|\geq m>0$ on $[x^*-\delta,x^*+\delta]$ and $|f''(x)|\leq M$. Then:
+\[
+  |e_{n+1}| = \frac{|f''(\xi_n)|}{2|f'(x_n)|}|e_n|^2 \leq \frac{M}{2m}|e_n|^2
+\]
+If $|e_0|<2m/M$, then $|e_n|<\delta$ for all $n$ by induction.\hfill$\square$
+\end{thmbox}
+
+\begin{thmbox}[Fourier--Kantorovich Sufficient Condition]
+If $f,f',f''$ are continuous on $[a,b]$, $f(a)\cdot f(b)<0$, and for all $x\in[a,b]$:
+\[
+  \frac{f(x)\,f''(x)}{[f'(x)]^2} < 1
+\]
+Then Newton-Raphson converges monotonically to $x^*$, provided $x_0$ is chosen as the endpoint satisfying $f(x_0)\cdot f''(x_0)>0$ (i.e.\ $f$ and $f''$ have the same sign).
+\end{thmbox}
+
+\bigskip
+
+\subsection*{Failure Cases}
+
+\begin{keybox}
+\textbf{When Newton-Raphson Fails or Diverges:}
+\begin{enumerate}[noitemsep]
+  \item \textbf{$f'(x_n) = 0$}: Division by zero — method is undefined. Occurs at stationary points.
+  \item \textbf{Inflection point near root}: Tangent lines ``shoot off'' to infinity.
+  \item \textbf{Cycling}: For some functions and starting points, the iteration oscillates between two values.
+  \item \textbf{Divergence}: If $x_0$ is far from $x^*$ or $f$ is highly nonlinear, the method may diverge.
+  \item \textbf{Wrong root}: May converge to a different root than intended.
+\end{enumerate}
+\end{keybox}
+
+\bigskip
+
+\subsection*{Newton-Raphson for Systems of Equations}
+
+Newton-Raphson generalises to systems $\mathbf{F}(\mathbf{x})=\mathbf{0}$ where $\mathbf{F}:\mathbb{R}^n\to\mathbb{R}^n$:
+\[
+  \mathbf{x}_{n+1} = \mathbf{x}_n - J(\mathbf{x}_n)^{-1}\mathbf{F}(\mathbf{x}_n)
+\]
+where $J(\mathbf{x}_n)$ is the \textbf{Jacobian matrix} with entries $J_{ij}=\partial F_i/\partial x_j$. In practice, one solves the linear system $J(\mathbf{x}_n)\,\boldsymbol{\delta}=-\mathbf{F}(\mathbf{x}_n)$ and sets $\mathbf{x}_{n+1}=\mathbf{x}_n+\boldsymbol{\delta}$.
+
+\subsection*{Halley's Method: Cubic Convergence}
+
+\begin{defbox}[Halley's Method --- Edmond Halley, 1694]
+Uses a second-order Taylor approximation (osculating parabola) instead of a tangent line:
+\[
+  x_{n+1} = x_n - \frac{2f(x_n)f'(x_n)}{2[f'(x_n)]^2 - f(x_n)f''(x_n)}
+\]
+Convergence order is $p=3$: $|e_{n+1}|\approx \dfrac{|f'''(x^*)|}{3|f'(x^*)|}|e_n|^3$. Correct digits triple each step. However, $f''$ is also required, increasing computational cost.
+\end{defbox}
+
+\subsection*{Basin of Attraction}
+
+For complex-valued functions, the set of starting points converging to a particular root under Newton iteration forms the \textbf{basin of attraction} for that root. For polynomials, these basins are \textbf{fractals} — the famous \textit{Newton fractals} — with boundaries intimately related to Julia sets in complex dynamics. This demonstrates that even a simple algorithm can exhibit extraordinary sensitivity to initial conditions.
+
+\subsection*{Modified Newton-Raphson for Multiple Roots}
+
+When $x^*$ is a root of \textbf{multiplicity} $m$ (i.e., $f(x^*) = f'(x^*) = \cdots = f^{(m-1)}(x^*) = 0$), standard Newton-Raphson degenerates to \textit{linear} convergence. The fix:
+
+\begin{defbox}[Modified Formula for Multiple Roots]
+\[
+  x_{n+1} = x_n - m\cdot\frac{f(x_n)}{f'(x_n)}
+\]
+or equivalently, define $u(x) = \dfrac{f(x)}{f'(x)}$ and apply Newton to $u(x) = 0$:
+\[
+  x_{n+1} = x_n - \frac{u(x_n)}{u'(x_n)} = x_n - \frac{f(x_n)f'(x_n)}{[f'(x_n)]^2 - f(x_n)f''(x_n)}
+\]
+This \textbf{restores quadratic convergence} for multiple roots.
+\end{defbox}
+
+\bigskip
+
+\begin{multicols}{2}
+\begin{prosbox}
+\begin{itemize}[noitemsep]
+  \item Quadratic convergence (very fast)
+  \item Correct digits double each step
+  \item Foundation of many advanced solvers
+  \item Easily extended to systems of equations
+  \item Works in complex plane
+\end{itemize}
+\end{prosbox}
+
+\columnbreak
+
+\begin{consbox}
+\begin{itemize}[noitemsep]
+  \item Requires $f'(x)$ (may be hard to compute)
+  \item Only local convergence (sensitive to $x_0$)
+  \item Fails if $f'(x_n) = 0$
+  \item May converge to wrong root
+  \item Slow for multiple roots (unless modified)
+\end{itemize}
+\end{consbox}
+\end{multicols}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  METHOD 04 — SECANT
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 04}\\[4pt]
+  {\LARGE\bfseries\color{white} Secant Method}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+The Secant Method is closely related to Regula Falsi and has roots going back to ancient times, but its modern derivative-free formulation is attributed to \textbf{18th-century numerical analysts}. The method gained prominence as a practical alternative to Newton-Raphson when derivatives are difficult to compute symbolically. It is particularly important in \textbf{quasi-Newton optimization methods} (BFGS, SR1) and in the solution of nonlinear systems. The remarkable result that its convergence order is the \textit{golden ratio} $\varphi = \frac{1+\sqrt{5}}{2}$ was established through careful error analysis.
+\end{histbox}
+
+\bigskip
+
+\section*{Derivation}
+
+\begin{derivbox}[Finite Difference Approximation of Derivative]
+Newton-Raphson requires $f'(x_n)$. In the Secant Method, we \textbf{approximate} the derivative using a finite difference between the two most recent iterates:
+\[
+  f'(x_n) \approx \frac{f(x_n) - f(x_{n-1})}{x_n - x_{n-1}}
+\]
+Substituting into the Newton-Raphson formula:
+\[
+  x_{n+1} = x_n - \frac{f(x_n)}{\dfrac{f(x_n) - f(x_{n-1})}{x_n - x_{n-1}}}
+\]
+\[
+  \boxed{x_{n+1} = x_n - f(x_n)\cdot\frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})}}
+\]
+Geometrically, this is the $x$-intercept of the \textbf{secant line} through $(x_{n-1},\,f(x_{n-1}))$ and $(x_n,\,f(x_n))$.
+\end{derivbox}
+
+\bigskip
+
+\subsection*{Secant vs.\ Regula Falsi}
+
+\begin{center}
+{\small
+\begin{tabular}{p{4.5cm} p{4.5cm} p{4.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Feature} & \hcell{Regula Falsi} & \hcell{Secant Method} \\
+\midrule
+\rowcolor{lightbg!40}
+Bracket required & Yes & No \\
+Points used & $a$ and $b$ (bracket ends) & $x_{n-1}$ and $x_n$ (last two) \\
+\rowcolor{lightbg!40}
+Convergence & Linear (may stagnate) & Superlinear \\
+Sign change enforced & Yes & No \\
+\rowcolor{lightbg!40}
+Guaranteed convergence & Yes & No \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+
+\bigskip
+
+\subsection*{Convergence Analysis}
+
+\begin{thmbox}[Superlinear Convergence --- Golden Ratio Order]
+For a simple root $x^*$ with $f'(x^*)\neq 0$, the Secant Method converges with order $p=\varphi=(1+\sqrt{5})/2\approx 1.618$.
+\end{thmbox}
+
+\begin{derivbox}[Proof: Error Recurrence and the Fibonacci Connection]
+Let $e_n=x_n-x^*$. Using the divided difference $f[x_{n-1},x_n]=(f(x_n)-f(x_{n-1}))/(x_n-x_{n-1})$ and expanding around $x^*$:
+\[
+  f(x_n)\approx f'(x^*)e_n + \tfrac{1}{2}f''(x^*)e_n^2, \qquad f[x_{n-1},x_n]\approx f'(x^*) + \tfrac{f''(x^*)}{2}(e_n+e_{n-1})
+\]
+After simplification, the error satisfies:
+\[
+  e_{n+1} \approx -\frac{f''(x^*)}{2f'(x^*)}\,e_n\,e_{n-1} = -C\,e_n\,e_{n-1}
+\]
+Assuming $|e_n|\approx A\lambda^{p^n}$, comparing powers gives $p^{n+1}=p^n+p^{n-1}$, i.e.\ $p^2=p+1$. This is exactly the \textbf{Fibonacci recurrence characteristic equation}, whose positive root is:
+\[
+  p = \frac{1+\sqrt{5}}{2} \approx 1.618 \qquad\text{(the Golden Ratio }\varphi\text{)}
+\]
+\textbf{Deep connection:} The Secant error satisfies the same recurrence as Fibonacci numbers. This is why the convergence order equals $\varphi$.\hfill$\square$
+\end{derivbox}
+
+\begin{keybox}
+\textbf{Numerical Instability Warning:} When $x_n\approx x_{n-1}$ (iterates are close), computing $f(x_n)-f(x_{n-1})$ causes \textbf{catastrophic cancellation}. If both values agree in the first 12 of 15 digits, the difference has only 3 correct digits — the Secant step becomes wildly inaccurate. \textbf{Remedy:} switch to Bisection when $|x_n-x_{n-1}|$ becomes very small. This is exactly what Brent's Method does.
+\end{keybox}
+
+\bigskip
+
+\subsection*{Computational Efficiency}
+
+\begin{keybox}
+\textbf{Function Evaluation Comparison:}
+
+Newton-Raphson needs $2$ evaluations per step ($f$ and $f'$), achieving quadratic convergence (order 2). The Secant Method needs only $1$ evaluation per step (reusing $f(x_{n-1})$), achieving order 1.618.
+
+\medskip
+In terms of evaluations per order gained, Secant is \textbf{more efficient} than Newton-Raphson:
+\[
+  \text{Newton: } p = 2 \text{ per 2 evals} \quad\leftrightarrow\quad
+  \text{Secant: } p \approx 1.618 \text{ per 1 eval}
+\]
+To get 10 digits with Newton: $\approx 7$ evaluations. To get 10 digits with Secant: $\approx 9$ evaluations. The difference is small, but Secant avoids symbolic differentiation entirely.
+\end{keybox}
+
+\bigskip
+
+\subsection*{Extensions}
+
+\begin{defbox}[Muller's Method --- 1956]
+While Secant fits a line through \textit{two} points, Muller's Method fits a \textbf{quadratic} through three consecutive iterates $(x_{n-2},f(x_{n-2}))$, $(x_{n-1},f(x_{n-1}))$, $(x_n,f(x_n))$ and takes the nearest root of this quadratic as $x_{n+1}$. Convergence order $p\approx 1.839$ (root of $p^3=p^2+p+1$). Can find \textbf{complex roots} starting from real initial values.
+\end{defbox}
+
+\begin{defbox}[Inverse Quadratic Interpolation (IQI)]
+Treats $x$ as a function of $f$ and fits a quadratic through $(f(x_{n-2}),x_{n-2})$, $(f(x_{n-1}),x_{n-1})$, $(f(x_n),x_n)$. Evaluating at $f=0$ gives the next iterate. Order $\approx 1.839$, numerically stable (no complex arithmetic). Used as the primary step in Brent's Method.
+\end{defbox}
+
+\begin{thmbox}[Brent's Method --- The Practical Gold Standard]
+\textbf{Richard Brent, 1973.} A hybrid algorithm combining:
+\begin{enumerate}[noitemsep]
+  \item \textbf{Inverse Quadratic Interpolation} (fast, order $\approx 1.839$) — used when it makes progress.
+  \item \textbf{Secant Method} (fast, order 1.618) — used as fallback.
+  \item \textbf{Bisection} (slow but guaranteed) — used when faster methods fail.
+\end{enumerate}
+Maintains a bracket (guaranteed convergence) while achieving superlinear speed in smooth regions. Implemented as \texttt{scipy.optimize.brentq}, MATLAB's \texttt{fzero}, and in GNU Scientific Library.
+\end{thmbox}
+
+\begin{multicols}{2}
+\begin{prosbox}
+\begin{itemize}[noitemsep]
+  \item No derivative required
+  \item Superlinear convergence ($\approx 1.618$)
+  \item Only 1 function evaluation per step
+  \item Higher efficiency index than Newton
+  \item Simple formula, easy to implement
+  \item Muller extension finds complex roots
+\end{itemize}
+\end{prosbox}
+
+\columnbreak
+
+\begin{consbox}
+\begin{itemize}[noitemsep]
+  \item No bracket maintained (may diverge)
+  \item Needs two starting values $x_0,x_1$
+  \item Catastrophic cancellation near convergence
+  \item May converge to wrong root
+  \item Slower than Newton per iteration
+  \item Fails if $f(x_n)=f(x_{n-1})$
+\end{itemize}
+\end{consbox}
+\end{multicols}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  METHOD 05 — FIXED POINT ITERATION
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 05}\\[4pt]
+  {\LARGE\bfseries\color{white} Fixed Point Iteration}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+Fixed point theory is a cornerstone of modern mathematics. The \textbf{Banach Fixed Point Theorem} (Stefan Banach, 1922) provided the rigorous foundation for the convergence of iterative methods in complete metric spaces. L.E.J. Brouwer's topological fixed point theorem (1911) established existence in higher dimensions. In numerical analysis, fixed point iteration underpins many algorithms — including Newton-Raphson (as a special case), the Gauss-Seidel method for linear systems, and iterative solvers in computational physics. The concept of a \textit{contraction mapping} is fundamental across pure and applied mathematics.
+\end{histbox}
+
+\bigskip
+
+\section*{Mathematical Foundation}
+
+\begin{defbox}[Fixed Point]
+A point $x^*$ is a \textbf{fixed point} of a function $g$ if:
+\[
+  g(x^*) = x^*
+\]
+To find a root of $f(x) = 0$, we rewrite the equation as $x = g(x)$ for some function $g$. Any fixed point of $g$ is then a root of $f$.
+
+\medskip
+\textbf{Examples of rearrangements} for $f(x) = x^3 - 2x - 5 = 0$:
+\[
+  g_1(x) = \sqrt[3]{2x+5} \quad\text{(converges)}\qquad
+  g_2(x) = \frac{x^3 - 5}{2} \quad\text{(diverges)}
+\]
+The key is choosing $g$ so that $|g'(x^*)| < 1$.
+\end{defbox}
+
+\bigskip
+
+\begin{thmbox}[Banach Fixed Point Theorem (Contraction Mapping Theorem)]
+Let $g$ be a \textbf{contraction mapping} on a closed interval $[a,b]$, meaning:
+\begin{enumerate}[noitemsep]
+  \item $g(x) \in [a,b]$ for all $x \in [a,b]$ \hfill(self-mapping)
+  \item $|g(x) - g(y)| \leq L|x - y|$ for all $x,y \in [a,b]$, where $0 \leq L < 1$ \hfill(Lipschitz condition)
+\end{enumerate}
+Then:
+\begin{itemize}[noitemsep]
+  \item $g$ has a \textbf{unique fixed point} $x^*$ in $[a,b]$.
+  \item The iteration $x_{n+1} = g(x_n)$ \textbf{converges} to $x^*$ for any $x_0 \in [a,b]$.
+  \item Error bound: $|x_n - x^*| \leq \dfrac{L^n}{1-L}|x_1 - x_0|$
+\end{itemize}
+\end{thmbox}
+
+\bigskip
+
+\begin{derivbox}[Convergence Condition via Derivative]
+By the Mean Value Theorem, if $g$ is differentiable on $[a,b]$:
+\[
+  g(x_n) - g(x^*) = g'(\xi_n)(x_n - x^*)
+  \quad\text{for some } \xi_n \text{ between } x_n \text{ and } x^*
+\]
+Therefore:
+\[
+  e_{n+1} = x_{n+1} - x^* = g(x_n) - g(x^*) = g'(\xi_n)\,e_n
+\]
+As $x_n \to x^*$, we get $\xi_n \to x^*$, so asymptotically:
+\[
+  |e_{n+1}| \approx |g'(x^*)|\,|e_n|
+\]
+The convergence rate is $|g'(x^*)|$, and convergence requires $|g'(x^*)| < 1$.
+\end{derivbox}
+
+\bigskip
+
+\subsection*{Choosing the Iteration Function $g(x)$}
+
+\begin{keybox}
+The choice of $g(x)$ is \textbf{critical}. Different rearrangements of the same equation can converge rapidly, converge slowly, or diverge completely.
+
+\medskip
+\textbf{Design principle:} Given $f(x) = 0$, rearrange to $x = g(x)$ such that $|g'(x^*)| < 1$. The smaller $|g'(x^*)|$, the faster the convergence.
+
+\medskip
+\textbf{Connection to other methods:} Newton-Raphson is a \textit{special case} of Fixed Point Iteration with:
+\[
+  g(x) = x - \frac{f(x)}{f'(x)}
+  \quad\Rightarrow\quad
+  g'(x) = \frac{f(x)f''(x)}{[f'(x)]^2}
+  \quad\Rightarrow\quad
+  g'(x^*) = 0
+\]
+Since $g'(x^*) = 0$, Newton-Raphson has \textbf{order 2} (quadratic convergence).
+\end{keybox}
+
+\bigskip
+
+\subsection*{Order of Convergence}
+
+\begin{thmbox}[General Convergence Order]
+If $g'(x^*) = g''(x^*) = \cdots = g^{(p-1)}(x^*) = 0$ but $g^{(p)}(x^*) \neq 0$, then the iteration converges with order $p$:
+\[
+  e_{n+1} \approx \frac{g^{(p)}(x^*)}{p!}\,e_n^p
+\]
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+\rowcolor{primary}
+\hcell{$g'(x^*)$} & \hcell{Order} & \hcell{Convergence Type} \\
+\midrule
+\rowcolor{lightbg!40}
+$0 < |g'(x^*)| < 1$ & 1 & Linear \\
+$g'(x^*) = 0$, $g''(x^*) \neq 0$ & 2 & Quadratic \\
+\rowcolor{lightbg!40}
+$g'(x^*)=g''(x^*)=0$, $g'''(x^*)\neq 0$ & 3 & Cubic \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{thmbox}
+
+\bigskip
+
+\subsection*{The Cobweb Diagram: Geometric Interpretation}
+
+\begin{defbox}[Cobweb Diagram]
+A graphical tool for visualising fixed point iterations:
+\begin{enumerate}[noitemsep]
+  \item Plot $y=g(x)$ and $y=x$ (the diagonal).
+  \item Start at $(x_0,0)$; draw vertically to the curve: reach $(x_0,x_1)$.
+  \item Draw horizontally to the diagonal: reach $(x_1,x_1)$.
+  \item Repeat: vertical to curve, horizontal to diagonal.
+\end{enumerate}
+\textbf{Converges (inward spiral):} $|g'(x^*)|<1$. If $0<g'(x^*)<1$: monotone staircase. If $-1<g'(x^*)<0$: oscillating spiral inward.
+
+\textbf{Diverges (outward spiral):} $|g'(x^*)|>1$ — cobweb spirals away from fixed point.
+\end{defbox}
+
+\subsection*{Newton-Raphson as a Fixed Point Iteration}
+
+Newton-Raphson is a special case with $g(x)=x-f(x)/f'(x)$. Computing $g'$:
+\[
+  g'(x) = 1 - \frac{[f'(x)]^2 - f(x)f''(x)}{[f'(x)]^2} = \frac{f(x)f''(x)}{[f'(x)]^2}
+\]
+At the root $x^*$ where $f(x^*)=0$:
+\[
+  g'(x^*) = \frac{0 \cdot f''(x^*)}{[f'(x^*)]^2} = 0
+\]
+Since $g'(x^*)=0$, Newton-Raphson achieves the best possible convergence factor — this is the algebraic explanation for its quadratic convergence.
+
+\subsection*{Connections to Other Areas of Mathematics}
+
+\begin{keybox}
+\textbf{Picard's Iteration for ODEs:} Picard's theorem (existence \& uniqueness of $y'=f(x,y)$) is proved via the fixed point iteration:
+\[
+  y_{n+1}(x) = y_0 + \int_{x_0}^x f(t,\,y_n(t))\,dt
+\]
+This is a fixed point iteration on the Banach space $C[x_0,x_0+h]$, converging by the Banach theorem.
+
+\medskip
+\textbf{Power Iteration for Eigenvalues:} To find the dominant eigenvalue of $A$, iterate $\mathbf{x}_{n+1}=A\mathbf{x}_n/\|A\mathbf{x}_n\|$. This is a fixed point iteration on the unit sphere in $\mathbb{R}^n$, converging to the eigenvector of $\lambda_1$.
+
+\medskip
+\textbf{Gauss-Seidel as Fixed Point:} Solving $A\mathbf{x}=\mathbf{b}$ by Gauss-Seidel gives the linear fixed point iteration $\mathbf{x}_{n+1}=G\mathbf{x}_n+\mathbf{c}$ with $G=-(D+L)^{-1}U$. Converges when the spectral radius $\rho(G)<1$ — a direct application of the Banach contraction condition.
+\end{keybox}
+
+\subsection*{Steffensen's Method}
+
+A powerful acceleration technique that converts a linearly convergent fixed point iteration into a \textbf{quadratically convergent} one:
+
+\begin{defbox}[Steffensen's Method]
+Given $x_n$, compute two auxiliary values:
+\[
+  p = g(x_n), \qquad q = g(p)
+\]
+Then apply the \textbf{Aitken $\Delta^2$ acceleration}:
+\[
+  x_{n+1} = x_n - \frac{(p - x_n)^2}{q - 2p + x_n}
+\]
+This achieves quadratic convergence without requiring $f'(x)$, making it a powerful derivative-free alternative to Newton-Raphson.
+\end{defbox}
+
+\bigskip
+
+\begin{multicols}{2}
+\begin{prosbox}
+\begin{itemize}[noitemsep]
+  \item Conceptually simple
+  \item No derivative needed
+  \item Very flexible (many choices of $g$)
+  \item Foundation of advanced iterative solvers
+  \item Can be accelerated (Steffensen's)
+\end{itemize}
+\end{prosbox}
+
+\columnbreak
+
+\begin{consbox}
+\begin{itemize}[noitemsep]
+  \item Convergence depends on choice of $g$
+  \item Wrong $g$ leads to divergence
+  \item Usually only linear convergence
+  \item No general rule for finding best $g$
+  \item Slower than Newton-Raphson
+\end{itemize}
+\end{consbox}
+\end{multicols}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  FINAL COMPARISON
+% ════════════════════════════════════════════════════════════
+\section*{Comprehensive Comparison of All Methods}
+
+\begin{center}
+{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{2.6cm} C{2.2cm} C{1.7cm} C{2cm} C{1.8cm} p{2.8cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Method} & \hcell{Conv.\ Order} & \hcell{Bracket?} & \hcell{Derivative?} & \hcell{Start Values} & \hcell{Key Property} \\
+\midrule
+\rowcolor{lightbg!40}
+Bisection      & 1 (ratio 0.5)  & Yes & No       & 1 bracket & Guaranteed; slow \\
+Regula Falsi   & 1 (varies)     & Yes & No       & 1 bracket & Uses slope info \\
+\rowcolor{lightbg!40}
+Newton-Raphson & 2 (quadratic)  & No  & Yes $f'$ & 1 point   & Fastest; local \\
+Secant         & 1.618 (golden) & No  & No       & 2 points  & Fast; no deriv. \\
+\rowcolor{lightbg!40}
+Fixed Point    & 1 (if $|g'|<1$) & No & No      & 1 point   & Flexible; $g$ matters \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+
+\bigskip
+
+\subsection*{Summary of Error Formulas}
+
+\begin{center}{\small
+\begin{tabular}{p{3.2cm} p{10cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Method} & \hcell{Error Formula / Bound} \\
+\midrule
+\rowcolor{lightbg!40}
+Bisection & $|e_n|\leq\dfrac{b_0-a_0}{2^{n+1}}$ \quad(a priori, guaranteed) \\[6pt]
+Regula Falsi & $|e_{n+1}|\approx\left(1-\dfrac{f'(x^*)}{f'(x^*)+K}\right)|e_n|$ \quad(linear; $K$ curvature-related) \\[6pt]
+\rowcolor{lightbg!40}
+Newton-Raphson & $|e_{n+1}|\approx\dfrac{|f''(x^*)|}{2|f'(x^*)|}|e_n|^2$ \quad(quadratic) \\[6pt]
+Secant & $|e_{n+1}|\approx C|e_n|^{1.618}$ \quad(golden-ratio superlinear) \\[6pt]
+\rowcolor{lightbg!40}
+Fixed Point & $|e_{n+1}|\approx|g'(x^*)||e_n|$ \quad(linear);\quad $|x_n-x^*|\leq\dfrac{L^n}{1-L}|x_1-x_0|$ \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\bigskip
+
+\subsection*{Convergence Speed Illustration}
+
+Starting with error $|e_0| = 10^{-1}$ (1 correct digit), number of correct digits after $n$ steps:
+
+\begin{center}
+{\small
+\begin{tabular}{C{1cm} C{2.5cm} C{2.5cm} C{2.5cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Step} & \hcell{Bisection} & \hcell{Regula Falsi} & \hcell{Newton-Raphson} & \hcell{Secant} \\
+\midrule
+\rowcolor{lightbg!40}
+1 & $\sim$1 digit  & $\sim$1--2 digits & $\sim$2 digits  & $\sim$2 digits \\
+2 & $\sim$1 digit  & $\sim$2 digits    & $\sim$4 digits  & $\sim$3 digits \\
+\rowcolor{lightbg!40}
+3 & $\sim$1 digit  & $\sim$2--3 digits & $\sim$8 digits  & $\sim$4 digits \\
+4 & $\sim$1 digit  & $\sim$3 digits    & $\sim$15 digits & $\sim$7 digits \\
+\rowcolor{lightbg!40}
+5 & $\sim$2 digits & $\sim$3--4 digits & machine zero    & $\sim$11 digits \\
+\bottomrule
+\end{tabular}
+}
+\end{center}
+
+\bigskip
+
+\subsection*{Digits Gained Per Function Evaluation}
+
+\begin{center}{\small
+\begin{tabular}{p{3.2cm} C{2cm} C{2cm} C{2.5cm} C{3cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Method} & \hcell{Order $p$} & \hcell{Evals/step} & \hcell{Efficiency Index $p^{1/q}$} & \hcell{Digits/eval} \\
+\midrule
+\rowcolor{lightbg!40}
+Bisection & 1 (factor 0.5) & 1 & 1.00 & 0.30 \\
+Regula Falsi & $\approx 1$ & 1 & $\approx 1.00$ & $\approx 0.30$ \\
+\rowcolor{lightbg!40}
+Fixed Point & $\approx 1$ & 1 & $\approx 1.00$ & $\approx 0.30$ \\
+Newton-Raphson & 2 & 2 & 1.414 & 0.65 \\
+\rowcolor{lightbg!40}
+Secant & 1.618 & 1 & 1.618 & 0.72 \\
+Halley's Method & 3 & 3 & 1.442 & 0.72 \\
+\rowcolor{lightbg!40}
+Steffensen & 2 & 2 & 1.414 & 0.65 \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\begin{keybox}
+The Secant Method's efficiency index $\approx 1.618$ is \textbf{higher} than Newton-Raphson's $\approx 1.414$, confirming that Secant extracts more accuracy per function evaluation. This makes it the method of choice when $f'$ is expensive to compute.
+\end{keybox}
+
+\bigskip
+
+\subsection*{Theoretical Properties at a Glance}
+
+\begin{center}{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{3.8cm} C{1.8cm} C{1.8cm} C{1.8cm} C{1.8cm} C{1.8cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Property} & \hcell{Bisection} & \hcell{Reg.\ Falsi} & \hcell{Newton} & \hcell{Secant} & \hcell{Fixed Pt} \\
+\midrule
+\rowcolor{lightbg!40}
+Guaranteed convergence & Yes & Yes & No & No & No \\
+A priori error bound & Yes & No & No & No & Yes (Banach) \\
+\rowcolor{lightbg!40}
+Global convergence & Yes & Yes & No & No & No \\
+Derivative required & No & No & Yes & No & No \\
+\rowcolor{lightbg!40}
+Multiple starting pts & No & No & No & Yes & No \\
+Can find complex roots & No & No & Yes & No & No \\
+\rowcolor{lightbg!40}
+Order of convergence & 1 & 1 & 2 & 1.618 & $\geq 1$ \\
+Extends to $n$-dim & No & No & Yes (Jacobian) & Partial & Yes \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\bigskip
+
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=primary,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  title={\small\bfseries\color{white} Practical Guidelines for Method Selection},
+  colbacktitle=primary,
+]
+\begin{enumerate}[noitemsep]
+  \item \textbf{Bisection:} Safety and guaranteed convergence paramount; reliable bracket available; need known iteration count.
+  \item \textbf{Newton-Raphson:} $f'(x)$ available analytically; good initial guess near root; high precision required; working with systems (use Jacobian).
+  \item \textbf{Secant Method:} Derivative expensive or impossible; two reasonable starting points available; black-box function.
+  \item \textbf{Regula Falsi (Illinois/Pegasus):} Guaranteed convergence required but bisection too slow; bracket available.
+  \item \textbf{Fixed Point Iteration:} Equation naturally suggests $x=g(x)$ with small $|g'|$; or use Steffensen for derivative-free quadratic convergence.
+  \item \textbf{Brent's Method:} Default choice in production code (\texttt{fzero}, \texttt{brentq}) — bracket required but superlinear speed.
+\end{enumerate}
+\end{tcolorbox}
+
+\bigskip
+
+\subsection*{Summary of Key Formulas}
+
+\begin{center}{\small
+\begin{tabular}{p{3.2cm} p{10cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Method} & \hcell{Iteration Formula} \\
+\midrule
+\rowcolor{lightbg!40}
+Bisection & $c_n = \dfrac{a_n+b_n}{2}$ \\[6pt]
+Regula Falsi & $c_n = \dfrac{a_n f(b_n)-b_n f(a_n)}{f(b_n)-f(a_n)}$ \\[6pt]
+\rowcolor{lightbg!40}
+Newton-Raphson & $x_{n+1} = x_n - \dfrac{f(x_n)}{f'(x_n)}$ \\[6pt]
+Modified Newton & $x_{n+1} = x_n - \dfrac{f(x_n)f'(x_n)}{[f'(x_n)]^2 - f(x_n)f''(x_n)}$ \\[6pt]
+\rowcolor{lightbg!40}
+Halley & $x_{n+1} = x_n - \dfrac{2f(x_n)f'(x_n)}{2[f'(x_n)]^2 - f(x_n)f''(x_n)}$ \\[6pt]
+Secant & $x_{n+1} = x_n - f(x_n)\cdot\dfrac{x_n-x_{n-1}}{f(x_n)-f(x_{n-1})}$ \\[6pt]
+\rowcolor{lightbg!40}
+Fixed Point & $x_{n+1} = g(x_n)$ \\[6pt]
+Steffensen & $x_{n+1} = x_n - \dfrac{(g(x_n)-x_n)^2}{g(g(x_n))-2g(x_n)+x_n}$ \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\end{document}
