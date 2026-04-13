@@ -14,6 +14,17 @@
 
 \tcbuselibrary{skins, breakable}
 
+% Breakable example box for worked examples
+\newtcolorbox{examplebox*}[1][]{
+  enhanced, breakable,
+  colback=graybg, colframe=grayclr!80, arc=5pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} #1},
+  colbacktitle=grayclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=grayclr, boxrule=0pt},
+}
+
 \geometry{margin=0.9in, top=1in, bottom=1in}
 
 % ── Colour palette ──────────────────────────────────────────
@@ -1387,6 +1398,500 @@ Secant & $x_{n+1} = x_n - f(x_n)\cdot\dfrac{x_n-x_{n-1}}{f(x_n)-f(x_{n-1})}$ \\[
 \rowcolor{lightbg!40}
 Fixed Point & $x_{n+1} = g(x_n)$ \\[6pt]
 Steffensen & $x_{n+1} = x_n - \dfrac{(g(x_n)-x_n)^2}{g(g(x_n))-2g(x_n)+x_n}$ \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  CHAPTER 2 — INTERPOLATION
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=28pt, bottom=20pt,
+  borderline south={5pt}{0pt}{accent},
+]
+  \centering
+  {\fontsize{22}{28}\bfseries\color{white}
+    Chapter 2\\[8pt]
+    Interpolation
+  }\\[10pt]
+  {\large\color{lightbg} Finite Differences and Interpolation Formulas}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\begin{tcolorbox}[colback=lightbg, colframe=accent, arc=4pt, boxrule=1pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt]
+\textbf{\color{primary}Topics Covered:}
+\begin{multicols}{2}
+\begin{enumerate}[noitemsep]
+  \item Finite Differences (Forward, Backward, Central)
+  \item Newton's Forward Interpolation
+  \item Newton's Backward Interpolation
+  \item Gauss Forward Interpolation
+  \item Gauss Backward Interpolation
+  \item Comparison and Applications
+\end{enumerate}
+\end{multicols}
+\end{tcolorbox}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\section{Introduction to Interpolation}
+% ────────────────────────────────────────────────────────────
+
+\begin{defbox}[Interpolation]
+\textbf{Interpolation} is the process of estimating the value of a function $f(x)$ at a point $x$ that lies \textbf{between} known data points $(x_0,y_0),(x_1,y_1),\ldots,(x_n,y_n)$. The idea is to construct a polynomial $P(x)$ that passes through all the given data points and use it to estimate values at intermediate points.
+\end{defbox}
+
+\begin{keybox}
+\textbf{Why Interpolation?} In practice, a function may be known only at discrete tabulated points (e.g.\ experimental data, astronomical tables). Interpolation lets us estimate values between tabulated entries without re-running the experiment.
+\end{keybox}
+
+\bigskip
+
+% ────────────────────────────────────────────────────────────
+\section{Finite Differences}
+% ────────────────────────────────────────────────────────────
+
+The foundation of all difference-based interpolation formulas is the concept of \textbf{finite differences}.
+
+\begin{defbox}[Forward Difference Operator $\Delta$]
+For a function $y = f(x)$ tabulated at equally spaced points with step size $h$:
+\[
+  \Delta y_r = y_{r+1} - y_r \qquad \text{(First forward difference)}
+\]
+Higher-order forward differences are defined recursively:
+\[
+  \Delta^2 y_r = \Delta y_{r+1} - \Delta y_r, \qquad
+  \Delta^3 y_r = \Delta^2 y_{r+1} - \Delta^2 y_r, \qquad \ldots
+\]
+In general:
+\[
+  \Delta^n y_r = \sum_{k=0}^{n}(-1)^{n-k}\binom{n}{k}y_{r+k}
+\]
+\end{defbox}
+
+\begin{defbox}[Backward Difference Operator $\nabla$]
+\[
+  \nabla y_r = y_r - y_{r-1} \qquad \text{(First backward difference)}
+\]
+Higher orders:
+\[
+  \nabla^2 y_r = \nabla y_r - \nabla y_{r-1}, \qquad
+  \nabla^n y_r = \sum_{k=0}^{n}(-1)^k\binom{n}{k}y_{r-k}
+\]
+\end{defbox}
+
+\begin{defbox}[Central Difference Operator $\delta$]
+\[
+  \delta y_r = y_{r+\frac{1}{2}} - y_{r-\frac{1}{2}}
+\]
+In practice, central differences are expressed using the notation $\delta^2 y_r = y_{r+1} - 2y_r + y_{r-1}$.
+\end{defbox}
+
+\bigskip
+
+\subsection*{Forward Difference Table}
+
+Given $n+1$ data points, the forward difference table is constructed as:
+
+\begin{center}{\small
+\begin{tabular}{C{1.5cm} C{1.5cm} C{2cm} C{2cm} C{2cm} C{2cm} C{2cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{$y$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} & \hcell{$\Delta^4 y$} & \hcell{$\Delta^5 y$} \\
+\midrule
+\rowcolor{lightbg!40}
+$x_0$ & $y_0$ & & & & & \\
+      &       & $\Delta y_0$ & & & & \\
+\rowcolor{lightbg!40}
+$x_1$ & $y_1$ & & $\Delta^2 y_0$ & & & \\
+      &       & $\Delta y_1$ & & $\Delta^3 y_0$ & & \\
+\rowcolor{lightbg!40}
+$x_2$ & $y_2$ & & $\Delta^2 y_1$ & & $\Delta^4 y_0$ & \\
+      &       & $\Delta y_2$ & & $\Delta^3 y_1$ & & $\Delta^5 y_0$ \\
+\rowcolor{lightbg!40}
+$x_3$ & $y_3$ & & $\Delta^2 y_2$ & & $\Delta^4 y_1$ & \\
+      &       & $\Delta y_3$ & & $\Delta^3 y_2$ & & \\
+\rowcolor{lightbg!40}
+$x_4$ & $y_4$ & & $\Delta^2 y_3$ & & & \\
+      &       & $\Delta y_4$ & & & & \\
+\rowcolor{lightbg!40}
+$x_5$ & $y_5$ & & & & & \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\bigskip
+
+\subsection*{Backward Difference Table}
+
+\begin{center}{\small
+\begin{tabular}{C{1.5cm} C{1.5cm} C{2cm} C{2cm} C{2cm} C{2cm} C{2cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{$y$} & \hcell{$\nabla y$} & \hcell{$\nabla^2 y$} & \hcell{$\nabla^3 y$} & \hcell{$\nabla^4 y$} & \hcell{$\nabla^5 y$} \\
+\midrule
+\rowcolor{lightbg!40}
+$x_0$ & $y_0$ & & & & & \\
+$x_1$ & $y_1$ & $\nabla y_1$ & & & & \\
+\rowcolor{lightbg!40}
+$x_2$ & $y_2$ & $\nabla y_2$ & $\nabla^2 y_2$ & & & \\
+$x_3$ & $y_3$ & $\nabla y_3$ & $\nabla^2 y_3$ & $\nabla^3 y_3$ & & \\
+\rowcolor{lightbg!40}
+$x_4$ & $y_4$ & $\nabla y_4$ & $\nabla^2 y_4$ & $\nabla^3 y_4$ & $\nabla^4 y_4$ & \\
+$x_5$ & $y_5$ & $\nabla y_5$ & $\nabla^2 y_5$ & $\nabla^3 y_5$ & $\nabla^4 y_5$ & $\nabla^5 y_5$ \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\section{Newton's Forward Interpolation Formula}
+% ────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 01}\\[4pt]
+  {\LARGE\bfseries\color{white} Newton's Forward Interpolation}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+Newton's forward difference interpolation formula was developed by \textbf{Sir Isaac Newton} in 1676 in his work \textit{Methodus Differentialis}. It is one of the earliest systematic methods for interpolation and forms the foundation of finite difference calculus. The formula is particularly suited for interpolating near the \textbf{beginning} of a data table.
+\end{histbox}
+
+\bigskip
+
+\begin{defbox}[Newton's Forward Interpolation Formula]
+Given $n+1$ equally spaced data points with step size $h = x_{r+1}-x_r$, define:
+\[
+  p = \frac{x - x_0}{h}
+\]
+Then the interpolating polynomial is:
+\[
+  \boxed{y_p = y_0 + p\,\Delta y_0 + \frac{p(p-1)}{2!}\,\Delta^2 y_0 + \frac{p(p-1)(p-2)}{3!}\,\Delta^3 y_0 + \cdots + \frac{p(p-1)\cdots(p-n+1)}{n!}\,\Delta^n y_0}
+\]
+where $x_0$ is the \textbf{initial value}, $h$ is the \textbf{difference of arguments}, and $\Delta^k y_0$ are the forward differences of $y_0$.
+\end{defbox}
+
+\bigskip
+
+\begin{derivbox}[Derivation via Newton's Forward Difference Formula]
+We seek a polynomial $P_n(x)$ of degree $\leq n$ passing through $(x_0,y_0),(x_1,y_1),\ldots,(x_n,y_n)$.
+
+Substituting $x = x_0 + ph$ and using the forward difference operator:
+\[
+  y_0 = y_0
+\]
+\[
+  y_1 = y_0 + \Delta y_0
+\]
+\[
+  y_2 = y_0 + 2\Delta y_0 + \Delta^2 y_0
+\]
+In general, by the binomial-type expansion using forward differences:
+\[
+  y_p = \sum_{k=0}^{n}\binom{p}{k}\Delta^k y_0
+  \quad\text{where}\quad
+  \binom{p}{k} = \frac{p(p-1)(p-2)\cdots(p-k+1)}{k!}
+\]
+\end{derivbox}
+
+\bigskip
+
+\begin{keybox}
+\textbf{When to use:} Newton's Forward Formula is used when the value of $x$ at which interpolation is required lies \textbf{near the beginning} of the data table (i.e.\ $p$ is small and positive).
+\end{keybox}
+
+\bigskip
+
+\begin{thmbox}[Error Term]
+The truncation error in Newton's Forward Interpolation Formula after $n$ terms is:
+\[
+  E_n = \frac{p(p-1)(p-2)\cdots(p-n)}{(n+1)!}\,h^{n+1}\,f^{(n+1)}(\xi)
+\]
+for some $\xi \in (x_0, x_n)$.
+\end{thmbox}
+
+\bigskip
+
+\begin{examplebox*}[Worked Example]
+\textbf{Problem:} Given the table below, find $f(1.5)$ using Newton's Forward Formula.
+
+\begin{center}{\small
+\begin{tabular}{C{2cm} C{2cm} C{2.5cm} C{2.5cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{$y$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} \\
+\midrule
+\rowcolor{lightbg!40}
+1 & 1 & & & \\
+  &   & 3 & & \\
+\rowcolor{lightbg!40}
+2 & 4 & & 2 & \\
+  &   & 5 & & 0 \\
+3 & 9 & & 2 & \\
+\rowcolor{lightbg!40}
+  &   & 7 & & \\
+4 & 16 & & & \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\textbf{Solution:} $x_0=1,\;h=1,\;x=1.5 \Rightarrow p=\dfrac{1.5-1}{1}=0.5$
+
+\[
+  y_{0.5} = 1 + (0.5)(3) + \frac{(0.5)(-0.5)}{2}(2) + \frac{(0.5)(-0.5)(-1.5)}{6}(0)
+\]
+\[
+  = 1 + 1.5 - 0.25 + 0 = \boxed{2.25}
+\]
+\end{examplebox*}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\section{Newton's Backward Interpolation Formula}
+% ────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 02}\\[4pt]
+  {\LARGE\bfseries\color{white} Newton's Backward Interpolation}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+Newton's Backward Interpolation Formula is the companion to the forward formula, designed for interpolating near the \textbf{end} of a data table. It uses backward differences $\nabla^k y_n$ starting from the last tabulated point $x_n$. It is particularly useful in \textbf{extrapolation} just beyond the end of the table.
+\end{histbox}
+
+\bigskip
+
+\begin{defbox}[Newton's Backward Interpolation Formula]
+Define:
+\[
+  p = \frac{x - x_n}{h}
+\]
+where $x_n$ is the \textbf{last} tabulated value and $p \leq 0$ for interpolation. Then:
+\[
+  \boxed{y_p = y_n + p\,\nabla y_n + \frac{p(p+1)}{2!}\,\nabla^2 y_n + \frac{p(p+1)(p+2)}{3!}\,\nabla^3 y_n + \cdots + \frac{p(p+1)\cdots(p+n-1)}{n!}\,\nabla^n y_n}
+\]
+where $\nabla^k y_n$ are the backward differences at $x_n$ (the last diagonal of the backward difference table).
+\end{defbox}
+
+\bigskip
+
+\begin{keybox}
+\textbf{Key difference from Forward Formula:}
+\begin{itemize}[noitemsep, topsep=4pt]
+  \item Forward: $p = (x-x_0)/h$, uses $\Delta^k y_0$ — best near the \textbf{start}.
+  \item Backward: $p = (x-x_n)/h$, uses $\nabla^k y_n$ — best near the \textbf{end}.
+  \item The sign pattern changes: forward uses $p(p-1)(p-2)\cdots$, backward uses $p(p+1)(p+2)\cdots$
+\end{itemize}
+\end{keybox}
+
+\bigskip
+
+\begin{thmbox}[Error Term]
+The truncation error after $n$ terms is:
+\[
+  E_n = \frac{p(p+1)(p+2)\cdots(p+n)}{(n+1)!}\,h^{n+1}\,f^{(n+1)}(\xi)
+\]
+for some $\xi \in (x_0, x_n)$.
+\end{thmbox}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\section{Central Differences — Gauss Forward Formula}
+% ────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 03}\\[4pt]
+  {\LARGE\bfseries\color{white} Gauss Forward Interpolation}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+\textbf{Carl Friedrich Gauss} (1777--1855) developed two central difference interpolation formulas — forward and backward — that are more accurate than Newton's formulas when interpolating \textbf{near the middle} of a data table. Central difference formulas use differences from both sides of the interpolation point, making them more symmetric and typically more accurate.
+\end{histbox}
+
+\bigskip
+
+\begin{defbox}[Gauss Forward Interpolation Formula]
+Let $x_0$ be the central point and $p = (x - x_0)/h$, where $-1 < p < 1$ for best accuracy. The formula is:
+\[
+  \boxed{y_p = y_0 + p\,\Delta y_0 + \frac{p(p-1)}{2!}\,\Delta^2 y_{-1} + \frac{p(p-1)(p+1)}{3!}\,\Delta^3 y_{-1} + \frac{p(p-1)(p+1)(p-2)}{4!}\,\Delta^4 y_{-2} + \cdots}
+\]
+where the differences are taken along the \textbf{forward diagonal} from $x_0$, using:
+\[
+  \Delta^{2k} y_{-k}, \quad \Delta^{2k+1} y_{-k} \quad (k = 0, 1, 2, \ldots)
+\]
+\end{defbox}
+
+\bigskip
+
+\begin{derivbox}[Structure of the Gauss Forward Formula]
+The pattern of differences used in the Gauss Forward formula proceeds \textit{forward} through the central difference table:
+\[
+  y_0 \to \Delta y_0 \to \Delta^2 y_{-1} \to \Delta^3 y_{-1} \to \Delta^4 y_{-2} \to \Delta^5 y_{-2} \to \cdots
+\]
+The even-order differences are taken \textbf{one step above} the central row; odd-order differences are taken \textbf{at or below} the central row.
+\end{derivbox}
+
+\bigskip
+
+\subsection*{Central Difference (Forward) Table}
+
+\begin{center}{\small
+\begin{tabular}{C{1.8cm} C{1.5cm} C{2cm} C{2cm} C{2cm} C{2cm} C{2cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{$y$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} & \hcell{$\Delta^4 y$} & \hcell{$\Delta^5 y$} \\
+\midrule
+\rowcolor{lightbg!40}
+$x_{-2}$ & $y_{-2}$ & & & & & \\
+         &          & $\Delta y_{-2}$ & & & & \\
+\rowcolor{lightbg!40}
+$x_{-1}$ & $y_{-1}$ & & $\Delta^2 y_{-2}$ & & & \\
+         &          & $\Delta y_{-1}$ & & $\Delta^3 y_{-2}$ & & \\
+$x_0$ & $y_0$ & & $\Delta^2 y_{-1}$ & & $\Delta^4 y_{-2}$ & \\
+\rowcolor{lightbg!40}
+      &       & $\Delta y_0$ & & $\Delta^3 y_{-1}$ & & $\Delta^5 y_{-2}$ \\
+$x_1$ & $y_1$ & & $\Delta^2 y_0$ & & $\Delta^4 y_{-1}$ & \\
+\rowcolor{lightbg!40}
+      &       & $\Delta y_1$ & & $\Delta^3 y_0$ & & \\
+$x_2$ & $y_2$ & & $\Delta^2 y_1$ & & & \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\section{Central Differences — Gauss Backward Formula}
+% ────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 04}\\[4pt]
+  {\LARGE\bfseries\color{white} Gauss Backward Interpolation}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+The Gauss Backward formula is the second of Gauss's two central difference formulas. While the forward formula uses differences proceeding forward from the central row, the backward formula uses differences proceeding \textbf{backward} — making it more accurate when the interpolation point is slightly \textbf{below} the central value.
+\end{histbox}
+
+\bigskip
+
+\begin{defbox}[Gauss Backward Interpolation Formula]
+With $p = (x - x_0)/h$ and $x_0$ as the central value:
+\[
+  \boxed{y_p = y_0 + p\,\nabla y_0 + \frac{p(p+1)}{2!}\,\nabla^2 y_0 + \frac{p(p+1)(p-1)}{3!}\,\nabla^3 y_0 + \frac{p(p+1)(p-1)(p+2)}{4!}\,\nabla^4 y_0 + \cdots}
+\]
+where the differences proceed \textbf{backward} through the central difference table:
+\[
+  \nabla y_0 \to \nabla^2 y_0 \to \nabla^3 y_{-1} \to \nabla^4 y_{-1} \to \cdots
+\]
+\end{defbox}
+
+\bigskip
+
+\begin{derivbox}[Gauss Forward vs.\ Backward — Key Comparison]
+\begin{center}{\small
+\begin{tabular}{p{4cm} p{5cm} p{5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Feature} & \hcell{Gauss Forward} & \hcell{Gauss Backward} \\
+\midrule
+\rowcolor{lightbg!40}
+Starting point & $y_0$ & $y_0$ \\
+First difference & $\Delta y_0$ & $\nabla y_0$ \\
+\rowcolor{lightbg!40}
+Direction & Forward diagonal & Backward diagonal \\
+Best used when & $p > 0$ (above centre) & $p < 0$ (below centre) \\
+\rowcolor{lightbg!40}
+2nd term sign & $p(p-1)$ & $p(p+1)$ \\
+\bottomrule
+\end{tabular}
+}\end{center}
+\end{derivbox}
+
+\bigskip
+
+\begin{keybox}
+\textbf{Central Difference Advantage:} Both Gauss formulas are more accurate than Newton's forward/backward formulas when interpolating near the \textbf{middle} of a table, because they draw differences from both sides of the interpolation point, reducing the asymmetry of the approximation.
+\end{keybox}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\section{Comprehensive Comparison of Interpolation Formulas}
+% ────────────────────────────────────────────────────────────
+
+\begin{center}{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{3.2cm} C{2.2cm} C{2.8cm} C{2.8cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Formula} & \hcell{Operator} & \hcell{Differences Used} & \hcell{Best For} & \hcell{$p$ Range} \\
+\midrule
+\rowcolor{lightbg!40}
+Newton Forward & $\Delta$ & $\Delta^k y_0$ & Near start of table & $0 < p < 1$ \\
+Newton Backward & $\nabla$ & $\nabla^k y_n$ & Near end of table & $-1 < p < 0$ \\
+\rowcolor{lightbg!40}
+Gauss Forward & $\Delta$ & Forward diagonal from $y_0$ & Near middle, $p>0$ & $0 < p < 1$ \\
+Gauss Backward & $\nabla$ & Backward diagonal from $y_0$ & Near middle, $p<0$ & $-1 < p < 0$ \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\bigskip
+
+\subsection*{Summary of All Formulas}
+
+\begin{center}{\small
+\begin{tabular}{p{3cm} p{11cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Formula} & \hcell{Expression} \\
+\midrule
+\rowcolor{lightbg!40}
+Newton Forward & $y_p = y_0 + p\Delta y_0 + \dfrac{p(p-1)}{2!}\Delta^2 y_0 + \dfrac{p(p-1)(p-2)}{3!}\Delta^3 y_0 + \cdots$ \\[10pt]
+Newton Backward & $y_p = y_n + p\nabla y_n + \dfrac{p(p+1)}{2!}\nabla^2 y_n + \dfrac{p(p+1)(p+2)}{3!}\nabla^3 y_n + \cdots$ \\[10pt]
+\rowcolor{lightbg!40}
+Gauss Forward & $y_p = y_0 + p\Delta y_0 + \dfrac{p(p-1)}{2!}\Delta^2 y_{-1} + \dfrac{p(p-1)(p+1)}{3!}\Delta^3 y_{-1} + \cdots$ \\[10pt]
+Gauss Backward & $y_p = y_0 + p\nabla y_0 + \dfrac{p(p+1)}{2!}\nabla^2 y_0 + \dfrac{p(p+1)(p-1)}{3!}\nabla^3 y_0 + \cdots$ \\[10pt]
 \bottomrule
 \end{tabular}
 }\end{center}
