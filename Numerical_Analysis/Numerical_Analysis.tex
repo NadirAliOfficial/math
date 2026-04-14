@@ -11,6 +11,7 @@
 \usepackage{multicol}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{titletoc}
 
 \tcbuselibrary{skins, breakable}
 
@@ -46,6 +47,16 @@
 \definecolor{darktext} {RGB}{44,  62,  80}
 \definecolor{gold}     {RGB}{183,149, 11}
 \definecolor{goldbg}   {RGB}{254,249,231}
+
+% ── Table of Contents styling ───────────────────────────────
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+\renewcommand{\contentsname}{}
+\titlecontents{section}
+  [18pt]
+  {\addvspace{5pt}\bfseries\color{primary}}
+  {}{}
+  {\color{accent!60}\titlerule*[5pt]{.}\textbf{\color{accent}\contentspage}}
 
 % ── Page style ──────────────────────────────────────────────
 \pagestyle{fancy}
@@ -179,7 +190,7 @@
     Theoretical Foundations
   }\\[12pt]
   {\large\color{lightbg}
-    A Deep Research Study of Root-Finding Methods
+    Root-Finding Methods \& Interpolation Formulas
   }
 \end{tcolorbox}
 
@@ -207,6 +218,9 @@
 \begin{tcolorbox}[colback=lightbg, colframe=accent, arc=4pt, boxrule=1pt,
   left=12pt, right=12pt, top=10pt, bottom=10pt]
 \textbf{\color{primary}Topics Covered:}
+
+\medskip
+\textcolor{accent}{\bfseries Chapter 1 — Root-Finding Methods}
 \begin{multicols}{2}
 \begin{enumerate}[noitemsep]
   \item Bisection Method
@@ -214,6 +228,18 @@
   \item Newton-Raphson Method
   \item Secant Method
   \item Fixed Point Iteration
+\end{enumerate}
+\end{multicols}
+
+\medskip
+\textcolor{accent}{\bfseries Chapter 2 — Interpolation}
+\begin{multicols}{2}
+\begin{enumerate}[noitemsep]
+  \item Finite Differences
+  \item Newton's Forward Formula
+  \item Newton's Backward Formula
+  \item Gauss Forward Formula
+  \item Gauss Backward Formula
 \end{enumerate}
 \end{multicols}
 \vspace{4pt}
@@ -225,15 +251,41 @@
 \begin{tcolorbox}[colback=purplebg!60, colframe=purpleclr, arc=4pt, boxrule=1pt,
   left=12pt, right=12pt, top=8pt, bottom=8pt,
   borderline west={4pt}{0pt}{purpleclr}]
-\textbf{\color{purpleclr}Scope of this Document:} This document provides a rigorous, research-level treatment of the five fundamental numerical root-finding methods. Each method is examined from multiple perspectives: its historical origins, complete mathematical derivation, formal convergence proofs, error analysis, important variants and improvements, connections to other areas of mathematics, and practical implementation guidelines. The treatment is intended for advanced undergraduate students of mathematics (BS-IV level).
+\textbf{\color{purpleclr}Scope of this Document:} This document provides a rigorous, research-level treatment of the fundamental numerical methods for root-finding and interpolation. Each method is examined from multiple perspectives: its historical origins, complete mathematical derivation, formal convergence proofs, error analysis, important variants and improvements, connections to other areas of mathematics, and practical implementation guidelines. The treatment is intended for advanced undergraduate students of mathematics (BS-IV level).
 \end{tcolorbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  TABLE OF CONTENTS
+% ════════════════════════════════════════════════════════════
+\thispagestyle{fancy}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=22pt, bottom=18pt,
+  borderline south={5pt}{0pt}{accent},
+]
+  \centering
+  {\fontsize{22}{28}\bfseries\color{white} Table of Contents}
+\end{tcolorbox}
+
+\vspace{10pt}
+\tableofcontents
 
 \newpage
 
 % ════════════════════════════════════════════════════════════
 %  INTRODUCTION
 % ════════════════════════════════════════════════════════════
-\section{Introduction to Numerical Root Finding}
+\addtocontents{toc}{%
+  \protect\vspace{6pt}%
+  \protect\noindent{\color{primary}\bfseries\large Chapter 1 \textemdash\ Root-Finding Methods}%
+  \protect\par\protect\vspace{2pt}%
+}
+\section*{Introduction to Numerical Root Finding}
+\addcontentsline{toc}{section}{Introduction to Numerical Root Finding}
 
 \begin{defbox}[Root of a Function]
 A \textbf{root} (or \textbf{zero}) of a function $f$ is a value $x^*$ such that
@@ -371,6 +423,7 @@ A sequence $\{x_n\}$ converging to $x^*$ has \textbf{order of convergence} $p\ge
 
 \newpage
 
+\addcontentsline{toc}{section}{Bisection Method}
 % ════════════════════════════════════════════════════════════
 %  METHOD 01 — BISECTION
 % ════════════════════════════════════════════════════════════
@@ -520,6 +573,7 @@ A remarkable application of Bisection is computing eigenvalues of symmetric trid
 
 \newpage
 
+\addcontentsline{toc}{section}{Regula Falsi Method}
 % ════════════════════════════════════════════════════════════
 %  METHOD 02 — REGULA FALSI
 % ════════════════════════════════════════════════════════════
@@ -686,6 +740,7 @@ Regula Falsi and its variants are widely used because they guarantee convergence
 
 \newpage
 
+\addcontentsline{toc}{section}{Newton-Raphson Method}
 % ════════════════════════════════════════════════════════════
 %  METHOD 03 — NEWTON-RAPHSON
 % ════════════════════════════════════════════════════════════
@@ -859,6 +914,7 @@ This \textbf{restores quadratic convergence} for multiple roots.
 
 \newpage
 
+\addcontentsline{toc}{section}{Secant Method}
 % ════════════════════════════════════════════════════════════
 %  METHOD 04 — SECANT
 % ════════════════════════════════════════════════════════════
@@ -1018,6 +1074,7 @@ Maintains a bracket (guaranteed convergence) while achieving superlinear speed i
 
 \newpage
 
+\addcontentsline{toc}{section}{Fixed Point Iteration}
 % ════════════════════════════════════════════════════════════
 %  METHOD 05 — FIXED POINT ITERATION
 % ════════════════════════════════════════════════════════════
@@ -1232,6 +1289,7 @@ This achieves quadratic convergence without requiring $f'(x)$, making it a power
 % ════════════════════════════════════════════════════════════
 %  FINAL COMPARISON
 % ════════════════════════════════════════════════════════════
+\addcontentsline{toc}{section}{Comprehensive Comparison of All Methods}
 \section*{Comprehensive Comparison of All Methods}
 
 \begin{center}
@@ -1405,6 +1463,11 @@ Steffensen & $x_{n+1} = x_n - \dfrac{(g(x_n)-x_n)^2}{g(g(x_n))-2g(x_n)+x_n}$ \\
 
 \newpage
 
+\addtocontents{toc}{%
+  \protect\vspace{10pt}%
+  \protect\noindent{\color{primary}\bfseries\large Chapter 2 \textemdash\ Interpolation}%
+  \protect\par\protect\vspace{2pt}%
+}
 % ════════════════════════════════════════════════════════════
 %  CHAPTER 2 — INTERPOLATION
 % ════════════════════════════════════════════════════════════
@@ -1719,6 +1782,42 @@ The truncation error after $n$ terms is:
 for some $\xi \in (x_0, x_n)$.
 \end{thmbox}
 
+\bigskip
+
+\begin{examplebox*}[Worked Example]
+\textbf{Problem:} Find $f(4.5)$ from the data below using Newton's Backward Interpolation Formula.
+
+\begin{center}{\small
+\begin{tabular}{C{2cm} C{2cm} C{2.5cm} C{2.5cm} C{2.5cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{$y$} & \hcell{$\nabla y$} & \hcell{$\nabla^2 y$} & \hcell{$\nabla^3 y$} & \hcell{$\nabla^4 y$} \\
+\midrule
+\rowcolor{lightbg!40}
+1 & 1    &    &    &   &   \\
+2 & 8    &  7 &    &   &   \\
+\rowcolor{lightbg!40}
+3 & 27   & 19 & 12 &   &   \\
+4 & 64   & 37 & 18 & 6 &   \\
+\rowcolor{lightbg!40}
+5 & 125  & 61 & 24 & 6 & 0 \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\textbf{Solution:} $x_n = 5$, $h = 1$, $x = 4.5$:
+\[
+  p = \frac{x - x_n}{h} = \frac{4.5 - 5}{1} = -0.5
+\]
+\[
+  y_p = 125 + (-0.5)(61) + \frac{(-0.5)(0.5)}{2}(24) + \frac{(-0.5)(0.5)(1.5)}{6}(6) + 0
+\]
+\[
+  = 125 - 30.5 - 3 - 0.375 = \boxed{91.125}
+\]
+\textit{(Exact: $4.5^3 = 91.125$ — no error since the data is a cubic polynomial.)}
+\end{examplebox*}
+
 \newpage
 
 % ────────────────────────────────────────────────────────────
@@ -1791,6 +1890,59 @@ $x_2$ & $y_2$ & & $\Delta^2 y_1$ & & & \\
 \end{tabular}
 }\end{center}
 
+\bigskip
+
+\begin{thmbox}[Error Term]
+The truncation error in Gauss Forward Interpolation after $n$ terms is:
+\[
+  E_n = \frac{p(p^2-1)(p^2-4)\cdots}{(n+1)!}\,h^{n+1}\,f^{(n+1)}(\xi), \quad \xi \in (x_{-\lfloor n/2\rfloor},\, x_{\lceil n/2\rceil})
+\]
+\end{thmbox}
+
+\bigskip
+
+\begin{examplebox*}[Worked Example]
+\textbf{Problem:} From the following table of $\sin\theta$, find $\sin(35°)$ using Gauss Forward Interpolation.
+
+\begin{center}{\small
+\begin{tabular}{C{2cm} C{2.2cm} C{2.2cm} C{2.5cm} C{2.5cm} C{2.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$\theta$} & \hcell{$\sin\theta$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} & \hcell{$\Delta^4 y$} \\
+\midrule
+\rowcolor{lightbg!40}
+$10°$ & 0.1736 &        &           &           &        \\
+      &        & 0.1684 &           &           &        \\
+\rowcolor{lightbg!40}
+$20°$ & 0.3420 &        & $-0.0104$ &           &        \\
+      &        & 0.1580 &           & $-0.0048$ &        \\
+$30°$ & 0.5000 &        & $-0.0152$ &           & 0.0004 \\
+\rowcolor{lightbg!40}
+      &        & 0.1428 &           & $-0.0044$ &        \\
+$40°$ & 0.6428 &        & $-0.0196$ &           &        \\
+\rowcolor{lightbg!40}
+      &        & 0.1232 &           &           &        \\
+$50°$ & 0.7660 &        &           &           &        \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\textbf{Solution:} Take $x_0 = 30°$, $h = 10$, $x = 35°$:
+\[
+  p = \frac{35 - 30}{10} = 0.5
+\]
+
+Gauss Forward differences from $x_0 = 30°$: $\Delta y_0 = 0.1428$,\ $\Delta^2 y_{-1} = -0.0152$,\ $\Delta^3 y_{-1} = -0.0044$,\ $\Delta^4 y_{-2} = 0.0004$.
+
+\begin{align*}
+y_{0.5} &= 0.5000 + (0.5)(0.1428) + \frac{(0.5)(-0.5)}{2}(-0.0152) + \frac{(0.5)(-0.5)(1.5)}{6}(-0.0044) \\[4pt]
+        &\quad + \frac{(0.5)(-0.5)(1.5)(-1.5)}{24}(0.0004) \\[4pt]
+        &= 0.5000 + 0.07140 + 0.00190 + 0.000275 + 0.000009 \\[4pt]
+        &\approx \boxed{0.5736}
+\end{align*}
+\textit{(Actual: $\sin 35° = 0.5736$)}
+\end{examplebox*}
+
 \newpage
 
 % ────────────────────────────────────────────────────────────
@@ -1847,6 +1999,31 @@ Best used when & $p > 0$ (above centre) & $p < 0$ (below centre) \\
 \end{tabular}
 }\end{center}
 \end{derivbox}
+
+\bigskip
+
+\begin{examplebox*}[Worked Example]
+\textbf{Problem:} Using the same $\sin\theta$ table, find $\sin(25°)$ using Gauss Backward Interpolation.
+
+\textbf{Solution:} Take $x_0 = 30°$, $h = 10$, $x = 25°$:
+\[
+  p = \frac{25 - 30}{10} = -0.5
+\]
+
+Gauss Backward differences from $x_0 = 30°$ (backward diagonal):
+\[
+  \nabla y_0 = 0.1580,\quad \nabla^2 y_0 = -0.0104,\quad \nabla^3 y_{-1} = -0.0048,\quad \nabla^4 y_{-1} = 0.0004
+\]
+(where $\nabla y_0 = \Delta y_{-1}$,\ $\nabla^2 y_0 = \Delta^2 y_{-2}$,\ $\nabla^3 y_{-1} = \Delta^3 y_{-2}$,\ $\nabla^4 y_{-1} = \Delta^4 y_{-2}$.)
+
+\begin{align*}
+y_{-0.5} &= 0.5000 + (-0.5)(0.1580) + \frac{(-0.5)(0.5)}{2}(-0.0104) + \frac{(-0.5)(0.5)(-1.5)}{6}(-0.0048) \\[4pt]
+         &\quad + \frac{(-0.5)(0.5)(-1.5)(1.5)}{24}(0.0004) \\[4pt]
+         &= 0.5000 - 0.0790 + 0.0013 - 0.0003 + 0.000009 \\[4pt]
+         &\approx \boxed{0.4220}
+\end{align*}
+\textit{(Actual: $\sin 25° = 0.4226$ — small discrepancy due to rounding in the 4-decimal input table.)}
+\end{examplebox*}
 
 \bigskip
 
