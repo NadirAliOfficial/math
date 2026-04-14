@@ -12,6 +12,8 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{titletoc}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, calc, decorations.pathreplacing}
 
 \tcbuselibrary{skins, breakable}
 
@@ -61,7 +63,7 @@
 % ── Page style ──────────────────────────────────────────────
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\color{primary}\textbf{Numerical Analysis}\;\textcolor{accent}{|}\;Theoretical Foundations}
+\fancyhead[L]{\small\color{primary}\textbf{Numerical Analysis I}\;\textcolor{accent}{|}\;Theoretical Foundations}
 \fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
 \renewcommand{\headrulewidth}{0pt}
 \fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
@@ -186,11 +188,11 @@
 ]
   \centering
   {\fontsize{26}{32}\bfseries\color{white}
-    Numerical Methods\\[8pt]
+    Numerical Analysis\\[8pt]
     Theoretical Foundations
   }\\[12pt]
   {\large\color{lightbg}
-    Root-Finding Methods \& Interpolation Formulas
+    Root-Finding \textbf{·} Systems of Equations \textbf{·} Interpolation
   }
 \end{tcolorbox}
 
@@ -199,18 +201,29 @@
 \begin{tcolorbox}[
   enhanced, arc=0pt, boxrule=0pt,
   colback=white, colframe=white,
-  borderline north={1.5pt}{0pt}{accent!60},
-  borderline south={1.5pt}{0pt}{accent!60},
-  left=16pt, right=16pt, top=12pt, bottom=12pt,
+  borderline north={2pt}{0pt}{primary},
+  borderline south={2pt}{0pt}{primary},
+  left=0pt, right=0pt, top=0pt, bottom=0pt,
 ]
-  \begin{tabular}{p{3.2cm} p{9.5cm}}
-    \textcolor{primary}{\textbf{Teacher:}}
-      & \textbf{Dr.\ Hisam Uddin Shaikh} \\
-      & {\small\color{darktext}Chairman, Department of Mathematics} \\[8pt]
-    \textcolor{primary}{\textbf{Prepared by:}}
-      & \textbf{Nadir Ali Khan} \\
-      & {\small\color{darktext}BS-IV} \\
-  \end{tabular}
+\begin{tabular}{p{0.33\textwidth} | p{0.33\textwidth} | p{0.31\textwidth}}
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} TEACHER}\\[4pt]
+    {\bfseries\color{primary} Dr.\ Hisam Uddin Shaikh}\\[3pt]
+    {\footnotesize\color{darktext} Chairman, Dept.\ of Mathematics}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} COMPOSED BY}\\[4pt]
+    {\bfseries\color{primary} Nadir Ali Khan}\\[3pt]
+    {\footnotesize\color{darktext} BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.28\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} DESIGN}\\[4pt]
+    {\bfseries\color{primary} Palwasha Ashique}\\[3pt]
+    {\footnotesize\color{darktext} BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}
+\end{tabular}
 \end{tcolorbox}
 
 \vspace{16pt}
@@ -228,6 +241,17 @@
   \item Newton-Raphson Method
   \item Secant Method
   \item Fixed Point Iteration
+\end{enumerate}
+\end{multicols}
+
+\medskip
+\textcolor{accent}{\bfseries System of Linear Equations}
+\begin{multicols}{2}
+\begin{enumerate}[noitemsep]
+  \item Gaussian Elimination
+  \item LU Decomposition
+  \item Jacobi Iterative Method
+  \item Gauss-Seidel Method
 \end{enumerate}
 \end{multicols}
 
@@ -251,7 +275,7 @@
 \begin{tcolorbox}[colback=purplebg!60, colframe=purpleclr, arc=4pt, boxrule=1pt,
   left=12pt, right=12pt, top=8pt, bottom=8pt,
   borderline west={4pt}{0pt}{purpleclr}]
-\textbf{\color{purpleclr}Scope of this Document:} This document provides a rigorous, research-level treatment of the fundamental numerical methods for root-finding and interpolation. Each method is examined from multiple perspectives: its historical origins, complete mathematical derivation, formal convergence proofs, error analysis, important variants and improvements, connections to other areas of mathematics, and practical implementation guidelines. The treatment is intended for advanced undergraduate students of mathematics (BS-IV level).
+\textbf{\color{purpleclr}Scope of this Document:} This document provides a rigorous, research-level treatment of numerical root-finding methods, systems of linear equations, and interpolation formulas. Each method is examined from multiple perspectives: its historical origins, complete mathematical derivation, formal convergence proofs, error analysis, worked examples, and practical implementation guidelines. The treatment is intended for advanced undergraduate students of mathematics (BS-IV level).
 \end{tcolorbox}
 
 \newpage
@@ -446,6 +470,38 @@ The Bisection Method embodies one of humanity's oldest problem-solving strategie
 
 \bigskip
 
+\begin{center}
+\begin{tikzpicture}[scale=1.05, font=\small]
+  % axes
+  \draw[->, thick, darktext!80] (-0.4,0) -- (7.2,0) node[right] {$x$};
+  \draw[->, thick, darktext!80] (0,-2.2) -- (0,2.4) node[above] {$f(x)$};
+  % curve f(x) crossing at x~3.5
+  \draw[thick, primary, domain=0.5:6.8, samples=120]
+    plot (\x, {0.25*(\x-1)*(\x-3.5)*(\x-5.5)/2});
+  \node[primary] at (6.9,1.4) {$f(x)$};
+  % bracket a0, b0
+  \draw[accent, thick] (1, 0.07) -- (1,-0.07) node[below=2pt] {$a_0$};
+  \draw[accent, thick] (6, 0.07) -- (6,-0.07) node[below=2pt] {$b_0$};
+  \draw[dashed, accent!50] (1,0) -- (1,{0.25*(1-1)*(1-3.5)*(1-5.5)/2});
+  \draw[dashed, accent!50] (6,0) -- (6,{0.25*(6-1)*(6-3.5)*(6-5.5)/2});
+  \fill[accent!80] (1,{0.25*(1-1)*(1-3.5)*(1-5.5)/2}) circle (2.2pt) node[left=2pt] {$f(a_0)<0$};
+  \fill[accent!80] (6,{0.25*(6-1)*(6-3.5)*(6-5.5)/2}) circle (2.2pt) node[right=2pt] {$f(b_0)>0$};
+  % midpoint c1 = 3.5
+  \draw[redclr, thick] (3.5,0.07) -- (3.5,-0.07) node[below=2pt] {$c_1$};
+  \draw[dashed, redclr!60] (3.5,0) -- (3.5,{0.25*(3.5-1)*(3.5-3.5)*(3.5-5.5)/2});
+  \fill[redclr] (3.5,0) circle (2.8pt);
+  \node[redclr, above right=2pt] at (3.5,0.07) {root $x^*$};
+  % iteration arrows below axis
+  \draw[<->, accent, thick] (1,-1.9) -- (3.5,-1.9) node[midway, below=1pt] {new $[a,b]$};
+  \draw[->, darktext!60] (3.5,-1.9) -- (6,-1.9);
+  \node[darktext!60] at (4.75,-2.15) {\footnotesize discard};
+  % label
+  \node[darktext, align=center] at (3.5,2.1) {\footnotesize\textit{Midpoint $c_1 = \tfrac{a_0+b_0}{2}$; keep bracket with sign change}};
+\end{tikzpicture}
+\end{center}
+
+\bigskip
+
 \section*{Mathematical Foundation}
 
 \begin{defbox}[Bisection Algorithm]
@@ -593,6 +649,44 @@ A remarkable application of Bisection is computing eigenvalues of symmetric trid
 \begin{histbox}
 The Regula Falsi (Latin for \textit{Rule of False Position}) is one of the \textbf{oldest known root-finding algorithms}, appearing in ancient Egyptian mathematics (circa 1550 BCE, Rhind Papyrus), ancient Babylonian texts, and Indian mathematics (Bakshali manuscript). Medieval Arab mathematicians including Al-Khawarizmi developed it further. It predates calculus by thousands of years and was the dominant algebraic technique until Newton's method emerged in the 17th century. It was formalized in its modern bracket-preserving form during the development of numerical analysis.
 \end{histbox}
+
+\bigskip
+
+\begin{center}
+\begin{tikzpicture}[scale=1.05, font=\small]
+  % axes
+  \draw[->, thick, darktext!80] (-0.4,0) -- (7.2,0) node[right] {$x$};
+  \draw[->, thick, darktext!80] (0,-2.2) -- (0,2.4) node[above] {$f(x)$};
+  % curve
+  \draw[thick, primary, domain=0.5:6.8, samples=120]
+    plot (\x, {0.3*(\x-3.5)*abs(\x-3.5)^0.6 - 0.05});
+  \node[primary] at (6.9,1.6) {$f(x)$};
+  % points a and b
+  \coordinate (A) at (1, {0.3*(1-3.5)*abs(1-3.5)^0.6 - 0.05});
+  \coordinate (B) at (6, {0.3*(6-3.5)*abs(6-3.5)^0.6 - 0.05});
+  \draw[dashed, accent!50] (1,0) -- (A);
+  \draw[dashed, accent!50] (6,0) -- (B);
+  \fill[accent!80] (A) circle (2.2pt) node[left=3pt] {$(a,\,f(a))$};
+  \fill[accent!80] (B) circle (2.2pt) node[right=3pt] {$(b,\,f(b))$};
+  \draw[accent, thick] (1,0.07) -- (1,-0.07) node[below=2pt] {$a$};
+  \draw[accent, thick] (6,0.07) -- (6,-0.07) node[below=2pt] {$b$};
+  % chord (false position line)
+  \draw[redclr, thick] (A) -- (B);
+  % x-intercept of chord: linear interpolation
+  % x_intercept = a - f(a)*(b-a)/(f(b)-f(a))
+  % fa = 0.3*(1-3.5)*|1-3.5|^0.6 - 0.05 ≈ -1.97, fb ≈ 1.88
+  % c = 1 - (-1.97)*(5)/( 1.88 - (-1.97)) = 1 + 9.85/3.85 ≈ 3.56
+  \coordinate (C) at (3.56, 0);
+  \draw[redclr, thick] (3.56,0.07) -- (3.56,-0.07) node[below=2pt] {\textcolor{redclr}{$c$}};
+  \fill[redclr] (C) circle (2.8pt);
+  \draw[dashed, redclr!60] (3.56,0) -- (3.56, {0.3*(3.56-3.5)*abs(3.56-3.5)^0.6 - 0.05});
+  \fill[redclr!60] (3.56, {0.3*(3.56-3.5)*abs(3.56-3.5)^0.6 - 0.05}) circle (1.8pt);
+  % annotation
+  \node[darktext, align=center] at (3.5,2.1)
+    {\footnotesize\textit{Chord from $(a,f(a))$ to $(b,f(b))$; its $x$-intercept $= c$}};
+  \node[redclr] at (5.2,0.9) {\footnotesize secant line};
+\end{tikzpicture}
+\end{center}
 
 \bigskip
 
@@ -760,6 +854,56 @@ Regula Falsi and its variants are widely used because they guarantee convergence
 \begin{histbox}
 \textbf{Isaac Newton} (1669, \textit{De analysi}) introduced a version of this method for polynomials. \textbf{Joseph Raphson} (1690) independently published a simplified, more general algebraic form. The modern calculus-based form using $f'(x)$ was developed by \textbf{Thomas Simpson} (1740). The method is now considered the cornerstone of computational root finding and is the basis of numerical solvers in MATLAB, Python's \texttt{scipy.optimize}, and virtually every scientific computing library.
 \end{histbox}
+
+\bigskip
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1, font=\small]
+  % axes
+  \draw[->, thick, darktext!80] (-0.4,0) -- (7,0) node[right] {$x$};
+  \draw[->, thick, darktext!80] (0,-1.2) -- (0,3.2) node[above] {$f(x)$};
+  % curve f(x) = (x-2)^2 - 0.5, root near x=2.71
+  \draw[thick, primary, domain=0.5:6.5, samples=120]
+    plot (\x, {0.4*(\x-2)*(\x-2) - 0.6});
+  \node[primary] at (6.6,1.8) {$f(x)$};
+  % x0 = 5
+  \def\xz{5}
+  \def\fxz{0.4*(5-2)*(5-2) - 0.6}  % = 3.0
+  \def\dfxz{0.8*(5-2)}              % = 2.4
+  % tangent at x0: y - fxz = dfxz*(x - xz)  =>  y = dfxz*x - dfxz*xz + fxz
+  % x-intercept: 0 = dfxz*x - dfxz*xz + fxz => x = xz - fxz/dfxz = 5 - 3/2.4 = 3.75
+  \def\xone{3.75}
+  \def\fxone{0.4*(3.75-2)*(3.75-2) - 0.6}  % = 0.4*3.0625 - 0.6 = 0.625
+  \def\dfxone{0.8*(3.75-2)}                  % = 1.4
+  % x2 = x1 - f(x1)/f'(x1) = 3.75 - 0.625/1.4 = 3.304
+  \def\xtwo{3.30}
+  % draw tangent at x0
+  \draw[redclr, thick] (2.5, {\dfxz*2.5 - \dfxz*\xz + \fxz}) -- (5.5, {\dfxz*5.5 - \dfxz*\xz + \fxz});
+  % vertical dashed lines
+  \draw[dashed, accent!50] (\xz,0) -- (\xz,{\fxz});
+  \draw[dashed, accent!50] (\xone,0) -- (\xone,{\fxone});
+  \draw[dashed, accent!50] (\xtwo,0) -- (\xtwo,{0.4*(\xtwo-2)*(\xtwo-2)-0.6});
+  % points on curve
+  \fill[primary] (\xz,{\fxz}) circle (2.5pt);
+  \fill[primary] (\xone,{\fxone}) circle (2.5pt);
+  % x labels
+  \draw[accent, thick] (\xz,0.07) -- (\xz,-0.07) node[below=2pt] {$x_0$};
+  \draw[accent, thick] (\xone,0.07) -- (\xone,-0.07) node[below=2pt] {$x_1$};
+  \draw[redclr, thick] (\xtwo,0.07) -- (\xtwo,-0.07) node[below=2pt] {$x_2$};
+  % tangent at x1
+  \draw[redclr!70, thick, dashed]
+    (2.8, {\dfxone*2.8 - \dfxone*\xone + \fxone}) --
+    (4.2, {\dfxone*4.2 - \dfxone*\xone + \fxone});
+  % arrows showing iteration direction
+  \draw[->, thick, accent!70] (\xz+0.05,-0.5) -- (\xone+0.05,-0.5);
+  \draw[->, thick, accent!40] (\xone+0.05,-0.7) -- (\xtwo+0.05,-0.7);
+  % root marker
+  \fill[greenclr] (2.72,0) circle (2.5pt) node[above right=1pt] {\footnotesize\color{greenclr}$x^*$};
+  % label
+  \node[darktext, align=center] at (3.5,2.8)
+    {\footnotesize\textit{Tangent at $x_n$ crosses $x$-axis $\Rightarrow x_{n+1} = x_n - f(x_n)/f'(x_n)$}};
+\end{tikzpicture}
+\end{center}
 
 \bigskip
 
@@ -937,6 +1081,48 @@ The Secant Method is closely related to Regula Falsi and has roots going back to
 
 \bigskip
 
+\begin{center}
+\begin{tikzpicture}[scale=1.1, font=\small]
+  % axes
+  \draw[->, thick, darktext!80] (-0.4,0) -- (7,0) node[right] {$x$};
+  \draw[->, thick, darktext!80] (0,-1.2) -- (0,3.2) node[above] {$f(x)$};
+  % curve
+  \draw[thick, primary, domain=0.5:6.5, samples=120]
+    plot (\x, {0.4*(\x-2)*(\x-2) - 0.6});
+  \node[primary] at (6.6,1.8) {$f(x)$};
+  % x0=1.2, x1=5
+  \def\xz{1.5}   \def\fxz{0.4*(1.5-2)*(1.5-2)-0.6}    % ~-0.5
+  \def\xo{5.0}   \def\fxo{0.4*(5-2)*(5-2)-0.6}         % ~3.0
+  % secant line 1 through (x0,f(x0)) and (x1,f(x1))
+  % slope = (fxo - fxz)/(xo - xz) = (3.0 - (-0.5))/(3.5) = 1.0
+  % x-intercept: x2 = x1 - fxo*(xo-xz)/(fxo-fxz) = 5 - 3.0*3.5/3.5 = 5-3 = 2.0?
+  % actually x2 = xo - fxo*(xo-xz)/(fxo-fxz)
+  \def\xt{2.72}   \def\fxt{0.4*(2.72-2)*(2.72-2)-0.6}  % ~-0.39
+  % draw secant line 1
+  \draw[redclr, thick] (0.5, {1.0*0.5 - 1.0*\xo + \fxo}) -- (5.8, {1.0*5.8 - 1.0*\xo + \fxo});
+  % vertical dashed
+  \draw[dashed, accent!50] (\xz,0) -- (\xz,{\fxz});
+  \draw[dashed, accent!50] (\xo,0) -- (\xo,{\fxo});
+  \draw[dashed, accent!40] (\xt,0) -- (\xt,{\fxt});
+  % points on curve
+  \fill[primary] (\xz,{\fxz}) circle (2.5pt);
+  \fill[primary] (\xo,{\fxo}) circle (2.5pt);
+  \fill[primary] (\xt,{\fxt}) circle (2pt);
+  % x labels
+  \draw[accent, thick] (\xz,0.07) -- (\xz,-0.07) node[below=2pt] {$x_0$};
+  \draw[accent, thick] (\xo,0.07) -- (\xo,-0.07) node[below=2pt] {$x_1$};
+  \draw[redclr, thick] (\xt,0.07) -- (\xt,-0.07) node[below=2pt] {$x_2$};
+  % root
+  \fill[greenclr] (2.72,0) circle (2.5pt) node[above right=1pt] {\footnotesize\color{greenclr}$x^*$};
+  % label
+  \node[darktext, align=center] at (3.5,2.8)
+    {\footnotesize\textit{Secant through $(x_0,f(x_0))$ and $(x_1,f(x_1))$; $x$-intercept $= x_2$}};
+  \node[redclr] at (5.0,1.4) {\footnotesize secant};
+\end{tikzpicture}
+\end{center}
+
+\bigskip
+
 \section*{Derivation}
 
 \begin{derivbox}[Finite Difference Approximation of Derivative]
@@ -1094,6 +1280,47 @@ Maintains a bracket (guaranteed convergence) while achieving superlinear speed i
 \begin{histbox}
 Fixed point theory is a cornerstone of modern mathematics. The \textbf{Banach Fixed Point Theorem} (Stefan Banach, 1922) provided the rigorous foundation for the convergence of iterative methods in complete metric spaces. L.E.J. Brouwer's topological fixed point theorem (1911) established existence in higher dimensions. In numerical analysis, fixed point iteration underpins many algorithms — including Newton-Raphson (as a special case), the Gauss-Seidel method for linear systems, and iterative solvers in computational physics. The concept of a \textit{contraction mapping} is fundamental across pure and applied mathematics.
 \end{histbox}
+
+\bigskip
+
+\begin{center}
+\begin{tikzpicture}[scale=1.15, font=\small]
+  % axes
+  \draw[->, thick, darktext!80] (-0.3,0) -- (5.5,0) node[right] {$x$};
+  \draw[->, thick, darktext!80] (0,-0.3) -- (0,5.5) node[above] {$y$};
+  % y = x line
+  \draw[thick, grayclr!70, domain=0:5.2] plot(\x,\x) node[right=2pt] {$y=x$};
+  % g(x) = sqrt(x+1.5) -- fixed point near x=1.91
+  \draw[thick, primary, domain=0:5.2, samples=100]
+    plot (\x, {sqrt(\x + 1.8)});
+  \node[primary] at (5.0,2.7) {$y=g(x)$};
+  % fixed point x* ≈ 1.91 (solving x=sqrt(x+1.8) => x^2=x+1.8 => x=(1+sqrt(8.2))/2 ≈ 1.93)
+  \fill[greenclr] (1.93,1.93) circle (2.8pt) node[above right=2pt] {\color{greenclr}$x^*$};
+  % cobweb: start x0=4
+  \def\xa{4.0}   \def\ga{2.530}   % g(4)=sqrt(5.8)
+  \def\xb{2.530} \def\gb{2.059}   % g(2.530)=sqrt(4.33)
+  \def\xc{2.059} \def\gc{1.976}   % g(2.059)=sqrt(3.859)
+  \def\xd{1.976} \def\gd{1.948}
+  % step 1: from (x0,0) up to (x0,g(x0))
+  \draw[redclr, thick, ->] (\xa,0) -- (\xa,\ga);
+  % step 2: across to y=x: (x0,g(x0)) -> (g(x0),g(x0))
+  \draw[redclr, thick, ->] (\xa,\ga) -- (\ga,\ga);
+  % step 3: up to g(x1)
+  \draw[redclr, thick, ->] (\gb,\ga) -- (\gb,\gb);
+  % step 4: across
+  \draw[redclr, thick, ->] (\gb,\gb) -- (\gc,\gc);
+  % step 5
+  \draw[redclr, thick, ->] (\gc,\gc) -- (\gc,\gc);
+  % x labels
+  \draw[accent] (\xa,0.06) -- (\xa,-0.06) node[below] {$x_0$};
+  \draw[accent] (\ga,0.06) -- (\ga,-0.06) node[below] {$x_1$};
+  \draw[accent] (\gb,0.06) -- (\gb,-0.06) node[below] {$x_2$};
+  \draw[accent] (\gc,0.06) -- (\gc,-0.06) node[below=2pt] {\footnotesize$x_3$};
+  % annotation
+  \node[darktext, align=center] at (2.8,4.8)
+    {\footnotesize\textit{Cobweb: iterate $x_{n+1}=g(x_n)$ converging to fixed point $x^*$}};
+\end{tikzpicture}
+\end{center}
 
 \bigskip
 
@@ -1460,6 +1687,403 @@ Steffensen & $x_{n+1} = x_n - \dfrac{(g(x_n)-x_n)^2}{g(g(x_n))-2g(x_n)+x_n}$ \\
 \end{tabular}
 }\end{center}
 
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+%  SYSTEM OF LINEAR EQUATIONS
+% ════════════════════════════════════════════════════════════
+
+\addtocontents{toc}{%
+  \protect\vspace{8pt}%
+  \protect\noindent{\color{primary}\bfseries\normalsize System of Linear Equations}%
+  \protect\par\protect\vspace{2pt}%
+}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=28pt, bottom=20pt,
+  borderline south={5pt}{0pt}{accent},
+]
+  \centering
+  {\fontsize{11}{14}\bfseries\color{accent}\MakeUppercase{Numerical Analysis I}}\\[10pt]
+  {\fontsize{26}{32}\bfseries\color{white}
+    System of Linear\\[6pt]Equations
+  }\\[12pt]
+  {\large\color{lightbg} $A\mathbf{x} = \mathbf{b}$ — Direct and Iterative Methods}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\begin{tcolorbox}[colback=lightbg, colframe=accent, arc=4pt, boxrule=1pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt]
+\textbf{\color{primary}Methods Covered:}
+\begin{multicols}{2}
+\begin{enumerate}[noitemsep]
+  \item Gaussian Elimination
+  \item LU Decomposition
+  \item Jacobi Iterative Method
+  \item Gauss-Seidel Method
+\end{enumerate}
+\end{multicols}
+\end{tcolorbox}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\section*{Introduction to Systems of Linear Equations}
+\addcontentsline{toc}{section}{Introduction to Systems}
+% ────────────────────────────────────────────────────────────
+
+\begin{defbox}[System of Linear Equations]
+A \textbf{system of $n$ linear equations} in $n$ unknowns $x_1, x_2, \ldots, x_n$ is written in matrix form as:
+\[
+  A\mathbf{x} = \mathbf{b}
+\]
+where $A \in \mathbb{R}^{n\times n}$ is the \textbf{coefficient matrix}, $\mathbf{x} \in \mathbb{R}^n$ is the \textbf{unknown vector}, and $\mathbf{b} \in \mathbb{R}^n$ is the \textbf{right-hand side}. A unique solution exists if and only if $\det(A) \neq 0$.
+\end{defbox}
+
+\begin{keybox}
+\textbf{Two classes of methods:}
+\begin{itemize}[noitemsep, topsep=4pt]
+  \item \textbf{Direct methods} (Gaussian Elimination, LU Decomposition): find the exact solution in a finite number of steps. Best for small to medium dense systems.
+  \item \textbf{Iterative methods} (Jacobi, Gauss-Seidel): start from an initial guess and converge to the solution. Best for large sparse systems.
+\end{itemize}
+\end{keybox}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\addcontentsline{toc}{section}{Gaussian Elimination}
+% ────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 06}\\[4pt]
+  {\LARGE\bfseries\color{white} Gaussian Elimination}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+\textbf{Carl Friedrich Gauss} (1777--1855) systematized this method, though variants appear in ancient Chinese mathematics (\textit{The Nine Chapters on the Mathematical Art}, circa 200 BCE). Gauss used it extensively in his least-squares work for astronomical calculations. The method is the foundation of virtually all direct linear solvers and underpins modern numerical libraries such as LAPACK and MATLAB's backslash operator.
+\end{histbox}
+
+\bigskip
+
+\begin{defbox}[Gaussian Elimination Algorithm]
+Given the augmented matrix $[A\,|\,\mathbf{b}]$, proceed in two phases:
+
+\textbf{Phase 1 — Forward Elimination:} For each pivot row $k = 1,\ldots,n-1$:
+\[
+  R_i \leftarrow R_i - \frac{a_{ik}}{a_{kk}}\,R_k \qquad \text{for } i = k+1,\ldots,n
+\]
+This reduces $A$ to upper triangular form $U$.
+
+\textbf{Phase 2 — Back Substitution:}
+\[
+  x_n = \frac{b_n}{u_{nn}}, \qquad
+  x_i = \frac{1}{u_{ii}}\!\left(b_i - \sum_{j=i+1}^{n} u_{ij}\,x_j\right), \quad i = n-1,\ldots,1
+\]
+\end{defbox}
+
+\begin{thmbox}[Computational Complexity]
+Gaussian Elimination requires $\dfrac{2n^3}{3} + O(n^2)$ floating-point operations. \textbf{Partial pivoting} (swapping rows so the largest entry in each column becomes the pivot) is used in practice to avoid division by near-zero values and improve numerical stability.
+\end{thmbox}
+
+\bigskip
+
+\begin{examplebox*}[Worked Example]
+\textbf{Problem:} Solve the system $A\mathbf{x} = \mathbf{b}$:
+\[
+  \begin{pmatrix}2 & 1 & -1\\-3 & -1 & 2\\-2 & 1 & 2\end{pmatrix}
+  \begin{pmatrix}x_1\\x_2\\x_3\end{pmatrix}
+  =\begin{pmatrix}8\\-11\\-3\end{pmatrix}
+\]
+
+\textbf{Augmented matrix:}
+\[
+  \left[\begin{array}{rrr|r}2 & 1 & -1 & 8\\-3 & -1 & 2 & -11\\-2 & 1 & 2 & -3\end{array}\right]
+\]
+
+\textbf{Forward elimination:}
+
+$R_2 \leftarrow R_2 + \tfrac{3}{2}R_1$:\quad
+$\left[\begin{array}{rrr|r}2 & 1 & -1 & 8\\0 & \tfrac{1}{2} & \tfrac{1}{2} & 1\\-2 & 1 & 2 & -3\end{array}\right]$
+
+$R_3 \leftarrow R_3 + R_1$:\quad
+$\left[\begin{array}{rrr|r}2 & 1 & -1 & 8\\0 & \tfrac{1}{2} & \tfrac{1}{2} & 1\\0 & 2 & 1 & 5\end{array}\right]$
+
+$R_3 \leftarrow R_3 - 4R_2$:\quad
+$\left[\begin{array}{rrr|r}2 & 1 & -1 & 8\\0 & \tfrac{1}{2} & \tfrac{1}{2} & 1\\0 & 0 & -1 & 1\end{array}\right]$
+
+\textbf{Back substitution:}
+\[
+  x_3 = \frac{1}{-1} = -1, \qquad
+  x_2 = \frac{1 - \tfrac{1}{2}(-1)}{\tfrac{1}{2}} = 3, \qquad
+  x_1 = \frac{8 - (1)(3) - (-1)(-1)}{2} = 2
+\]
+\[
+  \boxed{x_1 = 2,\quad x_2 = 3,\quad x_3 = -1}
+\]
+\end{examplebox*}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\addcontentsline{toc}{section}{LU Decomposition}
+% ────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 07}\\[4pt]
+  {\LARGE\bfseries\color{white} LU Decomposition}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+LU decomposition was formalized by \textbf{Alan Turing} (1948) and independently developed by \textbf{Tadeusz Banachiewicz} (Crout's method, 1938) and \textbf{Prescott Doolittle} (Doolittle's method, 1878). It is the standard factorization used in LAPACK, MATLAB, and NumPy's \texttt{linalg.solve}. Its key advantage over raw Gaussian Elimination is that once $A = LU$ is computed, \textit{multiple right-hand sides} can be solved cheaply.
+\end{histbox}
+
+\bigskip
+
+\begin{defbox}[LU Decomposition — Doolittle's Method]
+Factor $A = LU$ where:
+\[
+  L = \begin{pmatrix}1 & 0 & \cdots & 0\\ l_{21} & 1 & \cdots & 0\\ \vdots & & \ddots & \vdots\\ l_{n1} & l_{n2} & \cdots & 1\end{pmatrix},
+  \qquad
+  U = \begin{pmatrix}u_{11} & u_{12} & \cdots & u_{1n}\\ 0 & u_{22} & \cdots & u_{2n}\\ \vdots & & \ddots & \vdots\\ 0 & 0 & \cdots & u_{nn}\end{pmatrix}
+\]
+Entries are computed column by column:
+\[
+  u_{kj} = a_{kj} - \sum_{s=1}^{k-1} l_{ks}\,u_{sj}, \qquad
+  l_{ik} = \frac{1}{u_{kk}}\!\left(a_{ik} - \sum_{s=1}^{k-1} l_{is}\,u_{sk}\right)
+\]
+To solve $A\mathbf{x}=\mathbf{b}$, solve $L\mathbf{y}=\mathbf{b}$ (forward substitution), then $U\mathbf{x}=\mathbf{y}$ (back substitution).
+\end{defbox}
+
+\bigskip
+
+\begin{examplebox*}[Worked Example]
+\textbf{Problem:} Decompose $A = \begin{pmatrix}2 & 1 & -1\\-3 & -1 & 2\\-2 & 1 & 2\end{pmatrix}$ into $LU$ and solve $A\mathbf{x} = (8,-11,-3)^T$.
+
+\textbf{Step 1 — Compute $U$ (row 1) and $L$ (column 1):}
+\[
+  u_{1j} = a_{1j}: \quad U\text{ row 1} = [2,\;1,\;-1]
+\]
+\[
+  l_{21} = \frac{-3}{2} = -\tfrac{3}{2},\qquad l_{31} = \frac{-2}{2} = -1
+\]
+
+\textbf{Step 2 — Row 2 of $U$ and column 2 of $L$:}
+\[
+  u_{22} = -1 - (-\tfrac{3}{2})(1) = \tfrac{1}{2},\quad
+  u_{23} = 2 - (-\tfrac{3}{2})(-1) = \tfrac{1}{2}
+\]
+\[
+  l_{32} = \frac{1 - (-1)(1)}{\tfrac{1}{2}} = 4
+\]
+
+\textbf{Step 3:}\; $u_{33} = 2 - (-1)(-1) - (4)(\tfrac{1}{2}) = -1$
+
+\[
+  L = \begin{pmatrix}1 & 0 & 0\\-\tfrac{3}{2} & 1 & 0\\-1 & 4 & 1\end{pmatrix},\qquad
+  U = \begin{pmatrix}2 & 1 & -1\\0 & \tfrac{1}{2} & \tfrac{1}{2}\\0 & 0 & -1\end{pmatrix}
+\]
+
+\textbf{Forward substitution} $L\mathbf{y} = \mathbf{b}$: $y_1=8,\; y_2=1,\; y_3=1$.
+\textbf{Back substitution} $U\mathbf{x} = \mathbf{y}$: $\boxed{x_1=2,\; x_2=3,\; x_3=-1}$.
+\end{examplebox*}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\addcontentsline{toc}{section}{Jacobi Iterative Method}
+% ────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 08}\\[4pt]
+  {\LARGE\bfseries\color{white} Jacobi Iterative Method}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+\textbf{Carl Gustav Jacob Jacobi} (1801--1851) developed this iterative scheme for solving diagonally dominant systems. It belongs to the class of \textit{stationary iterative methods} and is the conceptual predecessor to more powerful solvers like Gauss-Seidel and SOR. The method is naturally parallelizable since all updated values are computed simultaneously from the previous iteration, making it relevant in modern GPU-based computing.
+\end{histbox}
+
+\bigskip
+
+\begin{defbox}[Jacobi Iteration Formula]
+Split $A = D + (L + U)$ where $D$ is the diagonal. The iteration is:
+\[
+  \boxed{x_i^{(k+1)} = \frac{1}{a_{ii}}\left(b_i - \sum_{\substack{j=1\\j\neq i}}^{n} a_{ij}\,x_j^{(k)}\right), \qquad i = 1, 2, \ldots, n}
+\]
+All $x_i^{(k+1)}$ use only values from the \textbf{previous} iteration $k$. In matrix form: $\mathbf{x}^{(k+1)} = D^{-1}(\mathbf{b} - (L+U)\mathbf{x}^{(k)})$.
+\end{defbox}
+
+\begin{thmbox}[Convergence Condition]
+The Jacobi method converges if $A$ is \textbf{strictly diagonally dominant}:
+\[
+  |a_{ii}| > \sum_{\substack{j=1\\j\neq i}}^{n}|a_{ij}| \qquad \text{for all } i
+\]
+Equivalently, the spectral radius of the iteration matrix satisfies $\rho(D^{-1}(L+U)) < 1$.
+\end{thmbox}
+
+\bigskip
+
+\begin{examplebox*}[Worked Example]
+\textbf{Problem:} Solve by Jacobi iteration, starting from $(x_1,x_2)=(0,0)$:
+\[
+  5x_1 + x_2 = 17 \qquad x_1 + 5x_2 = 13
+\]
+\textit{(Exact solution: $x_1 = 3,\; x_2 = 2$)}
+
+\textbf{Iteration formulas:}
+\[
+  x_1^{(k+1)} = \frac{17 - x_2^{(k)}}{5}, \qquad x_2^{(k+1)} = \frac{13 - x_1^{(k)}}{5}
+\]
+
+\begin{center}{\small
+\begin{tabular}{C{1.5cm} C{3cm} C{3cm} C{4cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$k$} & \hcell{$x_1^{(k)}$} & \hcell{$x_2^{(k)}$} & \hcell{Error $\|e\|$} \\
+\midrule
+\rowcolor{lightbg!40}
+0 & 0.0000 & 0.0000 & --- \\
+1 & 3.4000 & 2.6000 & 1.0198 \\
+\rowcolor{lightbg!40}
+2 & 2.8800 & 1.9200 & 0.1697 \\
+3 & 3.0160 & 2.0240 & 0.0284 \\
+\rowcolor{lightbg!40}
+4 & 2.9952 & 1.9968 & 0.0057 \\
+5 & 3.0006 & 2.0010 & 0.0011 \\
+\bottomrule
+\end{tabular}
+}\end{center}
+Converging to $(3,\;2)$ with linear convergence rate.
+\end{examplebox*}
+
+\newpage
+
+% ────────────────────────────────────────────────────────────
+\addcontentsline{toc}{section}{Gauss-Seidel Method}
+% ────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=14pt, bottom=10pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  {\color{accent!70}\small\bfseries METHOD 09}\\[4pt]
+  {\LARGE\bfseries\color{white} Gauss-Seidel Method}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{histbox}
+The Gauss-Seidel method was described by \textbf{Carl Friedrich Gauss} in a letter to his student Gerling (1823) and later analysed by \textbf{Philipp Ludwig von Seidel} (1874). It improves upon Jacobi by using each newly computed $x_i$ \textit{immediately} in the same iteration. This typically doubles the convergence rate and halves the memory requirement. It is the basis of successive over-relaxation (SOR) and is widely used in finite-element solvers and iterative image reconstruction.
+\end{histbox}
+
+\bigskip
+
+\begin{defbox}[Gauss-Seidel Iteration Formula]
+\[
+  \boxed{x_i^{(k+1)} = \frac{1}{a_{ii}}\left(b_i - \sum_{j=1}^{i-1} a_{ij}\,x_j^{(k+1)} - \sum_{j=i+1}^{n} a_{ij}\,x_j^{(k)}\right)}
+\]
+Updated values $x_j^{(k+1)}$ (already computed in the \textit{current} sweep) are used immediately. In matrix form: $\mathbf{x}^{(k+1)} = (D+L)^{-1}(\mathbf{b} - U\mathbf{x}^{(k)})$.
+\end{defbox}
+
+\begin{derivbox}[Gauss-Seidel vs.\ Jacobi]
+\begin{center}{\small
+\begin{tabular}{p{4.5cm} p{5cm} p{4.5cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Feature} & \hcell{Jacobi} & \hcell{Gauss-Seidel} \\
+\midrule
+\rowcolor{lightbg!40}
+Update rule & Uses $\mathbf{x}^{(k)}$ only & Uses latest available values \\
+Convergence rate & Slower & $\approx 2\times$ faster \\
+\rowcolor{lightbg!40}
+Parallelizable & Yes (all at once) & No (sequential) \\
+Memory & Needs two vectors & One vector sufficient \\
+\bottomrule
+\end{tabular}
+}\end{center}
+\end{derivbox}
+
+\bigskip
+
+\begin{examplebox*}[Worked Example]
+\textbf{Problem:} Solve the same system using Gauss-Seidel, starting from $(0,0)$:
+\[
+  5x_1 + x_2 = 17 \qquad x_1 + 5x_2 = 13
+\]
+
+\textbf{Iteration formulas} (using updated $x_1$ immediately for $x_2$):
+\[
+  x_1^{(k+1)} = \frac{17 - x_2^{(k)}}{5}, \qquad
+  x_2^{(k+1)} = \frac{13 - x_1^{(k+1)}}{5}
+\]
+
+\begin{center}{\small
+\begin{tabular}{C{1.5cm} C{3cm} C{3cm} C{4cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$k$} & \hcell{$x_1^{(k)}$} & \hcell{$x_2^{(k)}$} & \hcell{Error $\|e\|$} \\
+\midrule
+\rowcolor{lightbg!40}
+0 & 0.0000 & 0.0000 & --- \\
+1 & 3.4000 & 1.9200 & 0.4123 \\
+\rowcolor{lightbg!40}
+2 & 3.0160 & 1.9968 & 0.0161 \\
+3 & 3.0006 & 1.9999 & 0.0006 \\
+\rowcolor{lightbg!40}
+4 & 3.0000 & 2.0000 & $< 10^{-4}$ \\
+\bottomrule
+\end{tabular}
+}\end{center}
+Converges in \textbf{4 iterations} vs.\ 5+ for Jacobi — noticeably faster on the same system.
+\end{examplebox*}
+
+\begin{multicols}{2}
+\begin{prosbox}
+\begin{itemize}[noitemsep]
+  \item Faster convergence than Jacobi
+  \item Uses one vector (memory efficient)
+  \item Foundation for SOR acceleration
+  \item Guaranteed convergence for SPD matrices
+\end{itemize}
+\end{prosbox}
+
+\columnbreak
+
+\begin{consbox}
+\begin{itemize}[noitemsep]
+  \item Not easily parallelizable
+  \item May diverge if not diagonally dominant
+  \item Order of equations affects convergence
+  \item Convergence not always guaranteed
+\end{itemize}
+\end{consbox}
+\end{multicols}
 
 \newpage
 
