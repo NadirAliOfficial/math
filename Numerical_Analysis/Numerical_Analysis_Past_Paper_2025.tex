@@ -1,0 +1,499 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{booktabs,array,multirow,graphicx,enumitem}
+\usepackage[expansion=false]{microtype}
+
+\tcbuselibrary{skins,breakable}
+\geometry{margin=0.85in,top=1in,bottom=1in}
+
+\definecolor{primary}  {RGB}{27, 79,114}
+\definecolor{accent}   {RGB}{46,134,193}
+\definecolor{lightbg}  {RGB}{234,244,251}
+\definecolor{darktext} {RGB}{44, 62, 80}
+\definecolor{purpleclr}{RGB}{90, 20,140}
+\definecolor{purplebg} {RGB}{240,228,255}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Numerical Analysis -- I}\;\textcolor{accent}{|}\;Solved Past Paper 2025}
+\fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+\newtcolorbox{qbox}[1]{enhanced,arc=0pt,boxrule=0pt,
+  colback=primary,colframe=primary,left=14pt,right=14pt,top=10pt,bottom=8pt,
+  borderline south={4pt}{0pt}{accent},fontupper=\bfseries\color{white},
+  title={\small\bfseries\color{accent!80}#1},coltitle=accent!80,
+  attach title to upper=\\[2pt]}
+
+\newtcolorbox{ansbox}{enhanced,arc=4pt,boxrule=1.5pt,breakable,
+  colback=purplebg!50,colframe=purpleclr,left=10pt,right=10pt,top=8pt,bottom=8pt,
+  title={\small\bfseries\color{white}Solution},colbacktitle=purpleclr,coltitle=white,
+  attach boxed title to top left={xshift=10pt,yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt,colframe=purpleclr,boxrule=0pt}}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\begin{document}
+
+% ── COVER PAGE ─────────────────────────────────────────────
+\thispagestyle{empty}
+\begin{tcolorbox}[enhanced,arc=0pt,boxrule=0pt,colback=primary,colframe=primary,
+  left=20pt,right=20pt,top=28pt,bottom=20pt,borderline south={5pt}{0pt}{accent}]
+  \centering
+  {\fontsize{26}{32}\bfseries\color{white}Numerical Analysis -- I\\[8pt]Solved Past Paper}\\[12pt]
+  {\large\color{lightbg}Root-Finding \textbf{·} Interpolation \textbf{·} Systems of Equations}
+\end{tcolorbox}
+
+\vspace{8pt}
+\begin{tcolorbox}[enhanced,arc=0pt,boxrule=0pt,colback=white,colframe=white,
+  borderline north={2pt}{0pt}{primary},borderline south={2pt}{0pt}{primary},
+  left=0pt,right=0pt,top=0pt,bottom=0pt]
+\begin{tabular}{p{0.47\textwidth}|p{0.47\textwidth}}
+  \hspace{12pt}\begin{minipage}[t]{0.43\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent}COMPOSED BY}\\[4pt]
+    {\bfseries\color{primary}Nadir Ali Khan}\\[3pt]
+    {\footnotesize\color{darktext}BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}&
+  \hspace{12pt}\begin{minipage}[t]{0.43\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent}TEACHER}\\[4pt]
+    {\bfseries\color{primary}Prof.\ Dr.\ Hisam Uddin Shaikh}\\[3pt]
+    {\footnotesize\color{darktext}Chairman, Dept.\ of Mathematics}
+  \vspace{8pt}\end{minipage}
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{16pt}
+\begin{tcolorbox}[colback=lightbg,colframe=accent,arc=4pt,boxrule=1pt,
+  left=12pt,right=12pt,top=10pt,bottom=10pt]
+\begin{tabular}{ll}
+  \textcolor{accent}{\bfseries Total Marks:}&50\quad(Attempt any \textbf{Three} questions)\\
+  \textcolor{accent}{\bfseries Time:}&2 Hours 30 Minutes\\
+\end{tabular}
+\end{tcolorbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q1
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 1 \textemdash\ Types of Errors \textbf{+} Bisection Method}
+\end{qbox}
+
+\medskip
+\textbf{(a)} Define the following types of errors with examples: absolute error, relative error, round-off error, truncation error.
+
+\begin{ansbox}
+Let $x^*$ be the true value and $\tilde{x}$ its approximation.
+
+\medskip
+\textbf{1. Absolute Error:}
+\[
+  E_a = |x^* - \tilde{x}|
+\]
+\textit{Example:} True value $\pi = 3.14159\ldots$, approximation $3.14$. $E_a = 0.00159$.
+
+\medskip
+\textbf{2. Relative Error:}
+\[
+  E_r = \frac{|x^* - \tilde{x}|}{|x^*|} \quad(\text{or as percentage: } E_r\times100\%)
+\]
+\textit{Example:} $E_r = 0.00159/3.14159 \approx 0.000506 = 0.0506\%$.
+
+\medskip
+\textbf{3. Round-Off Error:}
+Arises because computers store numbers with finite digits. When $1/3 = 0.3333\ldots$ is stored as $0.3333$, the round-off error is $0.0000\overline{3}$. Accumulates over many arithmetic operations.
+
+\medskip
+\textbf{4. Truncation Error:}
+Arises when an infinite mathematical process (series, derivative, integral) is replaced by a finite approximation.
+\[
+  e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots
+\]
+If we keep only the first three terms, the truncation error is $\dfrac{x^3}{3!}+\dfrac{x^4}{4!}+\cdots$
+\end{ansbox}
+
+\medskip
+\textbf{(b)} Using the \textbf{Bisection Method}, find a root of $f(x) = x^3 - 4x - 9 = 0$ in $[2,\,3]$. Perform \textbf{4 iterations}.
+
+\begin{ansbox}
+\textbf{Verify bracket:}
+$f(2) = 8 - 8 - 9 = -9 < 0$,\quad $f(3) = 27 - 12 - 9 = 6 > 0$.\quad Sign change confirmed.\;\checkmark
+
+\medskip
+\textbf{Bisection formula:} $x_m = \dfrac{a+b}{2}$.\quad If $f(a)\cdot f(x_m)<0$, root is in $[a,x_m]$; else in $[x_m,b]$.
+
+\medskip
+\begin{center}
+\begin{tabular}{|c|C{1.4cm}|C{1.4cm}|C{2cm}|C{2.5cm}|C{1.8cm}|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{Iter}} & \textcolor{white}{\textbf{$a$}} & \textcolor{white}{\textbf{$b$}} & \textcolor{white}{\textbf{$x_m=(a+b)/2$}} & \textcolor{white}{\textbf{$f(x_m)$}} & \textcolor{white}{\textbf{New Interval}}\\
+\hline
+1 & 2 & 3 & 2.5 & $-3.375$ & $[2.5,\;3]$\\\hline
+2 & 2.5 & 3 & 2.75 & $+0.7969$ & $[2.5,\;2.75]$\\\hline
+3 & 2.5 & 2.75 & 2.625 & $-1.4121$ & $[2.625,\;2.75]$\\\hline
+4 & 2.625 & 2.75 & 2.6875 & $-0.3391$ & $[2.6875,\;2.75]$\\\hline
+\end{tabular}
+\end{center}
+
+\textbf{Sample calculations:}
+\begin{align*}
+  f(2.5) &= (2.5)^3 - 4(2.5) - 9 = 15.625 - 10 - 9 = -3.375\\
+  f(2.75) &= (2.75)^3 - 4(2.75) - 9 = 20.7969 - 11 - 9 = +0.7969\\
+  f(2.625) &= (2.625)^3 - 4(2.625) - 9 = 18.0879 - 10.5 - 9 = -1.4121\\
+  f(2.6875) &= (2.6875)^3 - 4(2.6875) - 9 = 19.4109 - 10.75 - 9 = -0.3391
+\end{align*}
+
+\textbf{After 4 iterations,} root $\approx \dfrac{2.6875 + 2.75}{2} = \mathbf{2.71875}$.\quad True root $\approx 2.7065$.
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q2
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 2 \textemdash\ Newton-Raphson Method}
+\end{qbox}
+
+\medskip
+\textbf{(a)} Derive the Newton-Raphson formula. Apply it to find a root of $f(x) = x^3 - 2x - 5 = 0$, starting from $x_0 = 2$. Perform \textbf{3 iterations}.
+
+\begin{ansbox}
+\textbf{Derivation:} Expand $f(x)$ in a Taylor series about $x_n$:
+\[
+  f(x_{n+1}) = f(x_n) + (x_{n+1}-x_n)\,f'(x_n) + \cdots
+\]
+Setting $f(x_{n+1}) = 0$ and neglecting higher-order terms:
+\[
+  \boxed{x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}}
+\]
+
+\medskip
+\textbf{Application:} $f(x) = x^3 - 2x - 5$,\quad $f'(x) = 3x^2 - 2$.
+
+\medskip\textbf{Iteration 1} ($x_0 = 2$):
+\begin{align*}
+  f(2) &= 8 - 4 - 5 = -1\\
+  f'(2) &= 3(4) - 2 = 10\\
+  x_1 &= 2 - \frac{-1}{10} = 2 + 0.1 = \mathbf{2.1}
+\end{align*}
+
+\textbf{Iteration 2} ($x_1 = 2.1$):
+\begin{align*}
+  f(2.1) &= (2.1)^3 - 2(2.1) - 5 = 9.261 - 4.2 - 5 = 0.061\\
+  f'(2.1) &= 3(2.1)^2 - 2 = 13.23 - 2 = 11.23\\
+  x_2 &= 2.1 - \frac{0.061}{11.23} = 2.1 - 0.00543 = \mathbf{2.09457}
+\end{align*}
+
+\textbf{Iteration 3} ($x_2 = 2.0946$):
+\begin{align*}
+  f(2.0946) &= (2.0946)^3 - 2(2.0946) - 5 \approx 9.1896 - 4.1892 - 5 = 0.0004\\
+  f'(2.0946) &= 3(2.0946)^2 - 2 = 3(4.3873) - 2 = 11.162\\
+  x_3 &= 2.0946 - \frac{0.0004}{11.162} \approx \mathbf{2.09456}
+\end{align*}
+
+\textbf{Root} $\approx \boxed{2.0946}$ (converged). True root $= 2.09455\ldots$\;\checkmark
+
+\medskip
+\textbf{Convergence:} Newton-Raphson has \textit{quadratic convergence} — the number of correct decimal digits roughly \textbf{doubles} with each iteration.
+\end{ansbox}
+
+\medskip
+\textbf{(b)} State the merits and demerits of the Newton-Raphson method.
+
+\begin{ansbox}
+\begin{center}
+\begin{tabular}{|p{7.5cm}|p{7.5cm}|}
+\hline
+\rowcolor{primary!80}\multicolumn{1}{|c|}{\textcolor{white}{\textbf{Merits}}} & \multicolumn{1}{c|}{\textcolor{white}{\textbf{Demerits}}}\\
+\hline
+Quadratic convergence: very fast. & Requires computation of $f'(x)$, which may be difficult.\\[4pt]
+Requires only one initial guess $x_0$. & Fails if $f'(x_n) = 0$ (division by zero).\\[4pt]
+Works for real and complex roots. & Sensitive to initial guess; may diverge.\\[4pt]
+Most widely used iterative method. & May cycle for certain functions.\\[4pt]
+Generalises to systems via Jacobian. & Slow convergence near multiple roots.\\
+\hline
+\end{tabular}
+\end{center}
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q3
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 3 \textemdash\ Regula Falsi Method \textbf{+} Secant Method}
+\end{qbox}
+
+\medskip
+\textbf{(a)} Using the \textbf{Regula Falsi (False Position) Method}, find a root of $f(x) = x^3 - 4x - 9 = 0$ in $[2,\,3]$. Perform \textbf{3 iterations}.
+
+\begin{ansbox}
+\textbf{Formula:}
+\[
+  x_1 = \frac{a\,f(b) - b\,f(a)}{f(b) - f(a)}
+\]
+
+\textbf{Initial values:} $a=2,\;b=3$;\quad $f(2)=-9$,\; $f(3)=6$.
+
+\medskip\textbf{Iteration 1:}
+\[
+  x_1 = \frac{2(6) - 3(-9)}{6-(-9)} = \frac{12+27}{15} = \frac{39}{15} = 2.6
+\]
+$f(2.6) = (2.6)^3 - 4(2.6) - 9 = 17.576 - 10.4 - 9 = -1.824 < 0$
+
+New bracket: $[2.6,\;3]$ (since $f(2.6)<0$ and $f(3)>0$).
+
+\medskip\textbf{Iteration 2:}
+\[
+  x_2 = \frac{2.6(6) - 3(-1.824)}{6-(-1.824)} = \frac{15.6+5.472}{7.824} = \frac{21.072}{7.824} = 2.6935
+\]
+$f(2.6935) = (2.6935)^3 - 4(2.6935) - 9 = 19.5412 - 10.774 - 9 = -0.2328 < 0$
+
+New bracket: $[2.6935,\;3]$.
+
+\medskip\textbf{Iteration 3:}
+\[
+  x_3 = \frac{2.6935(6) - 3(-0.2328)}{6-(-0.2328)} = \frac{16.161+0.6984}{6.2328} = \frac{16.859}{6.2328} = 2.7053
+\]
+$f(2.7053) = (2.7053)^3 - 4(2.7053) - 9 = 19.799 - 10.821 - 9 = -0.022 < 0$
+
+\medskip
+\begin{center}
+\begin{tabular}{|c|C{1.5cm}|C{1.5cm}|C{2cm}|C{2.2cm}|C{1.8cm}|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{Iter}} & \textcolor{white}{\textbf{$a$}} & \textcolor{white}{\textbf{$b$}} & \textcolor{white}{\textbf{$x_k$}} & \textcolor{white}{\textbf{$f(x_k)$}} & \textcolor{white}{\textbf{New Interval}}\\
+\hline
+1 & 2 & 3 & 2.6000 & $-1.8240$ & $[2.6,\;3]$\\\hline
+2 & 2.6 & 3 & 2.6935 & $-0.2328$ & $[2.6935,\;3]$\\\hline
+3 & 2.6935 & 3 & 2.7053 & $-0.0220$ & $[2.7053,\;3]$\\\hline
+\end{tabular}
+\end{center}
+
+Root $\approx \mathbf{2.7053}$, converging to $2.7065$.
+\end{ansbox}
+
+\medskip
+\textbf{(b)} Using the \textbf{Secant Method}, find a root of $f(x) = x^3 - 2x - 5 = 0$ with $x_0 = 2,\;x_1 = 3$. Perform \textbf{3 iterations}.
+
+\begin{ansbox}
+\textbf{Formula:}
+\[
+  x_{n+1} = x_n - f(x_n)\cdot\frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})}
+\]
+
+$f(x_0) = f(2) = -1$,\quad $f(x_1) = f(3) = 27-6-5 = 16$.
+
+\medskip\textbf{Iteration 1:}
+\[
+  x_2 = 3 - 16\cdot\frac{3-2}{16-(-1)} = 3 - \frac{16}{17} = 3 - 0.9412 = 2.0588
+\]
+$f(2.0588) = (2.0588)^3 - 2(2.0588) - 5 = 8.7265 - 4.1176 - 5 = -0.391$
+
+\medskip\textbf{Iteration 2:}
+\[
+  x_3 = 2.0588 - (-0.391)\cdot\frac{2.0588-3}{-0.391-16} = 2.0588 - \frac{(-0.391)(-0.9412)}{-16.391} = 2.0588 + 0.02244 = 2.0812
+\]
+$f(2.0812) = (2.0812)^3 - 2(2.0812) - 5 \approx 9.015 - 4.162 - 5 = -0.147$
+
+\medskip\textbf{Iteration 3:}
+\[
+  x_4 = 2.0812 - (-0.147)\cdot\frac{2.0812-2.0588}{-0.147-(-0.391)} = 2.0812 - \frac{(-0.147)(0.0224)}{0.244} = 2.0812 + 0.01349 = 2.0947
+\]
+
+Root $\approx \mathbf{2.0947}$, converging to true root $2.0946$.\;\checkmark
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q4
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 4 \textemdash\ Newton's Forward \textbf{+} Backward Interpolation}
+\end{qbox}
+
+\medskip
+\textbf{Data table:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{$x$}} & \textcolor{white}{\textbf{0}} & \textcolor{white}{\textbf{1}} & \textcolor{white}{\textbf{2}} & \textcolor{white}{\textbf{3}} & \textcolor{white}{\textbf{4}}\\
+\hline
+$y$ & 1 & 2 & 5 & 10 & 17\\\hline
+\end{tabular}
+\end{center}
+
+\textbf{(a)} Using Newton's \textbf{Forward} Difference formula, find $y(0.5)$.
+
+\begin{ansbox}
+\textbf{Step 1 — Forward Difference Table:}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{$x$}} & \textcolor{white}{\textbf{$y$}} & \textcolor{white}{\textbf{$\Delta y$}} & \textcolor{white}{\textbf{$\Delta^2 y$}} & \textcolor{white}{\textbf{$\Delta^3 y$}}\\
+\hline
+0 & 1 & & &\\\hline
+  &   & 1 & &\\\hline
+1 & 2 &   & 2 &\\\hline
+  &   & 3 &   & 0\\\hline
+2 & 5 &   & 2 &\\\hline
+  &   & 5 &   & 0\\\hline
+3 & 10 &  & 2 &\\\hline
+  &    & 7 &  &\\\hline
+4 & 17 &  &  &\\\hline
+\end{tabular}
+\end{center}
+
+\textbf{Step 2 — Formula:}
+\[
+  y(x) = y_0 + p\,\Delta y_0 + \frac{p(p-1)}{2!}\,\Delta^2 y_0 + \frac{p(p-1)(p-2)}{3!}\,\Delta^3 y_0 + \cdots
+  \quad\text{where } p = \frac{x-x_0}{h}
+\]
+
+\textbf{Step 3 — Apply:} $x_0=0$, $h=1$, $x=0.5$,\quad $p = \dfrac{0.5-0}{1} = 0.5$.
+
+\[
+  y(0.5) = 1 + (0.5)(1) + \frac{(0.5)(-0.5)}{2}(2) + \frac{(0.5)(-0.5)(-1.5)}{6}(0)
+\]
+\[
+  = 1 + 0.5 + \frac{-0.25}{2}(2) + 0 = 1 + 0.5 - 0.25 = \boxed{\mathbf{1.25}}
+\]
+
+\textit{Check:} $y = x^2+1$;\; $(0.5)^2+1 = 1.25$.\;\checkmark
+\end{ansbox}
+
+\medskip
+\textbf{(b)} Using Newton's \textbf{Backward} Difference formula, find $y(3.5)$.
+
+\begin{ansbox}
+\textbf{Step 1 — Backward Difference Table} (from same data):
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{$x$}} & \textcolor{white}{\textbf{$y$}} & \textcolor{white}{\textbf{$\nabla y$}} & \textcolor{white}{\textbf{$\nabla^2 y$}} & \textcolor{white}{\textbf{$\nabla^3 y$}}\\
+\hline
+0 & 1 & & &\\\hline
+1 & 2 & 1 & &\\\hline
+2 & 5 & 3 & 2 &\\\hline
+3 & 10 & 5 & 2 & 0\\\hline
+4 & 17 & 7 & 2 & 0\\\hline
+\end{tabular}
+\end{center}
+
+\textbf{Step 2 — Formula:}
+\[
+  y(x) = y_n + p\,\nabla y_n + \frac{p(p+1)}{2!}\,\nabla^2 y_n + \frac{p(p+1)(p+2)}{3!}\,\nabla^3 y_n + \cdots
+  \quad\text{where } p = \frac{x - x_n}{h}
+\]
+
+\textbf{Step 3 — Apply:} $x_n = 4$, $h=1$, $x=3.5$,\quad $p = \dfrac{3.5-4}{1} = -0.5$.
+
+Values at $x_n=4$: $\nabla y_4 = 7$,\; $\nabla^2 y_4 = 2$,\; $\nabla^3 y_4 = 0$.
+
+\[
+  y(3.5) = 17 + (-0.5)(7) + \frac{(-0.5)(0.5)}{2}(2) + \frac{(-0.5)(0.5)(1.5)}{6}(0)
+\]
+\[
+  = 17 - 3.5 + \frac{-0.25}{2}(2) + 0 = 17 - 3.5 - 0.25 = \boxed{\mathbf{13.25}}
+\]
+
+\textit{Check:} $y = x^2+1$;\; $(3.5)^2+1 = 12.25+1 = 13.25$.\;\checkmark
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q5
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 5 \textemdash\ Gauss Elimination \textbf{+} Fixed-Point Iteration}
+\end{qbox}
+
+\medskip
+\textbf{(a)} Solve the following system using \textbf{Gaussian Elimination}:
+\[
+  x + y + z = 6,\qquad 2x - y + z = 3,\qquad x + 2y - z = 2.
+\]
+
+\begin{ansbox}
+\textbf{Augmented matrix:}
+\[
+  \begin{bmatrix} 1 & 1 & 1 & \big| & 6 \\ 2 & -1 & 1 & \big| & 3 \\ 1 & 2 & -1 & \big| & 2 \end{bmatrix}
+\]
+
+\textbf{Step 1 — Eliminate below pivot in column 1:}
+
+$R_2 \leftarrow R_2 - 2R_1$:\quad $[0,\;-3,\;-1\;|\;-9]$
+
+$R_3 \leftarrow R_3 - R_1$:\quad $[0,\;\;\;1,\;-2\;|\;-4]$
+
+\[
+  \begin{bmatrix} 1 & 1 & 1 & \big| & 6 \\ 0 & -3 & -1 & \big| & -9 \\ 0 & 1 & -2 & \big| & -4 \end{bmatrix}
+\]
+
+\textbf{Step 2 — Swap $R_2 \leftrightarrow R_3$} (to get integer pivot):
+\[
+  \begin{bmatrix} 1 & 1 & 1 & \big| & 6 \\ 0 & 1 & -2 & \big| & -4 \\ 0 & -3 & -1 & \big| & -9 \end{bmatrix}
+\]
+
+\textbf{Step 3 — Eliminate below pivot in column 2:}
+
+$R_3 \leftarrow R_3 + 3R_2$:\quad $[0,\;0,\;-7\;|\;-21]$
+
+\[
+  \begin{bmatrix} 1 & 1 & 1 & \big| & 6 \\ 0 & 1 & -2 & \big| & -4 \\ 0 & 0 & -7 & \big| & -21 \end{bmatrix}
+\]
+
+\textbf{Back Substitution:}
+\begin{align*}
+  R_3:\quad &-7z = -21 \;\Rightarrow\; \boxed{z = 3}\\
+  R_2:\quad &y - 2(3) = -4 \;\Rightarrow\; y = 2 \;\Rightarrow\; \boxed{y = 2}\\
+  R_1:\quad &x + 2 + 3 = 6 \;\Rightarrow\; \boxed{x = 1}
+\end{align*}
+
+\textbf{Solution:} $x = 1,\quad y = 2,\quad z = 3$.\quad\textit{Check:} $1+2+3=6$\;\checkmark,\;$2-2+3=3$\;\checkmark,\;$1+4-3=2$\;\checkmark.
+\end{ansbox}
+
+\medskip
+\textbf{(b)} Using \textbf{Fixed-Point Iteration}, find a root of $f(x) = x - e^{-x} = 0$ starting from $x_0 = 0.5$. Perform \textbf{4 iterations}. Also verify the convergence condition.
+
+\begin{ansbox}
+\textbf{Rewrite:} $f(x) = 0 \;\Rightarrow\; x = e^{-x}$.\quad So the iteration function is $g(x) = e^{-x}$.
+
+\textbf{Convergence check:} $g'(x) = -e^{-x}$.\; At the root $x^* \approx 0.5671$:
+\[
+  |g'(0.5671)| = e^{-0.5671} \approx 0.5671 < 1.\quad\text{Convergence guaranteed.}\;\checkmark
+\]
+
+\textbf{Iterations:} $x_{n+1} = e^{-x_n}$.
+
+\begin{center}
+\begin{tabular}{|c|C{3.5cm}|C{4.5cm}|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{$n$}} & \textcolor{white}{\textbf{$x_n$}} & \textcolor{white}{\textbf{$x_{n+1} = e^{-x_n}$}}\\
+\hline
+0 & 0.5000 & $e^{-0.5000} = 0.6065$\\\hline
+1 & 0.6065 & $e^{-0.6065} = 0.5453$\\\hline
+2 & 0.5453 & $e^{-0.5453} = 0.5796$\\\hline
+3 & 0.5796 & $e^{-0.5796} = 0.5601$\\\hline
+4 & 0.5601 & $e^{-0.5601} = 0.5712$\\\hline
+\end{tabular}
+\end{center}
+
+The sequence $0.5000,\;0.6065,\;0.5453,\;0.5796,\;0.5601,\;0.5712,\;\ldots$ oscillates and converges to $x^* \approx \mathbf{0.5671}$.
+
+\textit{Note:} This is the solution of $x\,e^x = 1$, i.e.\ $x = W_0(1) \approx 0.5671$ (Lambert W function).
+\end{ansbox}
+
+\end{document}

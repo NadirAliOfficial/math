@@ -1,0 +1,502 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{booktabs,array,multirow,graphicx,enumitem}
+\usepackage[expansion=false]{microtype}
+
+\tcbuselibrary{skins,breakable}
+\geometry{margin=0.85in,top=1in,bottom=1in}
+
+\definecolor{primary}  {RGB}{27, 79,114}
+\definecolor{accent}   {RGB}{46,134,193}
+\definecolor{lightbg}  {RGB}{234,244,251}
+\definecolor{darktext} {RGB}{44, 62, 80}
+\definecolor{purpleclr}{RGB}{90, 20,140}
+\definecolor{purplebg} {RGB}{240,228,255}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Operations Research}\;\textcolor{accent}{|}\;Solved Past Paper 2025}
+\fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+\newtcolorbox{qbox}[1]{enhanced,arc=0pt,boxrule=0pt,
+  colback=primary,colframe=primary,left=14pt,right=14pt,top=10pt,bottom=8pt,
+  borderline south={4pt}{0pt}{accent},fontupper=\bfseries\color{white},
+  title={\small\bfseries\color{accent!80}#1},coltitle=accent!80,
+  attach title to upper=\\[2pt]}
+
+\newtcolorbox{ansbox}{enhanced,arc=4pt,boxrule=1.5pt,breakable,
+  colback=purplebg!50,colframe=purpleclr,left=10pt,right=10pt,top=8pt,bottom=8pt,
+  title={\small\bfseries\color{white}Solution},colbacktitle=purpleclr,coltitle=white,
+  attach boxed title to top left={xshift=10pt,yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt,colframe=purpleclr,boxrule=0pt}}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\begin{document}
+
+% ── COVER PAGE ─────────────────────────────────────────────
+\thispagestyle{empty}
+\begin{tcolorbox}[enhanced,arc=0pt,boxrule=0pt,colback=primary,colframe=primary,
+  left=20pt,right=20pt,top=28pt,bottom=20pt,borderline south={5pt}{0pt}{accent}]
+  \centering
+  {\fontsize{26}{32}\bfseries\color{white}Operations Research\\[8pt]Solved Past Paper}\\[12pt]
+  {\large\color{lightbg}Transportation Problem \textbf{·} VAM \textbf{·} MODI \textbf{·} Stepping Stone}
+\end{tcolorbox}
+
+\vspace{8pt}
+\begin{tcolorbox}[enhanced,arc=0pt,boxrule=0pt,colback=white,colframe=white,
+  borderline north={2pt}{0pt}{primary},borderline south={2pt}{0pt}{primary},
+  left=0pt,right=0pt,top=0pt,bottom=0pt]
+\begin{tabular}{p{0.23\textwidth}|p{0.24\textwidth}|p{0.24\textwidth}|p{0.22\textwidth}}
+  \hspace{8pt}\begin{minipage}[t]{0.21\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent}DATE}\\[4pt]
+    {\bfseries\color{primary}Sat, 31 May 2025}\\[3pt]
+    {\footnotesize\color{darktext}Final Examinations}
+  \vspace{8pt}\end{minipage}&
+  \hspace{8pt}\begin{minipage}[t]{0.21\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent}COMPOSED BY}\\[4pt]
+    {\bfseries\color{primary}Nadir Ali Khan}\\[3pt]
+    {\footnotesize\color{darktext}BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}&
+  \hspace{8pt}\begin{minipage}[t]{0.21\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent}UNIVERSITY}\\[4pt]
+    {\bfseries\color{primary}SALU Khairpur}\\[3pt]
+    {\footnotesize\color{darktext}Dept.\ of Mathematics}
+  \vspace{8pt}\end{minipage}&
+  \hspace{8pt}\begin{minipage}[t]{0.19\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent}TEACHER}\\[4pt]
+    {\bfseries\color{primary}Sir Darshan}\\[3pt]
+    {\footnotesize\color{darktext}Operations Research}
+  \vspace{8pt}\end{minipage}
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{16pt}
+\begin{tcolorbox}[colback=lightbg,colframe=accent,arc=4pt,boxrule=1pt,
+  left=12pt,right=12pt,top=10pt,bottom=10pt]
+\begin{tabular}{ll}
+  \textcolor{accent}{\bfseries Total Marks:}&50\quad(Attempt any \textbf{Three} questions)\\
+  \textcolor{accent}{\bfseries Time:}&2 Hours\\
+\end{tabular}
+\end{tcolorbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q1
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 1 \textemdash\ Transportation Problem: Definition and LPP Formulation}
+\end{qbox}
+
+\medskip
+\textbf{(a)} Define a transportation problem and develop a linear programming problem from the given diagram.
+
+\begin{ansbox}
+\textbf{Definition:} A \textbf{transportation problem} is a special type of linear programming problem that deals with shipping a commodity from $m$ sources (with given supplies $a_i$) to $n$ destinations (with given demands $b_j$) at minimum total transportation cost $c_{ij}$ per unit.
+
+\medskip
+\textbf{Network from diagram:} Sources $S_1(5),\,S_2(7),\,S_3(3)$; Destinations $D_1(7),\,D_2(3),\,D_3(5)$.
+
+\medskip
+\textbf{Decision variables:} Let $x_{ij}$ = units shipped from source $S_i$ to destination $D_j$.
+
+\medskip
+\textbf{LP Formulation:}
+
+\textit{Objective (Minimize total cost):}
+\[
+  Z = \sum_{i=1}^{3}\sum_{j=1}^{3} c_{ij}\,x_{ij}
+  = 3x_{11}+4x_{12}+8x_{13}+2x_{21}+3x_{22}+1x_{23}+4x_{31}+8x_{32}+3x_{33}.
+\]
+
+\textit{Supply constraints (cannot exceed available supply):}
+\[
+  x_{11}+x_{12}+x_{13}=5,\quad x_{21}+x_{22}+x_{23}=7,\quad x_{31}+x_{32}+x_{33}=3.
+\]
+
+\textit{Demand constraints (must meet demand):}
+\[
+  x_{11}+x_{21}+x_{31}=7,\quad x_{12}+x_{22}+x_{32}=3,\quad x_{13}+x_{23}+x_{33}=5.
+\]
+
+\textit{Non-negativity:} $x_{ij}\geq0$ for all $i,j$.
+\end{ansbox}
+
+\medskip
+\textbf{(b)} Discuss balanced and unbalanced transportation problems with examples.
+
+\begin{ansbox}
+\textbf{Balanced:} A transportation problem is \textbf{balanced} when total supply equals total demand:
+\[
+  \sum_{i=1}^{m} a_i = \sum_{j=1}^{n} b_j.
+\]
+\textit{Example (Q1 above):} Total supply $= 5+7+3=15$, Total demand $= 7+3+5=15$. Balanced. \checkmark
+
+\medskip
+\textbf{Unbalanced:} When total supply $\neq$ total demand.
+
+\begin{itemize}[nosep]
+  \item \textbf{Supply $>$ Demand:} Add a \textbf{dummy destination} $D_{\text{dummy}}$ with demand $= \sum a_i - \sum b_j$ and zero cost.
+  \item \textbf{Demand $>$ Supply:} Add a \textbf{dummy source} $S_{\text{dummy}}$ with supply $= \sum b_j - \sum a_i$ and zero cost.
+\end{itemize}
+
+\textit{Example:} In Q2 below, Supply $= 76+82+77=235$, Demand $= 72+102+41=215$. Since $235>215$, add dummy destination with demand $20$ and cost $0$.
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q2
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 2 \textemdash\ Vogel's Approximation Method (VAM) + MODI Optimality Test}
+\end{qbox}
+
+\begin{ansbox}
+\textbf{Step 1 — Check balance.}
+
+Supply $= 76+82+77 = 235$,\; Demand $= 72+102+41 = 215$.\; Unbalanced (excess supply = 20).
+
+Add dummy destination $D_4$ with demand $= 20$ and cost $= 0$.
+
+\medskip
+\textbf{Step 2 — Balanced table:}
+
+\begin{center}
+\begin{tabular}{|c|C{1.4cm}|C{1.4cm}|C{1.4cm}|C{1.4cm}|c|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{}} & \textcolor{white}{\textbf{D1(72)}} & \textcolor{white}{\textbf{D2(102)}} & \textcolor{white}{\textbf{D3(41)}} & \textcolor{white}{\textbf{D4(20)}} & \textcolor{white}{\textbf{Supply}}\\
+\hline
+S1 & 4 & 8 & 8 & 0 & 76 \\\hline
+S2 & 16 & 24 & 16 & 0 & 82 \\\hline
+S3 & 8 & 16 & 24 & 0 & 77 \\\hline
+\end{tabular}
+\end{center}
+
+\medskip
+\textbf{Step 3 — Apply VAM} (compute row \& column penalties = difference between two lowest costs):
+
+\textbf{Iteration 1:} Row penalties: R1=4, R2=\textbf{16}, R3=8.\; Col penalties: C1=4, C2=8, C3=8, C4=0.
+
+Max penalty = \textbf{16} (Row 2). Minimum cost in R2 = 0 at D4. Allocate $\min(82,20)=20$.
+\quad\textbf{Allocation:} $(S_2,D_4)=20$. D4 exhausted. $S_2$ remaining supply $=62$.
+
+\textbf{Iteration 2} (D4 removed): Row penalties: R1=4, R2=0, R3=\textbf{8}.\; Col penalties: C1=4, C2=\textbf{8}, C3=8.
+
+Max = 8 (R3). Min in R3 = 8 at D1. Allocate $\min(77,72)=72$.
+\quad\textbf{Allocation:} $(S_3,D_1)=72$. D1 exhausted. $S_3$ remaining $=5$.
+
+\textbf{Iteration 3} (D1 removed): Row penalties: R1=0, R2=\textbf{8}, R3=8.\; Col penalties: C2=8, C3=8.
+
+Max = 8 (R2). Min in R2 = 16 at D3. Allocate $\min(62,41)=41$.
+\quad\textbf{Allocation:} $(S_2,D_3)=41$. D3 exhausted. $S_2$ remaining $=21$.
+
+\textbf{Iteration 4} (D2 only remains): Supply S1=76, S2=21, S3=5; Demand D2=102.
+
+Allocate in order: $(S_1,D_2)=76$,\; $(S_2,D_2)=21$,\; $(S_3,D_2)=5$.
+\quad Check: $76+21+5=102$.\;\checkmark
+
+\medskip
+\textbf{VAM Initial BFS:}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\rowcolor{primary!80}\textcolor{white}{\textbf{Allocation}} & \textcolor{white}{\textbf{Units}} & \textcolor{white}{\textbf{Cost}} & \textcolor{white}{\textbf{Contribution}}\\
+\hline
+$(S_1,D_2)$ & 76 & 8 & 608\\\hline
+$(S_2,D_3)$ & 41 & 16 & 656\\\hline
+$(S_2,D_2)$ & 21 & 24 & 504\\\hline
+$(S_2,D_4)$ & 20 & 0 & 0\\\hline
+$(S_3,D_1)$ & 72 & 8 & 576\\\hline
+$(S_3,D_2)$ & 5 & 16 & 80\\\hline
+\rowcolor{lightbg}\multicolumn{3}{|c|}{\textbf{Total Cost}} & \textbf{2424}\\\hline
+\end{tabular}
+\end{center}
+
+No.\ of allocations $= 6 = m+n-1 = 3+4-1$.\;\checkmark\; (Non-degenerate)
+
+\medskip
+\textbf{Step 4 — MODI Method} (optimality test).
+
+Assign $u_i$ (rows) and $v_j$ (columns) such that $u_i+v_j = c_{ij}$ for all basic cells. Set $u_1=0$:
+
+\begin{center}
+\begin{tabular}{ll}
+$(S_1,D_2)$: $u_1+v_2=8$ & $\Rightarrow v_2=8$\\
+$(S_2,D_2)$: $u_2+v_2=24$ & $\Rightarrow u_2=16$\\
+$(S_2,D_3)$: $u_2+v_3=16$ & $\Rightarrow v_3=0$\\
+$(S_2,D_4)$: $u_2+v_4=0$ & $\Rightarrow v_4=-16$\\
+$(S_3,D_2)$: $u_3+v_2=16$ & $\Rightarrow u_3=8$\\
+$(S_3,D_1)$: $u_3+v_1=8$ & $\Rightarrow v_1=0$\\
+\end{tabular}
+\end{center}
+
+Values: $u_1=0,\;u_2=16,\;u_3=8,\;v_1=0,\;v_2=8,\;v_3=0,\;v_4=-16$.
+
+\textbf{Opportunity costs} $d_{ij} = c_{ij}-u_i-v_j$ for non-basic cells:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\rowcolor{primary!80}\textcolor{white}{\textbf{Cell}} & \textcolor{white}{\textbf{$c_{ij}$}} & \textcolor{white}{\textbf{$u_i+v_j$}} & \textcolor{white}{\textbf{$d_{ij}$}}\\
+\hline
+$(S_1,D_1)$ & 4 & $0+0=0$ & $+4$\\\hline
+$(S_1,D_3)$ & 8 & $0+0=0$ & $+8$\\\hline
+$(S_1,D_4)$ & 0 & $0+(-16)=-16$ & $+16$\\\hline
+$(S_2,D_1)$ & 16 & $16+0=16$ & $0$\\\hline
+$(S_3,D_3)$ & 24 & $8+0=8$ & $+16$\\\hline
+$(S_3,D_4)$ & 0 & $8+(-16)=-8$ & $+8$\\\hline
+\end{tabular}
+\end{center}
+
+\textbf{All $d_{ij}\geq0$, so the solution is OPTIMAL.}
+
+\begin{center}
+\textbf{Optimal Cost = 2424 units} \quad(real cost, dummy allocations excluded)
+\end{center}
+\textit{Note:} $(S_2,D_1)$ has $d_{ij}=0$, indicating an alternative optimal solution exists.
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q3
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 3 \textemdash\ NW Corner + Stepping Stone Method (Two Iterations)}
+\end{qbox}
+
+\medskip
+\textbf{Table:} (Supply = Demand = 50, Balanced \checkmark)
+
+\begin{center}
+\begin{tabular}{|c|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|c|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{From$\backslash$To}} & \textcolor{white}{\textbf{Mill 1}} & \textcolor{white}{\textbf{Mill 2}} & \textcolor{white}{\textbf{Mill 3}} & \textcolor{white}{\textbf{Mill 4}} & \textcolor{white}{\textbf{Supply}}\\
+\hline
+Farm 1 & 10 & 2 & 20 & 11 & 15\\\hline
+Farm 2 & 12 & 7 & 9 & 20 & 25\\\hline
+Farm 3 & 4 & 14 & 16 & 18 & 10\\\hline
+\textbf{Demand} & \textbf{5} & \textbf{15} & \textbf{15} & \textbf{15} & \textbf{50}\\\hline
+\end{tabular}
+\end{center}
+
+\begin{ansbox}
+\textbf{(a) North-West Corner Method:}
+
+Start at top-left and allocate as much as possible, moving right or down when exhausted:
+
+\begin{center}
+\begin{tabular}{|c|c|l|}
+\hline
+\rowcolor{primary!80}\textcolor{white}{\textbf{Step}}&\textcolor{white}{\textbf{Cell}}&\textcolor{white}{\textbf{Allocation}}\\
+\hline
+1 & $(F_1,M_1)$ & $\min(15,5)=5$\quad $M_1$ exhausted, $F_1$ remaining $=10$\\\hline
+2 & $(F_1,M_2)$ & $\min(10,15)=10$\quad $F_1$ exhausted, $M_2$ remaining $=5$\\\hline
+3 & $(F_2,M_2)$ & $\min(25,5)=5$\quad $M_2$ exhausted, $F_2$ remaining $=20$\\\hline
+4 & $(F_2,M_3)$ & $\min(20,15)=15$\quad $M_3$ exhausted, $F_2$ remaining $=5$\\\hline
+5 & $(F_2,M_4)$ & $\min(5,15)=5$\quad $F_2$ exhausted, $M_4$ remaining $=10$\\\hline
+6 & $(F_3,M_4)$ & $\min(10,10)=10$\quad Both exhausted\\\hline
+\end{tabular}
+\end{center}
+
+\textbf{NW Corner BFS and Cost:}
+\[
+  Z_{\text{NW}} = 5(10)+10(2)+5(7)+15(9)+5(20)+10(18) = 50+20+35+135+100+180 = \mathbf{520}
+\]
+
+\medskip
+\textbf{(b) Stepping Stone Method — Iteration 1:}
+
+Compute net cost change for each non-basic cell by finding a closed loop:
+
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{|c|c|l|}
+\hline
+\rowcolor{primary!80}\textcolor{white}{\textbf{Cell}}&\textcolor{white}{\textbf{Loop}}&\textcolor{white}{\textbf{Net Cost Change}}\\
+\hline
+$(F_1,M_3)$ & $(F_1M_3)^+\to(F_1M_2)^-\to(F_2M_2)^+\to(F_2M_3)^-$ & $20-2+7-9=+16$\\\hline
+$(F_1,M_4)$ & $(F_1M_4)^+\to(F_1M_2)^-\to(F_2M_2)^+\to(F_2M_4)^-$ & $11-2+7-20=-4$\\\hline
+$(F_2,M_1)$ & $(F_2M_1)^+\to(F_1M_1)^-\to(F_1M_2)^+\to(F_2M_2)^-$ & $12-10+2-7=-3$\\\hline
+$(F_3,M_1)$ & $(F_3M_1)^+\to(F_3M_4)^-\to(F_2M_4)^+\to(F_2M_2)^-\to(F_1M_2)^+\to(F_1M_1)^-$ & $4-18+20-7+2-10=\mathbf{-9}$\\\hline
+$(F_3,M_2)$ & $(F_3M_2)^+\to(F_3M_4)^-\to(F_2M_4)^+\to(F_2M_2)^-$ & $14-18+20-7=+9$\\\hline
+$(F_3,M_3)$ & $(F_3M_3)^+\to(F_2M_3)^-\to(F_2M_4)^+\to(F_3M_4)^-$ & $16-9+20-18=+9$\\\hline
+\end{tabular}}
+\end{center}
+
+Most negative: $(F_3,M_1)$ with $-9$. \textbf{Enter $(F_3,M_1)$ into basis.}
+
+Loop: $(F_3,M_1)^+\to(F_3,M_4)^-\to(F_2,M_4)^+\to(F_2,M_2)^-\to(F_1,M_2)^+\to(F_1,M_1)^-$
+
+Allocations at negative cells: $\theta = \min\{10,\,5,\,5\} = 5$.
+
+$(F_1,M_1)$ and $(F_2,M_2)$ both hit 0 (degeneracy). Let $(F_1,M_1)$ leave.
+
+\textbf{After Iteration 1:}
+\begin{align*}
+  &(F_1,M_2)=10+5=15,\quad(F_2,M_2)=5-5=0\ (\text{degenerate}),\quad(F_2,M_3)=15,\\
+  &(F_2,M_4)=5+5=10,\quad(F_3,M_1)=0+5=5,\quad(F_3,M_4)=10-5=5.
+\end{align*}
+\[
+  Z_1 = 15(2)+0(7)+15(9)+10(20)+5(4)+5(18) = 30+0+135+200+20+90 = \mathbf{475}
+\]
+
+\medskip
+\textbf{Stepping Stone — Iteration 2:}
+
+Recompute for non-basic cells with new basis:
+
+\begin{center}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{|c|c|l|}
+\hline
+\rowcolor{primary!80}\textcolor{white}{\textbf{Cell}}&\textcolor{white}{\textbf{Loop}}&\textcolor{white}{\textbf{Net Cost Change}}\\
+\hline
+$(F_1,M_1)$ & $(F_1M_1)^+\to(F_3M_1)^-\to(F_3M_4)^+\to(F_2M_4)^-\to(F_2M_2)^+\to(F_1M_2)^-$ & $10-4+18-20+7-2=+9$\\\hline
+$(F_1,M_3)$ & $(F_1M_3)^+\to(F_1M_2)^-\to(F_2M_2)^+\to(F_2M_3)^-$ & $20-2+7-9=+16$\\\hline
+$(F_1,M_4)$ & $(F_1M_4)^+\to(F_1M_2)^-\to(F_2M_2)^+\to(F_2M_4)^-$ & $11-2+7-20=\mathbf{-4}$\\\hline
+$(F_2,M_1)$ & $(F_2M_1)^+\to(F_3M_1)^-\to(F_3M_4)^+\to(F_2M_4)^-$ & $12-4+18-20=+6$\\\hline
+$(F_3,M_2)$ & $(F_3M_2)^+\to(F_3M_4)^-\to(F_2M_4)^+\to(F_2M_2)^-$ & $14-18+20-7=+9$\\\hline
+$(F_3,M_3)$ & $(F_3M_3)^+\to(F_2M_3)^-\to(F_2M_4)^+\to(F_3M_4)^-$ & $16-9+20-18=+9$\\\hline
+\end{tabular}}
+\end{center}
+
+Most negative: $(F_1,M_4)$ with $-4$. \textbf{Enter $(F_1,M_4)$.}
+
+Loop: $(F_1,M_4)^+\to(F_1,M_2)^-\to(F_2,M_2)^+\to(F_2,M_4)^-$
+
+Negative cells: $(F_1,M_2)=15$, $(F_2,M_4)=10$, $(F_2,M_2)=0$. $\theta=\min(15,10,0)=0$...
+
+Since $(F_2,M_2)=0$ (degenerate), $\theta=10$ from $(F_2,M_4)$. $(F_2,M_4)$ leaves.
+
+\textbf{After Iteration 2:}
+\begin{align*}
+  &(F_1,M_2)=15-10=5,\quad(F_1,M_4)=0+10=10,\\
+  &(F_2,M_2)=0+10=10,\quad(F_2,M_3)=15,\quad(F_3,M_1)=5,\quad(F_3,M_4)=5.
+\end{align*}
+\[
+  Z_2 = 5(2)+10(11)+10(7)+15(9)+5(4)+5(18) = 10+110+70+135+20+90 = \boxed{\mathbf{435}}
+\]
+Cost improved from 520 $\to$ 475 $\to$ \textbf{435} over two iterations.
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q4
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 4 \textemdash\ Three Methods for Initial Feasible Solution + Key Differences}
+\end{qbox}
+
+\medskip
+\textbf{Table:} (Supply $= 6+1+10=17$, Demand $= 7+5+3+2=17$, Balanced \checkmark)
+
+\begin{center}
+\begin{tabular}{|c|C{1.3cm}|C{1.3cm}|C{1.3cm}|C{1.3cm}|c|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{From$\backslash$To}} & \textcolor{white}{\textbf{D1(7)}} & \textcolor{white}{\textbf{D2(5)}} & \textcolor{white}{\textbf{D3(3)}} & \textcolor{white}{\textbf{D4(2)}} & \textcolor{white}{\textbf{Supply}}\\
+\hline
+S1 & 2 & 3 & 11 & 7 & 6\\\hline
+S2 & 1 & 0 & 6 & 1 & 1\\\hline
+S3 & 5 & 8 & 15 & 9 & 10\\\hline
+\textbf{Demand}&\textbf{7}&\textbf{5}&\textbf{3}&\textbf{2}&\textbf{17}\\\hline
+\end{tabular}
+\end{center}
+
+\begin{ansbox}
+\textbf{Method 1 — North-West Corner:}
+
+\begin{center}
+\begin{tabular}{|c|l|}
+\hline
+\rowcolor{primary!80}\textcolor{white}{\textbf{Cell}}&\textcolor{white}{\textbf{Allocation \& Reason}}\\
+\hline
+$(S_1,D_1)$ & $\min(6,7)=6$. $S_1$ done. $D_1$ remaining $=1$.\\\hline
+$(S_2,D_1)$ & $\min(1,1)=1$. $S_2$ \& $D_1$ done.\\\hline
+$(S_3,D_2)$ & $\min(10,5)=5$. $D_2$ done. $S_3$ remaining $=5$.\\\hline
+$(S_3,D_3)$ & $\min(5,3)=3$. $D_3$ done. $S_3$ remaining $=2$.\\\hline
+$(S_3,D_4)$ & $\min(2,2)=2$. All done.\\\hline
+\end{tabular}
+\end{center}
+\[
+  Z_{\text{NW}} = 6(2)+1(1)+5(8)+3(15)+2(9) = 12+1+40+45+18 = \mathbf{116}
+\]
+
+\medskip
+\textbf{Method 2 — Least Cost Method:}
+
+Assign to the cell with minimum cost first.
+
+\begin{center}
+\begin{tabular}{|c|c|l|}
+\hline
+\rowcolor{primary!80}\textcolor{white}{\textbf{Step}}&\textcolor{white}{\textbf{Min Cost Cell}}&\textcolor{white}{\textbf{Allocation}}\\
+\hline
+1 & $(S_2,D_2)=0$ & $\min(1,5)=1$. $S_2$ done. $D_2$ remaining $=4$.\\\hline
+2 & $(S_1,D_1)=2$ & $\min(6,7)=6$. $S_1$ done. $D_1$ remaining $=1$.\\\hline
+3 & $(S_3,D_1)=5$ & $\min(10,1)=1$. $D_1$ done. $S_3$ remaining $=9$.\\\hline
+4 & $(S_3,D_2)=8$ & $\min(9,4)=4$. $D_2$ done. $S_3$ remaining $=5$.\\\hline
+5 & $(S_3,D_4)=9$ & $\min(5,2)=2$. $D_4$ done. $S_3$ remaining $=3$.\\\hline
+6 & $(S_3,D_3)=15$ & $\min(3,3)=3$. All done.\\\hline
+\end{tabular}
+\end{center}
+\[
+  Z_{\text{LC}} = 1(0)+6(2)+1(5)+4(8)+2(9)+3(15) = 0+12+5+32+18+45 = \mathbf{112}
+\]
+
+\medskip
+\textbf{Method 3 — Vogel's Approximation Method (VAM):}
+
+\textit{Iter 1:} Row penalties: R1=1, R2=1, R3=\textbf{3}.\; Col penalties: C1=1, C2=3, C3=5, C4=\textbf{6}.\\
+Max = 6 (C4). Min in C4 = 1 at $(S_2,D_4)$. Allocate $\min(1,2)=1$. $S_2$ done. $D_4$ rem.=1.
+
+\textit{Iter 2:} Row penalties: R1=\textbf{5}, R3=3.\; Col penalties: C1=3, C2=\textbf{5}, C3=4, C4=2.\\
+Max = 5 (C2). Min in C2 = 3 at $(S_1,D_2)$. Allocate $\min(6,5)=5$. $D_2$ done. $S_1$ rem.=1.
+
+\textit{Iter 3:} Row penalties: R1=\textbf{5}, R3=4.\; Col penalties: C1=3, C3=4, C4=2.\\
+Max = 5 (R1). Min in R1 = 2 at $(S_1,D_1)$. Allocate $\min(1,7)=1$. $S_1$ done. $D_1$ rem.=6.
+
+\textit{Iter 4:} Only $S_3$ remains (supply=10): $D_1$ rem.=6, $D_3$ rem.=3, $D_4$ rem.=1.\\
+Min cost in $S_3$ row: $D_1$=5, $D_4$=9, $D_3$=15.\\
+$(S_3,D_1)$: $\min(10,6)=6$. $D_1$ done. $S_3$ rem.=4.\\
+$(S_3,D_4)$: $\min(4,1)=1$. $D_4$ done. $S_3$ rem.=3.\\
+$(S_3,D_3)$: $\min(3,3)=3$. All done.
+\[
+  Z_{\text{VAM}} = 1(1)+5(3)+1(2)+6(5)+1(9)+3(15) = 1+15+2+30+9+45 = \mathbf{102}
+\]
+
+\medskip
+\textbf{Key Differences:}
+
+\begin{center}
+\begin{tabular}{|C{3cm}|C{3.5cm}|C{3.5cm}|C{3.5cm}|}
+\hline
+\rowcolor{primary!80}
+\textcolor{white}{\textbf{Feature}} & \textcolor{white}{\textbf{NW Corner}} & \textcolor{white}{\textbf{Least Cost}} & \textcolor{white}{\textbf{VAM}}\\
+\hline
+Basis & Top-left corner & Minimum cost cell & Penalty (opportunity cost)\\
+\hline
+Cost considered? & No & Yes & Yes (indirectly)\\
+\hline
+Quality of solution & Poorest & Better & Best\\
+\hline
+Complexity & Simplest & Medium & Most complex\\
+\hline
+Cost (Q4) & 116 & 112 & \textbf{102}\\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Conclusion:} VAM gives the best initial solution (102) as it considers penalties (the cost of not choosing the cheapest option), making it closest to the optimal solution.
+\end{ansbox}
+
+\end{document}
