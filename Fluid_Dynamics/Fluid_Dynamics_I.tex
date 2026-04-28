@@ -1,0 +1,764 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{titletoc}
+\usepackage{tikz}
+
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{examplebox*}[1][]{
+  enhanced, breakable,
+  colback=slategray!8, colframe=slategray!50, arc=5pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} #1},
+  colbacktitle=slategray!70, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=slategray!70, boxrule=0pt},
+}
+
+\geometry{margin=0.9in, top=1in, bottom=1in}
+
+% ── Colour palette (Deep Ocean) ─────────────────────────
+\definecolor{primary}  {RGB}{10,  80,  90}   % deep teal
+\definecolor{accent}   {RGB}{0,  175, 185}   % cyan
+\definecolor{lightbg}  {RGB}{224,247,250}    % pale cyan
+\definecolor{jade}     {RGB}{0,  130,  80}
+\definecolor{jadebg}   {RGB}{215,245,230}
+\definecolor{amberclr} {RGB}{160, 90,   0}
+\definecolor{amberbg}  {RGB}{255,243,220}
+\definecolor{purpleclr}{RGB}{80,  30, 130}
+\definecolor{purplebg} {RGB}{238,228,255}
+\definecolor{redclr}   {RGB}{160,  30,  30}
+\definecolor{redbg}    {RGB}{255,228,228}
+\definecolor{greenclr} {RGB}{20, 110,  50}
+\definecolor{greenbg}  {RGB}{215,248,228}
+\definecolor{grayclr}  {RGB}{75,  85,  95}
+\definecolor{graybg}   {RGB}{244,246,248}
+\definecolor{darktext} {RGB}{25,  40,  50}
+\definecolor{slategray}{RGB}{90, 105, 115}
+\definecolor{rust}     {RGB}{180, 70,  20}
+\definecolor{rustbg}   {RGB}{255,235,220}
+
+% ── TOC styling ─────────────────────────────────────────
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+\renewcommand{\contentsname}{}
+\titlecontents{section}
+  [18pt]
+  {\addvspace{5pt}\bfseries\color{primary}}
+  {}{}
+  {\color{accent!70}\titlerule*[5pt]{.}\textbf{\color{accent}\contentspage}}
+
+% ── Page style ──────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Fluid Dynamics I}\;\textcolor{accent}{|}\;Complete Notes}
+\fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ─────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}{}
+  {0em}{}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}{}
+  {0em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+% ── tcolorbox environments ──────────────────────────────
+\newtcolorbox{defbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=jadebg, colframe=jade,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Definition\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=jade, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=jade, boxrule=0pt},
+}
+
+\newtcolorbox{thmbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Theorem\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
+}
+
+\newtcolorbox{derivbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=primary,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Derivation\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=primary, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+}
+
+\newtcolorbox{keybox}[1][]{
+  enhanced,
+  borderline west={4pt}{0pt}{purpleclr},
+  colback=purplebg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newtcolorbox{formulabox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=accent,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Key Formula},
+  colbacktitle=accent, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=accent, boxrule=0pt},
+}
+
+\newtcolorbox{notebox}{
+  enhanced,
+  borderline west={4pt}{0pt}{redclr},
+  colback=redbg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════
+%  COVER PAGE
+% ════════════════════════════════════════════════════════════
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=28pt, bottom=20pt,
+  borderline south={5pt}{0pt}{accent},
+]
+  \centering
+  {\fontsize{26}{32}\bfseries\color{white}
+    Fluid Dynamics I\\[8pt]
+    Complete Notes
+  }\\[12pt]
+  {\large\color{lightbg}
+    Fluid Statics \textbf{·} Kinematics \textbf{·} Dynamics \textbf{·} Bernoulli \textbf{·} Viscosity
+  }
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=white, colframe=white,
+  borderline north={2pt}{0pt}{primary},
+  borderline south={2pt}{0pt}{primary},
+  left=0pt, right=0pt, top=0pt, bottom=0pt,
+]
+\begin{tabular}{p{0.33\textwidth} | p{0.33\textwidth} | p{0.31\textwidth}}
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} DEPARTMENT}\\[4pt]
+    {\bfseries\color{primary} Mathematics}\\[3pt]
+    {\footnotesize\color{darktext} SALU, Khairpur}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} COMPOSED BY}\\[4pt]
+    {\bfseries\color{primary} Nadir Ali Khan}\\[3pt]
+    {\footnotesize\color{darktext} BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.28\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} SESSION}\\[4pt]
+    {\bfseries\color{primary} 2026}\\[3pt]
+    {\footnotesize\color{darktext} Seat No: MT-0123-052}
+  \vspace{8pt}\end{minipage}
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{16pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=white, colframe=primary,
+  left=10pt, right=10pt, top=4pt, bottom=8pt,
+  title={\bfseries\color{white} Table of Contents},
+  colbacktitle=primary,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+]
+\vspace{4pt}
+\tableofcontents
+\end{tcolorbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{1. Introduction to Fluid Dynamics}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Fluid]
+A \textbf{fluid} is a substance that continuously deforms under an applied shear stress, no matter how small. Liquids and gases are both fluids.
+\end{defbox}
+
+\subsection{Types of Fluids}
+\begin{itemize}[leftmargin=16pt, itemsep=3pt]
+  \item \textbf{Ideal (Perfect) Fluid:} Incompressible, inviscid (no viscosity)
+  \item \textbf{Real Fluid:} Has viscosity and compressibility
+  \item \textbf{Newtonian Fluid:} Shear stress $\propto$ rate of strain (e.g.\ water, air)
+  \item \textbf{Non-Newtonian Fluid:} Does not follow Newton's law of viscosity
+  \item \textbf{Compressible:} Density changes with pressure (gases)
+  \item \textbf{Incompressible:} Density constant (liquids)
+\end{itemize}
+
+\subsection{Key Fluid Properties}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{4cm}|C{5cm}|C{4cm}|}
+\hline
+\rowcolor{primary}
+\hcell{Property} & \hcell{Formula} & \hcell{Unit (SI)} \\
+\hline
+Density & $\rho = m/V$ & kg/m$^3$ \\
+\rowcolor{lightbg}
+Specific Weight & $\gamma = \rho g$ & N/m$^3$ \\
+Specific Gravity & $S = \rho_f / \rho_w$ & Dimensionless \\
+\rowcolor{lightbg}
+Dynamic Viscosity & $\mu = \tau / (du/dy)$ & Pa$\cdot$s \\
+Kinematic Viscosity & $\nu = \mu/\rho$ & m$^2$/s \\
+\rowcolor{lightbg}
+Pressure & $P = F/A$ & Pa (N/m$^2$) \\
+\hline
+\end{tabular}
+\end{center}
+
+% ════════════════════════════════════════════════════════════
+\section{2. Fluid Statics}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Fluid Statics]
+Study of fluids at \textbf{rest}. No relative motion between fluid layers, so no shear stress acts.
+\end{defbox}
+
+\subsection{Hydrostatic Pressure}
+
+\begin{formulabox}
+\[
+  P = P_0 + \rho g h
+\]
+where $P_0$ = pressure at surface, $h$ = depth below surface.
+\end{formulabox}
+
+\subsection{Pascal's Law}
+
+\begin{thmbox}[Pascal's Law]
+Pressure applied to a confined fluid is transmitted equally in all directions throughout the fluid.
+\[
+  \frac{F_1}{A_1} = \frac{F_2}{A_2}
+\]
+\end{thmbox}
+
+\subsection{Archimedes' Principle}
+
+\begin{thmbox}[Archimedes' Principle]
+A body wholly or partially submerged in a fluid experiences an upward buoyant force equal to the weight of fluid displaced:
+\[
+  F_B = \rho_f \, g \, V_{\text{displaced}}
+\]
+\end{thmbox}
+
+\begin{itemize}[leftmargin=16pt]
+  \item $F_B > W$ $\Rightarrow$ body floats
+  \item $F_B = W$ $\Rightarrow$ body is neutrally buoyant
+  \item $F_B < W$ $\Rightarrow$ body sinks
+\end{itemize}
+
+% ════════════════════════════════════════════════════════════
+\section{3. Kinematics of Fluid Motion}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Kinematics]
+Study of fluid motion without considering the forces causing it.
+\end{defbox}
+
+\subsection{Types of Flow}
+
+\begin{itemize}[leftmargin=16pt, itemsep=4pt]
+  \item \textbf{Steady Flow:} Fluid properties at any point do not change with time $\left(\dfrac{\partial}{\partial t} = 0\right)$
+  \item \textbf{Unsteady Flow:} Properties change with time
+  \item \textbf{Uniform Flow:} Velocity same at every point at a given instant
+  \item \textbf{Non-uniform Flow:} Velocity varies from point to point
+  \item \textbf{Laminar Flow:} Fluid layers slide smoothly (low Reynolds number, Re $< 2000$)
+  \item \textbf{Turbulent Flow:} Chaotic mixing of layers (Re $> 4000$)
+  \item \textbf{Rotational Flow:} Fluid particles rotate about their own axis
+  \item \textbf{Irrotational Flow:} No rotation; curl of velocity = 0
+\end{itemize}
+
+\subsection{Reynolds Number}
+
+\begin{formulabox}
+\[
+  \text{Re} = \frac{\rho V D}{\mu} = \frac{VD}{\nu}
+\]
+Re $< 2000$: Laminar \quad Re $> 4000$: Turbulent \quad $2000 <$ Re $< 4000$: Transitional
+\end{formulabox}
+
+\subsection{Velocity and Acceleration}
+
+For a velocity field $\mathbf{V} = u\,\hat{i} + v\,\hat{j} + w\,\hat{k}$:
+
+\begin{formulabox}
+\textbf{Material (Substantial) Derivative:}
+\[
+  \frac{D\mathbf{V}}{Dt} = \frac{\partial \mathbf{V}}{\partial t} + (\mathbf{V}\cdot\nabla)\mathbf{V}
+\]
+\[
+  a_x = \frac{Du}{Dt} = \frac{\partial u}{\partial t} + u\frac{\partial u}{\partial x} + v\frac{\partial u}{\partial y} + w\frac{\partial u}{\partial z}
+\]
+\end{formulabox}
+
+\subsection{Streamlines, Pathlines, Streaklines}
+
+\begin{itemize}[leftmargin=16pt, itemsep=3pt]
+  \item \textbf{Streamline:} Curve tangent to velocity vector at every point at a given instant
+  \item \textbf{Pathline:} Actual path traced by a fluid particle over time
+  \item \textbf{Streakline:} Locus of particles that have passed through a given point
+\end{itemize}
+
+\begin{keybox}
+In \textbf{steady flow}, streamlines = pathlines = streaklines.
+\end{keybox}
+
+\subsection{Equation of a Streamline}
+\begin{formulabox}
+\[
+  \frac{dx}{u} = \frac{dy}{v} = \frac{dz}{w}
+\]
+\end{formulabox}
+
+% ════════════════════════════════════════════════════════════
+\section{4. Equation of Continuity}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Continuity Equation]
+Based on conservation of mass: mass can neither be created nor destroyed.
+\end{defbox}
+
+\subsection{General Form (3D, Compressible)}
+
+\begin{formulabox}
+\[
+  \frac{\partial \rho}{\partial t} + \frac{\partial(\rho u)}{\partial x} + \frac{\partial(\rho v)}{\partial y} + \frac{\partial(\rho w)}{\partial z} = 0
+\]
+Or in vector form: $\quad \dfrac{\partial \rho}{\partial t} + \nabla \cdot (\rho \mathbf{V}) = 0$
+\end{formulabox}
+
+\subsection{For Incompressible Flow ($\rho = \text{const}$)}
+
+\begin{formulabox}
+\[
+  \frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} + \frac{\partial w}{\partial z} = 0
+  \qquad \text{i.e.} \quad \nabla \cdot \mathbf{V} = 0
+\]
+\end{formulabox}
+
+\subsection{Continuity for 1D Pipe Flow}
+
+\begin{formulabox}
+\[
+  A_1 V_1 = A_2 V_2 = Q \quad \text{(volume flow rate, m}^3\text{/s)}
+\]
+\end{formulabox}
+
+\begin{examplebox*}[Worked Example]
+Water flows through a pipe of diameter 0.2\,m at 3\,m/s. Find velocity where diameter narrows to 0.1\,m.
+\[
+  A_1V_1 = A_2V_2 \implies \frac{\pi(0.2)^2}{4}(3) = \frac{\pi(0.1)^2}{4}V_2 \implies V_2 = 12 \text{ m/s}
+\]
+\end{examplebox*}
+
+% ════════════════════════════════════════════════════════════
+\section{5. Euler's and Bernoulli's Equations}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Euler's Equation of Motion}
+
+\begin{derivbox}[Euler's Equation]
+For an ideal (inviscid) fluid along a streamline:
+\[
+  \frac{\partial V}{\partial t} + V\frac{\partial V}{\partial s} = -\frac{1}{\rho}\frac{\partial P}{\partial s} - g\frac{\partial z}{\partial s}
+\]
+In vector form:
+\[
+  \rho\frac{D\mathbf{V}}{Dt} = -\nabla P + \rho\,\mathbf{g}
+\]
+\end{derivbox}
+
+\subsection{Bernoulli's Equation}
+
+\begin{thmbox}[Bernoulli's Equation]
+For steady, incompressible, inviscid flow along a streamline:
+\[
+  \boxed{P + \frac{1}{2}\rho V^2 + \rho g z = \text{constant}}
+\]
+Or between two points:
+\[
+  P_1 + \frac{1}{2}\rho V_1^2 + \rho g z_1 = P_2 + \frac{1}{2}\rho V_2^2 + \rho g z_2
+\]
+\end{thmbox}
+
+\subsection{Bernoulli Terms}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{3.5cm}|C{4cm}|C{5cm}|}
+\hline
+\rowcolor{primary}
+\hcell{Term} & \hcell{Expression} & \hcell{Meaning} \\
+\hline
+Static Pressure & $P$ & Actual fluid pressure \\
+\rowcolor{lightbg}
+Dynamic Pressure & $\frac{1}{2}\rho V^2$ & Pressure due to motion \\
+Hydrostatic Pressure & $\rho g z$ & Pressure due to elevation \\
+\rowcolor{lightbg}
+Total (Stagnation) & $P + \frac{1}{2}\rho V^2 + \rho gz$ & Constant along streamline \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{notebox}
+\textbf{Assumptions for Bernoulli:} Steady flow $\cdot$ Incompressible $\cdot$ Inviscid $\cdot$ Along a streamline $\cdot$ No energy added or removed
+\end{notebox}
+
+\begin{examplebox*}[Worked Example — Bernoulli]
+Water flows from a tank through a pipe. At point 1: $V_1 = 2$ m/s, $z_1 = 5$ m, $P_1 = 100$ kPa. At point 2: $z_2 = 0$, $V_2 = 4$ m/s. Find $P_2$.
+\[
+  P_2 = P_1 + \rho g(z_1-z_2) + \tfrac{1}{2}\rho(V_1^2 - V_2^2)
+      = 100000 + 1000(9.81)(5) + \tfrac{1}{2}(1000)(4-16)
+      = 143050 \text{ Pa}
+\]
+\end{examplebox*}
+
+% ════════════════════════════════════════════════════════════
+\section{6. Applications of Bernoulli's Equation}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Venturi Meter}
+
+Used to measure flow rate in a pipe.
+
+\begin{formulabox}
+\[
+  Q = A_2\sqrt{\frac{2(P_1 - P_2)}{\rho\!\left(1 - (A_2/A_1)^2\right)}}
+\]
+\end{formulabox}
+
+\subsection{Torricelli's Theorem}
+
+Speed of fluid exiting a tank through a small hole at depth $h$:
+
+\begin{formulabox}
+\[
+  V = \sqrt{2gh}
+\]
+\end{formulabox}
+
+\subsection{Pitot Tube}
+
+Measures fluid velocity using stagnation pressure:
+
+\begin{formulabox}
+\[
+  V = \sqrt{\frac{2(P_0 - P)}{\rho}}
+\]
+where $P_0$ = stagnation pressure, $P$ = static pressure.
+\end{formulabox}
+
+% ════════════════════════════════════════════════════════════
+\section{7. Viscosity and Viscous Flow}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Viscosity]
+\textbf{Viscosity} is the measure of a fluid's resistance to deformation under shear stress.
+\end{defbox}
+
+\subsection{Newton's Law of Viscosity}
+
+\begin{formulabox}
+\[
+  \tau = \mu \frac{du}{dy}
+\]
+where $\tau$ = shear stress (Pa), $\mu$ = dynamic viscosity (Pa$\cdot$s), $\dfrac{du}{dy}$ = velocity gradient.
+\end{formulabox}
+
+\subsection{Navier-Stokes Equations}
+
+For incompressible viscous flow:
+
+\begin{formulabox}
+\[
+  \rho\frac{D\mathbf{V}}{Dt} = -\nabla P + \mu\,\nabla^2\mathbf{V} + \rho\,\mathbf{g}
+\]
+$x$-component:
+\[
+  \rho\!\left(\frac{\partial u}{\partial t} + u\frac{\partial u}{\partial x} + v\frac{\partial u}{\partial y}\right)
+  = -\frac{\partial P}{\partial x} + \mu\!\left(\frac{\partial^2 u}{\partial x^2}+\frac{\partial^2 u}{\partial y^2}\right)
+\]
+\end{formulabox}
+
+\subsection{Hagen-Poiseuille Flow (Pipe Flow)}
+
+Steady laminar flow in a circular pipe of radius $R$:
+
+\begin{formulabox}
+\[
+  u(r) = \frac{1}{4\mu}\!\left(-\frac{dP}{dx}\right)(R^2 - r^2)
+\]
+\[
+  Q = \frac{\pi R^4}{8\mu}\!\left(-\frac{dP}{dx}\right) \qquad
+  V_{\max} = \frac{R^2}{4\mu}\!\left(-\frac{dP}{dx}\right)
+\]
+\end{formulabox}
+
+\begin{keybox}
+In Hagen-Poiseuille flow: $V_{\text{avg}} = \dfrac{V_{\max}}{2}$. The velocity profile is parabolic.
+\end{keybox}
+
+% ════════════════════════════════════════════════════════════
+\section{8. Irrotational Flow and Stream Function}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Vorticity and Irrotational Flow}
+
+\begin{formulabox}
+\textbf{Vorticity:} $\boldsymbol{\omega} = \nabla \times \mathbf{V}$
+
+For 2D flow: $\omega_z = \dfrac{\partial v}{\partial x} - \dfrac{\partial u}{\partial y}$
+
+\textbf{Irrotational:} $\omega_z = 0 \implies \dfrac{\partial v}{\partial x} = \dfrac{\partial u}{\partial y}$
+\end{formulabox}
+
+\subsection{Stream Function $\psi$}
+
+\begin{defbox}[Stream Function]
+A scalar function $\psi(x,y)$ such that:
+\[
+  u = \frac{\partial \psi}{\partial y}, \qquad v = -\frac{\partial \psi}{\partial x}
+\]
+Automatically satisfies continuity. Streamlines are curves $\psi = \text{const}$.
+\end{defbox}
+
+\begin{formulabox}
+Flow rate between two streamlines:
+\[
+  Q = \psi_2 - \psi_1
+\]
+\end{formulabox}
+
+\subsection{Velocity Potential $\phi$}
+
+\begin{defbox}[Velocity Potential]
+For irrotational flow, $\exists$ scalar $\phi$ such that:
+\[
+  u = \frac{\partial \phi}{\partial x}, \qquad v = \frac{\partial \phi}{\partial y}, \qquad \mathbf{V} = \nabla\phi
+\]
+Equipotential lines are curves $\phi = \text{const}$ and are \textbf{orthogonal} to streamlines.
+\end{defbox}
+
+\subsection{Laplace's Equation}
+
+For irrotational, incompressible flow:
+\begin{formulabox}
+\[
+  \nabla^2\phi = \frac{\partial^2\phi}{\partial x^2} + \frac{\partial^2\phi}{\partial y^2} = 0
+  \qquad \text{and} \qquad
+  \nabla^2\psi = 0
+\]
+\end{formulabox}
+
+% ════════════════════════════════════════════════════════════
+\section{9. Dimensional Analysis}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Buckingham $\pi$ Theorem}
+
+\begin{thmbox}[Buckingham $\pi$ Theorem]
+If a physical problem involves $n$ variables and $m$ fundamental dimensions (M, L, T), then it can be expressed in terms of $(n - m)$ dimensionless $\pi$ groups.
+\end{thmbox}
+
+\subsection{Important Dimensionless Numbers}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|C{3.5cm}|C{4cm}|C{5cm}|}
+\hline
+\rowcolor{primary}
+\hcell{Number} & \hcell{Formula} & \hcell{Physical Meaning} \\
+\hline
+Reynolds (Re) & $\rho VL/\mu$ & Inertia / Viscous forces \\
+\rowcolor{lightbg}
+Froude (Fr) & $V/\sqrt{gL}$ & Inertia / Gravity forces \\
+Euler (Eu) & $P/\rho V^2$ & Pressure / Inertia forces \\
+\rowcolor{lightbg}
+Mach (Ma) & $V/c$ & Flow / Sound speed \\
+Weber (We) & $\rho V^2 L/\sigma$ & Inertia / Surface tension \\
+\hline
+\end{tabular}
+\end{center}
+
+% ════════════════════════════════════════════════════════════
+\section{Quick Reference Cheat Sheet}
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=14pt, right=14pt, top=10pt, bottom=10pt,
+  borderline south={3pt}{0pt}{accent},
+]
+  \centering
+  {\large\bfseries\color{white} FLUID DYNAMICS I — MASTER FORMULA SHEET}\\[4pt]
+  {\small\color{lightbg} All key equations and results for the exam}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=jadebg, colframe=jade,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Core Equations},
+  colbacktitle=jade, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=jade, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter,
+]
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}ll@{}}
+  Hydrostatic P & $P = P_0 + \rho gh$ \\
+  Buoyancy & $F_B = \rho_f g V$ \\
+  Continuity & $A_1V_1 = A_2V_2$ \\
+  Bernoulli & $P+\tfrac{1}{2}\rho V^2+\rho gz=C$ \\
+  Torricelli & $V = \sqrt{2gh}$ \\
+  Reynolds & $\text{Re} = \rho VD/\mu$ \\
+  Viscosity & $\tau = \mu\,du/dy$ \\
+  H-P Flow & $Q = \pi R^4 (-dP/dx)/8\mu$ \\
+\end{tabular}
+\end{tcolorbox}
+\hfill
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=primary,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Stream Function \& Potential},
+  colbacktitle=primary, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter,
+]
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}ll@{}}
+  Stream fn & $u=\partial\psi/\partial y,\;v=-\partial\psi/\partial x$ \\
+  Vel. potential & $u=\partial\phi/\partial x,\;v=\partial\phi/\partial y$ \\
+  Laplace & $\nabla^2\phi = 0,\;\nabla^2\psi = 0$ \\
+  Irrotational & $\partial v/\partial x = \partial u/\partial y$ \\
+  Vorticity & $\omega_z = \partial v/\partial x - \partial u/\partial y$ \\
+  Mat.\ Deriv. & $D/Dt = \partial/\partial t + \mathbf{V}\cdot\nabla$ \\
+  Continuity & $\nabla\cdot\mathbf{V} = 0$ \\
+  Euler & $\rho D\mathbf{V}/Dt = -\nabla P + \rho\mathbf{g}$ \\
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Dimensionless Numbers},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
+]
+\[
+  \text{Re} = \frac{\rho VL}{\mu} \qquad
+  \text{Fr} = \frac{V}{\sqrt{gL}} \qquad
+  \text{Ma} = \frac{V}{c} \qquad
+  \text{We} = \frac{\rho V^2 L}{\sigma} \qquad
+  \text{Eu} = \frac{P}{\rho V^2}
+\]
+\[
+  \text{Re} < 2000: \text{ Laminar} \qquad
+  \text{Re} > 4000: \text{ Turbulent} \qquad
+  2000 < \text{Re} < 4000: \text{ Transitional}
+\]
+\end{tcolorbox}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=purplebg!60, colframe=purpleclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Flow Types — Quick Recall},
+  colbacktitle=purpleclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=purpleclr, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter,
+]
+\begin{itemize}[leftmargin=12pt, itemsep=2pt]
+  \item Steady: $\partial/\partial t = 0$
+  \item Uniform: $\partial/\partial s = 0$
+  \item Incompressible: $\nabla\cdot\mathbf{V}=0$
+  \item Irrotational: $\nabla\times\mathbf{V}=0$
+  \item Laminar: Re $< 2000$
+  \item Turbulent: Re $> 4000$
+\end{itemize}
+\end{tcolorbox}
+\hfill
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=greenbg, colframe=greenclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Bernoulli Applications},
+  colbacktitle=greenclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=greenclr, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter,
+]
+\begin{itemize}[leftmargin=12pt, itemsep=2pt]
+  \item Venturi meter: flow rate in pipe
+  \item Pitot tube: fluid velocity
+  \item Torricelli: tank exit velocity
+  \item Orifice: discharge coefficient
+  \item Aerofoil: lift generation
+  \item Syphon: fluid transfer
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{20pt}
+\begin{center}
+  \color{grayclr}\rule{0.6\linewidth}{0.4pt}\\[8pt]
+  {\small\color{darktext} For feedback or to request additional topics:}\\[4pt]
+  {\normalsize\bfseries\color{primary} +92 304 2019543}
+\end{center}
+
+\end{document}

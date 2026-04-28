@@ -1,0 +1,814 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{titletoc}
+\usepackage{tikz}
+
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{examplebox*}[1][]{
+  enhanced, breakable,
+  colback=graybg, colframe=grayclr!80, arc=5pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} #1},
+  colbacktitle=grayclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=grayclr, boxrule=0pt},
+}
+
+\geometry{margin=0.9in, top=1in, bottom=1in}
+
+% ── Colour palette ──────────────────────────────────────────
+\definecolor{primary}  {RGB}{27,  79, 114}
+\definecolor{accent}   {RGB}{46, 134, 193}
+\definecolor{lightbg}  {RGB}{234,244,251}
+\definecolor{tealclr}  {RGB}{0,  110,  90}
+\definecolor{tealbg}   {RGB}{220,245,240}
+\definecolor{amberclr} {RGB}{160, 90,   0}
+\definecolor{amberbg}  {RGB}{255,243,220}
+\definecolor{purpleclr}{RGB}{90,  20, 140}
+\definecolor{purplebg} {RGB}{240,228,255}
+\definecolor{redclr}   {RGB}{150,  20,  20}
+\definecolor{redbg}    {RGB}{255,228,228}
+\definecolor{greenclr} {RGB}{20, 120,  40}
+\definecolor{greenbg}  {RGB}{220,248,228}
+\definecolor{grayclr}  {RGB}{80,  80,  80}
+\definecolor{graybg}   {RGB}{245,245,245}
+\definecolor{darktext} {RGB}{44,  62,  80}
+\definecolor{gold}     {RGB}{183,149, 11}
+\definecolor{goldbg}   {RGB}{254,249,231}
+
+% ── Table of Contents styling ───────────────────────────────
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+\renewcommand{\contentsname}{}
+\titlecontents{section}
+  [18pt]
+  {\addvspace{5pt}\bfseries\color{primary}}
+  {}{}
+  {\color{accent!60}\titlerule*[5pt]{.}\textbf{\color{accent}\contentspage}}
+
+% ── Page style ──────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Calculus I}\;\textcolor{accent}{|}\;Complete Notes}
+\fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ─────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}{}
+  {0em}{}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}{}
+  {0em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+% ── tcolorbox environments ──────────────────────────────────
+\newtcolorbox{defbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=tealbg, colframe=tealclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Definition\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=tealclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=tealclr, boxrule=0pt},
+}
+
+\newtcolorbox{thmbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Theorem\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
+}
+
+\newtcolorbox{derivbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=primary,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Derivation\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=primary, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+}
+
+\newtcolorbox{keybox}[1][]{
+  enhanced,
+  borderline west={4pt}{0pt}{purpleclr},
+  colback=purplebg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newtcolorbox{formulabox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=accent,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Key Formula},
+  colbacktitle=accent, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=accent, boxrule=0pt},
+}
+
+\newtcolorbox{notebox}{
+  enhanced,
+  borderline west={4pt}{0pt}{redclr},
+  colback=redbg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════
+%  COVER PAGE
+% ════════════════════════════════════════════════════════════
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=28pt, bottom=20pt,
+  borderline south={5pt}{0pt}{accent},
+]
+  \centering
+  {\fontsize{26}{32}\bfseries\color{white}
+    Calculus I\\[8pt]
+    Complete Notes
+  }\\[12pt]
+  {\large\color{lightbg}
+    Limits \textbf{·} Differentiation \textbf{·} Integration \textbf{·} Applications
+  }
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=white, colframe=white,
+  borderline north={2pt}{0pt}{primary},
+  borderline south={2pt}{0pt}{primary},
+  left=0pt, right=0pt, top=0pt, bottom=0pt,
+]
+\begin{tabular}{p{0.33\textwidth} | p{0.33\textwidth} | p{0.31\textwidth}}
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} DEPARTMENT}\\[4pt]
+    {\bfseries\color{primary} Mathematics}\\[3pt]
+    {\footnotesize\color{darktext} SALU, Khairpur}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} COMPOSED BY}\\[4pt]
+    {\bfseries\color{primary} Nadir Ali Khan}\\[3pt]
+    {\footnotesize\color{darktext} BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.28\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} SESSION}\\[4pt]
+    {\bfseries\color{primary} 2026}\\[3pt]
+    {\footnotesize\color{darktext} Seat No: MT-0123-052}
+  \vspace{8pt}\end{minipage}
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{16pt}
+
+% Table of Contents
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=white, colframe=primary,
+  left=10pt, right=10pt, top=4pt, bottom=8pt,
+  title={\bfseries\color{white} Table of Contents},
+  colbacktitle=primary,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+]
+\vspace{4pt}
+\tableofcontents
+\end{tcolorbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{1. Functions}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Function]
+A \textbf{function} $f$ from set $A$ to set $B$ is a rule that assigns to each element $x \in A$ exactly one element $f(x) \in B$.
+\[
+  f : A \longrightarrow B
+\]
+\begin{itemize}[leftmargin=16pt]
+  \item \textbf{Domain:} Set of all valid inputs $x$
+  \item \textbf{Range:} Set of all actual outputs $f(x)$
+  \item \textbf{Codomain:} The target set $B$
+\end{itemize}
+\end{defbox}
+
+\subsection{Types of Functions}
+
+\begin{itemize}[leftmargin=16pt, itemsep=4pt]
+  \item \textbf{Even function:} $f(-x) = f(x)$ \quad (symmetric about $y$-axis) \quad e.g.\ $x^2,\,\cos x$
+  \item \textbf{Odd function:} $f(-x) = -f(x)$ \quad (symmetric about origin) \quad e.g.\ $x^3,\,\sin x$
+  \item \textbf{One-to-one (Injective):} Different inputs give different outputs
+  \item \textbf{Onto (Surjective):} Every element of $B$ is hit by some $x$
+  \item \textbf{Bijective:} Both one-to-one and onto $\Rightarrow$ inverse exists
+\end{itemize}
+
+\subsection{Composite and Inverse Functions}
+
+\begin{formulabox}
+\[
+  (f \circ g)(x) = f(g(x))
+\]
+\[
+  \text{If } y = f(x) \text{ then } x = f^{-1}(y), \quad \text{Domain}(f^{-1}) = \text{Range}(f)
+\]
+\end{formulabox}
+
+\begin{examplebox*}[Worked Example]
+Let $f(x) = 2x+1$ and $g(x) = x^2$. Find $(f \circ g)(x)$.\\[4pt]
+$(f \circ g)(x) = f(g(x)) = f(x^2) = 2x^2 + 1$
+\end{examplebox*}
+
+% ════════════════════════════════════════════════════════════
+\section{2. Limits}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Limit]
+$\displaystyle\lim_{x \to a} f(x) = L$ means $f(x)$ gets arbitrarily close to $L$ as $x$ approaches $a$ (but $x \neq a$).
+\end{defbox}
+
+\subsection{Limit Laws}
+
+\begin{formulabox}
+\begin{align*}
+  \lim[f(x) \pm g(x)] &= \lim f(x) \pm \lim g(x) \\[4pt]
+  \lim[f(x) \cdot g(x)] &= \lim f(x) \cdot \lim g(x) \\[4pt]
+  \lim\frac{f(x)}{g(x)} &= \frac{\lim f(x)}{\lim g(x)}, \quad \lim g(x) \neq 0 \\[4pt]
+  \lim[c \cdot f(x)] &= c \cdot \lim f(x)
+\end{align*}
+\end{formulabox}
+
+\subsection{Standard Limits (Must Memorize)}
+
+\begin{formulabox}
+\[
+  \lim_{x \to 0}\frac{\sin x}{x} = 1 \qquad
+  \lim_{x \to 0}\frac{1-\cos x}{x} = 0 \qquad
+  \lim_{x \to 0}\frac{e^x - 1}{x} = 1
+\]
+\[
+  \lim_{x \to 0}\frac{a^x - 1}{x} = \ln a \qquad
+  \lim_{x \to \infty}\!\left(1+\frac{1}{x}\right)^{\!x} = e \qquad
+  \lim_{x \to 0}\frac{\ln(1+x)}{x} = 1
+\]
+\end{formulabox}
+
+\subsection{One-Sided Limits}
+
+\begin{itemize}[leftmargin=16pt]
+  \item \textbf{Left-hand limit (LHL):} $\displaystyle\lim_{x \to a^-} f(x)$ — approach from left
+  \item \textbf{Right-hand limit (RHL):} $\displaystyle\lim_{x \to a^+} f(x)$ — approach from right
+\end{itemize}
+
+\begin{keybox}
+The limit $\displaystyle\lim_{x \to a} f(x)$ exists \textbf{if and only if} LHL $=$ RHL $= L$.
+\end{keybox}
+
+\subsection{Limits at Infinity}
+
+\[
+  \lim_{x \to \infty} \frac{1}{x^n} = 0 \quad (n > 0), \qquad
+  \lim_{x \to \infty} c = c
+\]
+
+For rational functions $\frac{p(x)}{q(x)}$ as $x \to \infty$: divide numerator and denominator by the highest power of $x$ in the denominator.
+
+\subsection{L'H\^{o}pital's Rule}
+
+\begin{thmbox}[L'H\^{o}pital's Rule]
+If $\displaystyle\lim_{x\to a}\frac{f(x)}{g(x)}$ gives the indeterminate form $\frac{0}{0}$ or $\frac{\infty}{\infty}$, then:
+\[
+  \lim_{x \to a}\frac{f(x)}{g(x)} = \lim_{x \to a}\frac{f'(x)}{g'(x)}
+\]
+provided the right-hand limit exists.
+\end{thmbox}
+
+\begin{examplebox*}[Worked Example]
+$\displaystyle\lim_{x \to 0}\frac{\sin x}{x} \to \frac{0}{0}$ form.
+Apply L'H\^{o}pital:
+\[
+  \lim_{x \to 0}\frac{\cos x}{1} = \cos 0 = 1
+\]
+\end{examplebox*}
+
+% ════════════════════════════════════════════════════════════
+\section{3. Continuity}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Continuity at a Point]
+$f(x)$ is \textbf{continuous} at $x = a$ if all three conditions hold:
+\begin{enumerate}[leftmargin=20pt, itemsep=2pt]
+  \item $f(a)$ is defined
+  \item $\displaystyle\lim_{x \to a} f(x)$ exists
+  \item $\displaystyle\lim_{x \to a} f(x) = f(a)$
+\end{enumerate}
+\end{defbox}
+
+\subsection{Types of Discontinuity}
+
+\begin{itemize}[leftmargin=16pt, itemsep=4pt]
+  \item \textbf{Removable:} Limit exists but $\neq f(a)$ — a hole in the graph
+  \item \textbf{Jump:} LHL $\neq$ RHL
+  \item \textbf{Infinite:} Limit is $\pm\infty$ — vertical asymptote
+\end{itemize}
+
+\begin{thmbox}[Intermediate Value Theorem]
+If $f$ is continuous on $[a,b]$ and $k$ is any value between $f(a)$ and $f(b)$, then there exists $c \in (a,b)$ such that $f(c) = k$.
+\end{thmbox}
+
+% ════════════════════════════════════════════════════════════
+\section{4. Differentiation}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Derivative from First Principles]
+\[
+  f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}
+\]
+\end{defbox}
+
+\subsection{Basic Differentiation Rules}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{4.5cm}|C{5cm}|}
+  \hline
+  \rowcolor{primary}
+  \hcell{Function $f(x)$} & \hcell{Derivative $f'(x)$} \\
+  \hline
+  $c$ (constant) & $0$ \\
+  \rowcolor{lightbg}
+  $x^n$ & $nx^{n-1}$ \\
+  $e^x$ & $e^x$ \\
+  \rowcolor{lightbg}
+  $a^x$ & $a^x \ln a$ \\
+  $\ln x$ & $\dfrac{1}{x}$ \\
+  \rowcolor{lightbg}
+  $\sin x$ & $\cos x$ \\
+  $\cos x$ & $-\sin x$ \\
+  \rowcolor{lightbg}
+  $\tan x$ & $\sec^2 x$ \\
+  $\cot x$ & $-\csc^2 x$ \\
+  \rowcolor{lightbg}
+  $\sec x$ & $\sec x \tan x$ \\
+  $\csc x$ & $-\csc x \cot x$ \\
+  \rowcolor{lightbg}
+  $\sin^{-1} x$ & $\dfrac{1}{\sqrt{1-x^2}}$ \\
+  $\cos^{-1} x$ & $\dfrac{-1}{\sqrt{1-x^2}}$ \\
+  \rowcolor{lightbg}
+  $\tan^{-1} x$ & $\dfrac{1}{1+x^2}$ \\
+  \hline
+\end{tabular}
+\end{center}
+
+\subsection{Product Rule}
+\begin{formulabox}
+\[
+  \frac{d}{dx}\bigl[f(x)\cdot g(x)\bigr] = f'(x)\,g(x) + f(x)\,g'(x)
+\]
+\end{formulabox}
+
+\subsection{Quotient Rule}
+\begin{formulabox}
+\[
+  \frac{d}{dx}\!\left[\frac{f(x)}{g(x)}\right] = \frac{f'(x)\,g(x) - f(x)\,g'(x)}{[g(x)]^2}
+\]
+\end{formulabox}
+
+\subsection{Chain Rule}
+\begin{formulabox}
+\[
+  \frac{d}{dx}\bigl[f(g(x))\bigr] = f'(g(x))\cdot g'(x)
+\]
+\end{formulabox}
+
+\begin{examplebox*}[Chain Rule Example]
+$y = \sin(x^2)$
+\[
+  \frac{dy}{dx} = \cos(x^2)\cdot 2x = 2x\cos(x^2)
+\]
+\end{examplebox*}
+
+\subsection{Implicit Differentiation}
+
+Differentiate both sides w.r.t.\ $x$, treating $y$ as a function of $x$.
+
+\begin{examplebox*}[Implicit Differentiation Example]
+$x^2 + y^2 = 25$
+\[
+  2x + 2y\,\frac{dy}{dx} = 0 \implies \frac{dy}{dx} = -\frac{x}{y}
+\]
+\end{examplebox*}
+
+\subsection{Logarithmic Differentiation}
+
+Take $\ln$ of both sides first. Useful when $y = [f(x)]^{g(x)}$.
+
+\begin{examplebox*}[Logarithmic Differentiation Example]
+$y = x^x$\\[4pt]
+$\ln y = x\ln x \implies \dfrac{1}{y}\dfrac{dy}{dx} = \ln x + 1 \implies \dfrac{dy}{dx} = x^x(\ln x + 1)$
+\end{examplebox*}
+
+% ════════════════════════════════════════════════════════════
+\section{5. Mean Value Theorems}
+% ════════════════════════════════════════════════════════════
+
+\begin{thmbox}[Rolle's Theorem]
+If $f$ is continuous on $[a,b]$, differentiable on $(a,b)$, and $f(a) = f(b)$, then $\exists\; c \in (a,b)$ such that:
+\[
+  f'(c) = 0
+\]
+\end{thmbox}
+
+\begin{thmbox}[Mean Value Theorem (MVT)]
+If $f$ is continuous on $[a,b]$ and differentiable on $(a,b)$, then $\exists\; c \in (a,b)$ such that:
+\[
+  f'(c) = \frac{f(b) - f(a)}{b - a}
+\]
+\end{thmbox}
+
+\begin{thmbox}[Cauchy's Mean Value Theorem]
+If $f$ and $g$ are continuous on $[a,b]$ and differentiable on $(a,b)$, then $\exists\; c \in (a,b)$ such that:
+\[
+  \frac{f'(c)}{g'(c)} = \frac{f(b) - f(a)}{g(b) - g(a)}
+\]
+\end{thmbox}
+
+% ════════════════════════════════════════════════════════════
+\section{6. Applications of Derivatives}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Increasing / Decreasing Functions}
+
+\begin{itemize}[leftmargin=16pt]
+  \item $f'(x) > 0$ on $(a,b)$ $\Rightarrow$ $f$ is \textbf{increasing} on $(a,b)$
+  \item $f'(x) < 0$ on $(a,b)$ $\Rightarrow$ $f$ is \textbf{decreasing} on $(a,b)$
+  \item $f'(c) = 0$ $\Rightarrow$ \textbf{critical point} (possible max or min)
+\end{itemize}
+
+\subsection{First Derivative Test}
+
+\begin{itemize}[leftmargin=16pt]
+  \item $f'$ changes $+$ to $-$ at $c$ $\Rightarrow$ \textbf{local maximum}
+  \item $f'$ changes $-$ to $+$ at $c$ $\Rightarrow$ \textbf{local minimum}
+\end{itemize}
+
+\subsection{Second Derivative Test}
+
+\begin{formulabox}
+At a critical point $c$ where $f'(c)=0$:
+\[
+  f''(c) > 0 \Rightarrow \text{local minimum} \qquad
+  f''(c) < 0 \Rightarrow \text{local maximum} \qquad
+  f''(c) = 0 \Rightarrow \text{inconclusive}
+\]
+\end{formulabox}
+
+\subsection{Concavity and Inflection Points}
+
+\begin{itemize}[leftmargin=16pt]
+  \item $f''(x) > 0$ $\Rightarrow$ concave \textbf{up} (cup shape)
+  \item $f''(x) < 0$ $\Rightarrow$ concave \textbf{down} (cap shape)
+  \item $f''(x) = 0$ and changes sign $\Rightarrow$ \textbf{inflection point}
+\end{itemize}
+
+\subsection{Taylor's and Maclaurin's Series}
+
+\begin{formulabox}
+\textbf{Taylor's Series} about $x = a$:
+\[
+  f(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{3!}(x-a)^3 + \cdots
+\]
+\textbf{Maclaurin's Series} (set $a=0$):
+\[
+  f(x) = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2 + \frac{f'''(0)}{3!}x^3 + \cdots
+\]
+\end{formulabox}
+
+\subsection{Common Maclaurin Series}
+
+\begin{formulabox}
+\begin{align*}
+  e^x &= 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots \\[6pt]
+  \sin x &= x - \frac{x^3}{3!} + \frac{x^5}{5!} - \cdots \\[6pt]
+  \cos x &= 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \cdots \\[6pt]
+  \ln(1+x) &= x - \frac{x^2}{2} + \frac{x^3}{3} - \cdots \quad (|x| \leq 1)
+\end{align*}
+\end{formulabox}
+
+% ════════════════════════════════════════════════════════════
+\section{7. Integration}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Indefinite Integral]
+\[
+  \int f(x)\,dx = F(x) + C \quad \text{where } F'(x) = f(x)
+\]
+$C$ is the constant of integration.
+\end{defbox}
+
+\subsection{Basic Integration Formulas}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{|C{5cm}|C{6cm}|}
+  \hline
+  \rowcolor{primary}
+  \hcell{Function $f(x)$} & \hcell{$\int f(x)\,dx$} \\
+  \hline
+  $x^n\;(n \neq -1)$ & $\dfrac{x^{n+1}}{n+1} + C$ \\
+  \rowcolor{lightbg}
+  $\dfrac{1}{x}$ & $\ln|x| + C$ \\
+  $e^x$ & $e^x + C$ \\
+  \rowcolor{lightbg}
+  $a^x$ & $\dfrac{a^x}{\ln a} + C$ \\
+  $\sin x$ & $-\cos x + C$ \\
+  \rowcolor{lightbg}
+  $\cos x$ & $\sin x + C$ \\
+  $\sec^2 x$ & $\tan x + C$ \\
+  \rowcolor{lightbg}
+  $\csc^2 x$ & $-\cot x + C$ \\
+  $\sec x \tan x$ & $\sec x + C$ \\
+  \rowcolor{lightbg}
+  $\dfrac{1}{\sqrt{1-x^2}}$ & $\sin^{-1} x + C$ \\
+  $\dfrac{1}{1+x^2}$ & $\tan^{-1} x + C$ \\
+  \hline
+\end{tabular}
+\end{center}
+
+\subsection{Techniques of Integration}
+
+\subsubsection*{1. Substitution (u-substitution)}
+
+\begin{formulabox}
+Let $u = g(x)$, then $du = g'(x)\,dx$:
+\[
+  \int f(g(x))\,g'(x)\,dx = \int f(u)\,du
+\]
+\end{formulabox}
+
+\begin{examplebox*}[Substitution Example]
+$\displaystyle\int 2x\cos(x^2)\,dx$. Let $u = x^2 \Rightarrow du = 2x\,dx$
+\[
+  = \int \cos u\,du = \sin u + C = \sin(x^2) + C
+\]
+\end{examplebox*}
+
+\subsubsection*{2. Integration by Parts}
+
+\begin{formulabox}
+\[
+  \int u\,dv = uv - \int v\,du
+\]
+\textbf{LIATE Rule} for choosing $u$: \textbf{L}ogarithm, \textbf{I}nverse trig, \textbf{A}lgebraic, \textbf{T}rig, \textbf{E}xponential
+\end{formulabox}
+
+\begin{examplebox*}[Integration by Parts Example]
+$\displaystyle\int x e^x\,dx$. Let $u = x$, $dv = e^x dx \Rightarrow du = dx$, $v = e^x$
+\[
+  = xe^x - \int e^x\,dx = xe^x - e^x + C = e^x(x-1) + C
+\]
+\end{examplebox*}
+
+\subsubsection*{3. Partial Fractions}
+
+Used for rational functions $\dfrac{P(x)}{Q(x)}$ where $\deg P < \deg Q$.
+
+\begin{examplebox*}[Partial Fractions Example]
+$\displaystyle\int \frac{1}{x^2-1}\,dx = \int\!\left[\frac{1/2}{x-1} - \frac{1/2}{x+1}\right]dx = \frac{1}{2}\ln|x-1| - \frac{1}{2}\ln|x+1| + C$
+\end{examplebox*}
+
+\subsection{Definite Integral}
+
+\begin{thmbox}[Fundamental Theorem of Calculus]
+\textbf{Part 1:} If $F(x) = \displaystyle\int_a^x f(t)\,dt$, then $F'(x) = f(x)$\\[8pt]
+\textbf{Part 2:} $\displaystyle\int_a^b f(x)\,dx = F(b) - F(a)$
+\end{thmbox}
+
+\subsection{Properties of Definite Integrals}
+
+\begin{formulabox}
+\begin{align*}
+  &\int_a^a f(x)\,dx = 0 \\[4pt]
+  &\int_a^b f(x)\,dx = -\int_b^a f(x)\,dx \\[4pt]
+  &\int_a^b f(x)\,dx = \int_a^c f(x)\,dx + \int_c^b f(x)\,dx \\[4pt]
+  &\int_{-a}^a f(x)\,dx = 0 \quad \text{if } f \text{ is odd} \\[4pt]
+  &\int_{-a}^a f(x)\,dx = 2\int_0^a f(x)\,dx \quad \text{if } f \text{ is even}
+\end{align*}
+\end{formulabox}
+
+% ════════════════════════════════════════════════════════════
+\section{8. Applications of Integration}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Area Between Curves}
+\begin{formulabox}
+\[
+  A = \int_a^b \bigl[f(x) - g(x)\bigr]\,dx \quad \text{where } f(x) \geq g(x)
+\]
+\end{formulabox}
+
+\subsection{Volume of Revolution}
+
+\textbf{Disk Method} (rotating $y = f(x)$ about $x$-axis):
+\begin{formulabox}
+\[
+  V = \pi\int_a^b \bigl[f(x)\bigr]^2\,dx
+\]
+\end{formulabox}
+
+\textbf{Washer Method} (hollow solid):
+\begin{formulabox}
+\[
+  V = \pi\int_a^b \Bigl\{\bigl[f(x)\bigr]^2 - \bigl[g(x)\bigr]^2\Bigr\}\,dx
+\]
+\end{formulabox}
+
+\subsection{Arc Length}
+\begin{formulabox}
+\[
+  L = \int_a^b \sqrt{1 + \bigl[f'(x)\bigr]^2}\,dx
+\]
+\end{formulabox}
+
+% ════════════════════════════════════════════════════════════
+\section{Quick Reference Cheat Sheet}
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=14pt, right=14pt, top=10pt, bottom=10pt,
+  borderline south={3pt}{0pt}{accent},
+]
+  \centering
+  {\large\bfseries\color{white} CALCULUS I — MASTER FORMULA SHEET}\\[4pt]
+  {\small\color{lightbg} Everything you need to know for the exam in one place}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+% ── Row 1: Derivatives + Integrals side by side ─────────
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=tealbg, colframe=tealclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Derivatives},
+  colbacktitle=tealclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=tealclr, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter,
+]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}ll@{}}
+  $\dfrac{d}{dx}(x^n)$ & $= nx^{n-1}$ \\
+  $\dfrac{d}{dx}(e^x)$ & $= e^x$ \\
+  $\dfrac{d}{dx}(a^x)$ & $= a^x \ln a$ \\
+  $\dfrac{d}{dx}(\ln x)$ & $= \dfrac{1}{x}$ \\
+  $\dfrac{d}{dx}(\sin x)$ & $= \cos x$ \\
+  $\dfrac{d}{dx}(\cos x)$ & $= -\sin x$ \\
+  $\dfrac{d}{dx}(\tan x)$ & $= \sec^2 x$ \\
+  $\dfrac{d}{dx}(\cot x)$ & $= -\csc^2 x$ \\
+  $\dfrac{d}{dx}(\sec x)$ & $= \sec x\tan x$ \\
+  $\dfrac{d}{dx}(\sin^{-1} x)$ & $= \dfrac{1}{\sqrt{1-x^2}}$ \\
+  $\dfrac{d}{dx}(\cos^{-1} x)$ & $= \dfrac{-1}{\sqrt{1-x^2}}$ \\
+  $\dfrac{d}{dx}(\tan^{-1} x)$ & $= \dfrac{1}{1+x^2}$ \\
+\end{tabular}
+\end{tcolorbox}
+\hfill
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=primary,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Integrals},
+  colbacktitle=primary, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter,
+]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}ll@{}}
+  $\displaystyle\int x^n\,dx$ & $= \dfrac{x^{n+1}}{n+1}+C$ \\
+  $\displaystyle\int \dfrac{1}{x}\,dx$ & $= \ln|x|+C$ \\
+  $\displaystyle\int e^x\,dx$ & $= e^x+C$ \\
+  $\displaystyle\int a^x\,dx$ & $= \dfrac{a^x}{\ln a}+C$ \\
+  $\displaystyle\int \sin x\,dx$ & $= -\cos x+C$ \\
+  $\displaystyle\int \cos x\,dx$ & $= \sin x+C$ \\
+  $\displaystyle\int \sec^2 x\,dx$ & $= \tan x+C$ \\
+  $\displaystyle\int \csc^2 x\,dx$ & $= -\cot x+C$ \\
+  $\displaystyle\int \sec x\tan x\,dx$ & $= \sec x+C$ \\
+  $\displaystyle\int \dfrac{1}{\sqrt{1-x^2}}\,dx$ & $= \sin^{-1}x+C$ \\
+  $\displaystyle\int \dfrac{1}{1+x^2}\,dx$ & $= \tan^{-1}x+C$ \\[4pt]
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+% ── Row 2: Standard Limits ──────────────────────────────
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Standard Limits},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
+]
+\[
+  \lim_{x\to 0}\frac{\sin x}{x}=1 \qquad
+  \lim_{x\to 0}\frac{1-\cos x}{x}=0 \qquad
+  \lim_{x\to 0}\frac{e^x-1}{x}=1 \qquad
+  \lim_{x\to 0}\frac{a^x-1}{x}=\ln a
+\]
+\[
+  \lim_{x\to\infty}\!\left(1+\frac{1}{x}\right)^{\!x}=e \qquad
+  \lim_{x\to 0}\frac{\ln(1+x)}{x}=1 \qquad
+  \lim_{x\to 0}\frac{\tan x}{x}=1 \qquad
+  \lim_{x\to\infty}\frac{1}{x^n}=0
+\]
+\end{tcolorbox}
+
+\vspace{6pt}
+
+% ── Row 3: Differentiation Rules + Integration Techniques ──
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=purplebg!60, colframe=purpleclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Differentiation Rules},
+  colbacktitle=purpleclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=purpleclr, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter,
+]
+\textbf{Product Rule:}
+\[ (fg)' = f'g + fg' \]
+\textbf{Quotient Rule:}
+\[ \left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2} \]
+\textbf{Chain Rule:}
+\[ \frac{d}{dx}f(g(x)) = f'(g(x))\cdot g'(x) \]
+\textbf{L'H\^{o}pital (0/0 or $\infty/\infty$):}
+\[ \lim\frac{f}{g} = \lim\frac{f'}{g'} \]
+\end{tcolorbox}
+\hfill
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=greenbg, colframe=greenclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Integration Techniques},
+  colbacktitle=greenclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=greenclr, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter,
+]
+\textbf{Substitution:}
+\[ \int f(g(x))g'(x)\,dx = \int f(u)\,du \]
+\textbf{By Parts (LIATE):}
+\[ \int u\,dv = uv - \int v\,du \]
+\textbf{Definite Integral (FTC):}
+\[ \int_a^b f(x)\,dx = F(b)-F(a) \]
+\textbf{MVT:}
+\[ f'(c)=\frac{f(b)-f(a)}{b-a} \]
+\end{tcolorbox}
+
+
+\vspace{20pt}
+\begin{center}
+  \color{grayclr}\rule{0.6\linewidth}{0.4pt}\\[8pt]
+  {\small\color{darktext} For feedback or to request additional topics:}\\[4pt]
+  {\normalsize\bfseries\color{primary} +92 304 2019543}
+\end{center}
+
+\end{document}
