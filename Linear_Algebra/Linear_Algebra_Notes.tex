@@ -1,0 +1,701 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{titletoc}
+\usepackage{tikz}
+
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{examplebox*}[1][]{
+  enhanced, breakable,
+  colback=graybg, colframe=grayclr!80, arc=5pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} #1},
+  colbacktitle=grayclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=grayclr, boxrule=0pt},
+}
+
+\geometry{margin=0.9in, top=1in, bottom=1in}
+
+% ── Colour palette (Deep Purple / Violet) ───────────────────
+\definecolor{primary}  {RGB}{72,  20, 120}
+\definecolor{accent}   {RGB}{140, 70, 210}
+\definecolor{lightbg}  {RGB}{243,232,255}
+\definecolor{tealclr}  {RGB}{0,  115, 100}
+\definecolor{tealbg}   {RGB}{218,248,240}
+\definecolor{amberclr} {RGB}{155,  90,   0}
+\definecolor{amberbg}  {RGB}{255,244,218}
+\definecolor{purpleclr}{RGB}{72,  20, 120}
+\definecolor{purplebg} {RGB}{243,232,255}
+\definecolor{redclr}   {RGB}{150,  20,  20}
+\definecolor{redbg}    {RGB}{255,228,228}
+\definecolor{greenclr} {RGB}{20, 120,  40}
+\definecolor{greenbg}  {RGB}{220,248,228}
+\definecolor{grayclr}  {RGB}{80,  80,  80}
+\definecolor{graybg}   {RGB}{245,245,245}
+\definecolor{darktext} {RGB}{44,  62,  80}
+\definecolor{roseclr}  {RGB}{175,  40,  80}
+\definecolor{rosebg}   {RGB}{255,228,238}
+
+% ── Table of Contents styling ───────────────────────────────
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+\renewcommand{\contentsname}{}
+\titlecontents{section}
+  [18pt]
+  {\addvspace{5pt}\bfseries\color{primary}}
+  {}{}
+  {\color{accent!60}\titlerule*[5pt]{.}\textbf{\color{accent}\contentspage}}
+
+% ── Page style ──────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Linear Algebra}\;\textcolor{accent}{|}\;Complete Notes}
+\fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ─────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}{}
+  {0em}{}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}{}
+  {0em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+% ── tcolorbox environments ──────────────────────────────────
+\newtcolorbox{defbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=rosebg, colframe=roseclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Definition\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=roseclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=roseclr, boxrule=0pt},
+}
+
+\newtcolorbox{thmbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Theorem\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
+}
+
+\newtcolorbox{derivbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=primary,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Method\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=primary, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+}
+
+\newtcolorbox{keybox}[1][]{
+  enhanced,
+  borderline west={4pt}{0pt}{purpleclr},
+  colback=purplebg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newtcolorbox{formulabox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=accent,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Key Formula},
+  colbacktitle=accent, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=accent, boxrule=0pt},
+}
+
+\newtcolorbox{notebox}{
+  enhanced,
+  borderline west={4pt}{0pt}{redclr},
+  colback=redbg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════
+%  COVER PAGE
+% ════════════════════════════════════════════════════════════
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=28pt, bottom=20pt,
+  borderline south={5pt}{0pt}{accent},
+]
+  \centering
+  {\fontsize{26}{32}\bfseries\color{white}
+    Linear Algebra\\[8pt]
+    Complete Notes
+  }\\[12pt]
+  {\color{accent!60}\rule{0.5\textwidth}{0.8pt}}\\[10pt]
+  {\large\color{white!80}BS-IV Mathematics}\\[6pt]
+  {\normalsize\color{white!60}SALU Khairpur --- 2025--2026}
+\end{tcolorbox}
+
+\vspace{16pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=6pt, boxrule=1pt,
+  colback=lightbg, colframe=accent!60,
+  left=14pt, right=14pt, top=10pt, bottom=10pt,
+]
+  \centering
+  {\large\bfseries\color{primary} Topics Covered}\\[6pt]
+  \begin{multicols}{2}
+  \begin{itemize}[leftmargin=14pt, itemsep=3pt]
+    \item[\textcolor{accent}{$\blacktriangleright$}] Matrix Operations ($+,-,\times$)
+    \item[\textcolor{accent}{$\blacktriangleright$}] Determinants
+    \item[\textcolor{accent}{$\blacktriangleright$}] Singular \& Non-Singular Matrix
+    \item[\textcolor{accent}{$\blacktriangleright$}] Minors \& Cofactors
+    \item[\textcolor{accent}{$\blacktriangleright$}] Gauss--Jordan Elimination
+    \item[\textcolor{accent}{$\blacktriangleright$}] Gauss Elimination
+    \item[\textcolor{accent}{$\blacktriangleright$}] Cramer's Rule
+    \item[\textcolor{accent}{$\blacktriangleright$}] Orthogonal \& Orthonormal Sets
+    \item[\textcolor{accent}{$\blacktriangleright$}] Projection of a Vector
+    \item[\textcolor{accent}{$\blacktriangleright$}] Group Theory
+  \end{itemize}
+  \end{multicols}
+\end{tcolorbox}
+
+\vspace{10pt}
+\tableofcontents
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{1.\ Matrix Operations}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Matrix]
+A \textbf{matrix} is a rectangular array of numbers arranged in rows and columns. An $m \times n$ matrix has $m$ rows and $n$ columns. A $3\times3$ matrix:
+\[
+A = \begin{pmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{pmatrix}
+\]
+\end{defbox}
+
+\subsection{Addition and Subtraction}
+
+\begin{keybox}
+Two matrices of the \textbf{same order} are added/subtracted element-by-element: $(A \pm B)_{ij} = a_{ij} \pm b_{ij}$.
+\end{keybox}
+
+\textbf{Example.} Let
+$A = \begin{pmatrix}1&2&3\\4&5&6\\7&8&9\end{pmatrix}$,\quad
+$B = \begin{pmatrix}9&8&7\\6&5&4\\3&2&1\end{pmatrix}$.
+
+\[
+A + B = \begin{pmatrix}10&10&10\\10&10&10\\10&10&10\end{pmatrix}, \qquad
+A - B = \begin{pmatrix}-8&-6&-4\\-2&0&2\\4&6&8\end{pmatrix}
+\]
+
+\subsection{Matrix Multiplication}
+
+\begin{defbox}[Matrix Product]
+For $A$ ($m\times n$) and $B$ ($n\times p$), the product $C = AB$ is $m\times p$ with
+\[
+c_{ij} = \sum_{k=1}^{n} a_{ik}\,b_{kj}.
+\]
+Matrix multiplication is \textbf{not commutative} in general: $AB \neq BA$.
+\end{defbox}
+
+\textbf{Example.}
+\[
+A = \begin{pmatrix}1&2&0\\3&0&1\\1&1&2\end{pmatrix}, \quad
+B = \begin{pmatrix}2&1\\0&3\\1&0\end{pmatrix}
+\]
+\[
+AB = \begin{pmatrix}1\cdot2+2\cdot0+0\cdot1 & 1\cdot1+2\cdot3+0\cdot0 \\ 3\cdot2+0\cdot0+1\cdot1 & 3\cdot1+0\cdot3+1\cdot0 \\ 1\cdot2+1\cdot0+2\cdot1 & 1\cdot1+1\cdot3+2\cdot0\end{pmatrix}
+= \begin{pmatrix}2&7\\7&3\\4&4\end{pmatrix}
+\]
+
+\subsection{Properties of Matrix Operations}
+
+\begin{tcolorbox}[enhanced, colback=greenbg, colframe=greenclr, arc=4pt, boxrule=1pt]
+\begin{multicols}{2}
+\textbf{Addition:}
+\begin{itemize}[leftmargin=14pt, itemsep=2pt]
+  \item $A+B = B+A$ (commutative)
+  \item $(A+B)+C = A+(B+C)$
+  \item $A + O = A$ (zero matrix)
+  \item $A + (-A) = O$
+\end{itemize}
+\columnbreak
+\textbf{Multiplication:}
+\begin{itemize}[leftmargin=14pt, itemsep=2pt]
+  \item $(AB)C = A(BC)$ (associative)
+  \item $A(B+C) = AB+AC$
+  \item $AI = IA = A$
+  \item $(AB)^T = B^T A^T$
+\end{itemize}
+\end{multicols}
+\end{tcolorbox}
+
+% ════════════════════════════════════════════════════════════
+\section{2.\ Determinants}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Determinant]
+The \textbf{determinant} is a scalar value computed from a square matrix. For a $3\times3$ matrix $A$:
+\[
+\det(A) = a_{11}(a_{22}a_{33}-a_{23}a_{32}) - a_{12}(a_{21}a_{33}-a_{23}a_{31}) + a_{13}(a_{21}a_{32}-a_{22}a_{31})
+\]
+\end{defbox}
+
+\subsection{Sarrus' Rule (3×3)}
+
+\begin{keybox}
+Write the first two columns to the right of $A$, then sum the three downward diagonals and subtract the three upward diagonals.
+\end{keybox}
+
+\textbf{Example.} $A = \begin{pmatrix}1&2&3\\4&5&6\\7&8&9\end{pmatrix}$
+
+\[
+\det(A) = (1\cdot5\cdot9 + 2\cdot6\cdot7 + 3\cdot4\cdot8) - (3\cdot5\cdot7 + 1\cdot6\cdot8 + 2\cdot4\cdot9)
+\]
+\[
+= (45 + 84 + 96) - (105 + 48 + 72) = 225 - 225 = 0
+\]
+
+\begin{formulabox}
+\textbf{Properties of Determinants:}
+\begin{itemize}[leftmargin=14pt, itemsep=3pt]
+  \item $\det(AB) = \det(A)\cdot\det(B)$
+  \item $\det(A^T) = \det(A)$
+  \item $\det(kA) = k^n\det(A)$ for $n\times n$ matrix
+  \item Swapping two rows/columns changes the sign of the determinant
+  \item If two rows are identical, $\det(A) = 0$
+  \item $\det(A^{-1}) = 1/\det(A)$ (if $A$ is invertible)
+\end{itemize}
+\end{formulabox}
+
+% ════════════════════════════════════════════════════════════
+\section{3.\ Singular and Non-Singular Matrices}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Singular Matrix]
+A square matrix $A$ is \textbf{singular} if $\det(A) = 0$. A singular matrix has no inverse.
+\end{defbox}
+
+\begin{defbox}[Non-Singular Matrix]
+A square matrix $A$ is \textbf{non-singular} (invertible) if $\det(A) \neq 0$. Its inverse is
+\[
+A^{-1} = \frac{1}{\det(A)}\,\text{adj}(A)
+\]
+where $\text{adj}(A)$ is the adjugate (transpose of the cofactor matrix).
+\end{defbox}
+
+\begin{tcolorbox}[enhanced, colback=amberbg, colframe=amberclr, arc=4pt, boxrule=1pt]
+\textbf{Comparison Table:}
+
+\vspace{4pt}
+\begin{tabular}{lll}
+\toprule
+\textbf{Property} & \textbf{Singular} & \textbf{Non-Singular} \\
+\midrule
+$\det(A)$ & $= 0$ & $\neq 0$ \\
+Inverse & Does not exist & Exists \\
+Rank & $< n$ & $= n$ (full rank) \\
+System $Ax=b$ & May have no/infinite solutions & Unique solution \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\textbf{Example.}
+$A = \begin{pmatrix}2&4\\1&2\end{pmatrix}$: $\det(A) = 4-4=0$ \textrightarrow\ \textbf{Singular}.\\[4pt]
+$B = \begin{pmatrix}3&1\\2&4\end{pmatrix}$: $\det(B) = 12-2=10 \neq 0$ \textrightarrow\ \textbf{Non-Singular}.
+
+% ════════════════════════════════════════════════════════════
+\section{4.\ Minor and Cofactor}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Minor]
+The \textbf{minor} $M_{ij}$ of element $a_{ij}$ is the determinant of the submatrix obtained by deleting row $i$ and column $j$.
+\end{defbox}
+
+\begin{defbox}[Cofactor]
+The \textbf{cofactor} $C_{ij}$ is the signed minor:
+\[
+C_{ij} = (-1)^{i+j} M_{ij}
+\]
+The sign pattern for a $3\times3$ matrix is:
+\[
+\begin{pmatrix}+&-&+\\-&+&-\\+&-&+\end{pmatrix}
+\]
+\end{defbox}
+
+\textbf{Example.} For $A = \begin{pmatrix}1&2&3\\0&4&5\\1&0&6\end{pmatrix}$:
+
+Minor $M_{11}$: delete row 1, col 1 $\Rightarrow \det\begin{pmatrix}4&5\\0&6\end{pmatrix} = 24$
+
+Minor $M_{12}$: delete row 1, col 2 $\Rightarrow \det\begin{pmatrix}0&5\\1&6\end{pmatrix} = -5$
+
+Minor $M_{13}$: delete row 1, col 3 $\Rightarrow \det\begin{pmatrix}0&4\\1&0\end{pmatrix} = -4$
+
+\[
+\det(A) = 1(24) - 2(-5) + 3(-4) = 24 + 10 - 12 = 22
+\]
+
+\begin{keybox}
+\textbf{Cofactor Expansion:} $\det(A) = \sum_{j=1}^{n} a_{ij}\,C_{ij}$ along any row $i$, or $\sum_{i=1}^{n} a_{ij}\,C_{ij}$ along any column $j$.
+\end{keybox}
+
+% ════════════════════════════════════════════════════════════
+\section{5.\ Gauss Elimination (3×3)}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Gauss Elimination]
+\textbf{Gaussian Elimination} reduces the augmented matrix $[A|b]$ to \textbf{upper triangular} (Row Echelon Form), then uses \textbf{back substitution} to solve.
+\end{defbox}
+
+\begin{derivbox}[Steps]
+\begin{enumerate}[leftmargin=18pt, itemsep=4pt]
+  \item Write the augmented matrix $[A|b]$.
+  \item Use row operations to create zeros below each pivot (leading entry).
+  \item Achieve Row Echelon Form (upper triangular).
+  \item Back-substitute from the last equation upward.
+\end{enumerate}
+\end{derivbox}
+
+\textbf{Example.} Solve:
+\[
+x + 2y + z = 5, \quad 3x + 5y + z = 10, \quad 2x + 4y + z = 8
+\]
+
+Augmented matrix and row operations:
+\[
+\begin{pmatrix}1&2&1&5\\3&5&1&10\\2&4&1&8\end{pmatrix}
+\xrightarrow{R_2\leftarrow R_2-3R_1}
+\begin{pmatrix}1&2&1&5\\0&-1&-2&-5\\2&4&1&8\end{pmatrix}
+\xrightarrow{R_3\leftarrow R_3-2R_1}
+\begin{pmatrix}1&2&1&5\\0&-1&-2&-5\\0&0&-1&-2\end{pmatrix}
+\]
+
+Back substitution: $z = 2$, $-y - 4 = -5 \Rightarrow y = 1$, $x + 2 + 2 = 5 \Rightarrow x = 1$.
+
+\[
+\boxed{x = 1,\quad y = 1,\quad z = 2}
+\]
+
+% ════════════════════════════════════════════════════════════
+\section{6.\ Gauss--Jordan Elimination (3×3)}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Gauss--Jordan Elimination]
+\textbf{Gauss--Jordan} extends Gaussian elimination to produce \textbf{Reduced Row Echelon Form (RREF)}: each pivot is 1 and all other entries in that column are 0. No back substitution needed.
+\end{defbox}
+
+\textbf{Example.} Same system as above:
+\[
+\begin{pmatrix}1&2&1&5\\0&-1&-2&-5\\0&0&-1&-2\end{pmatrix}
+\xrightarrow{R_3\leftarrow -R_3}
+\begin{pmatrix}1&2&1&5\\0&-1&-2&-5\\0&0&1&2\end{pmatrix}
+\]
+\[
+\xrightarrow{R_2\leftarrow R_2+2R_3}
+\begin{pmatrix}1&2&1&5\\0&-1&0&-1\\0&0&1&2\end{pmatrix}
+\xrightarrow{R_2\leftarrow -R_2}
+\begin{pmatrix}1&2&1&5\\0&1&0&1\\0&0&1&2\end{pmatrix}
+\]
+\[
+\xrightarrow{R_1\leftarrow R_1-2R_2-R_3}
+\begin{pmatrix}1&0&0&1\\0&1&0&1\\0&0&1&2\end{pmatrix}
+\]
+
+Result directly: $x=1,\ y=1,\ z=2$.
+
+\begin{notebox}
+\textbf{Gauss vs Gauss--Jordan:} Gaussian gives upper triangular + back substitution. Gauss--Jordan gives full RREF --- solution read directly. Gauss--Jordan is used to find matrix inverses by augmenting with the identity $[A|I] \rightarrow [I|A^{-1}]$.
+\end{notebox}
+
+% ════════════════════════════════════════════════════════════
+\section{7.\ Cramer's Rule}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Cramer's Rule]
+For a system $Ax = b$ with $\det(A) \neq 0$, each variable $x_i$ is given by:
+\[
+x_i = \frac{\det(A_i)}{\det(A)}
+\]
+where $A_i$ is the matrix $A$ with its $i$-th column replaced by $b$.
+\end{defbox}
+
+\textbf{Example.} Solve:
+\[
+2x + y - z = 3,\quad x - y + 2z = 1,\quad 3x + 2y + z = 4
+\]
+
+\[
+A = \begin{pmatrix}2&1&-1\\1&-1&2\\3&2&1\end{pmatrix}, \quad
+b = \begin{pmatrix}3\\1\\4\end{pmatrix}
+\]
+
+$\det(A) = 2(-1-4) - 1(1-6) + (-1)(2+3) = -10 + 5 - 5 = -10$
+
+\[
+A_1 = \begin{pmatrix}3&1&-1\\1&-1&2\\4&2&1\end{pmatrix} \Rightarrow \det(A_1) = 3(-1-4)-1(1-8)+(-1)(2+4) = -15+7-6 = -14
+\]
+
+\[
+A_2 = \begin{pmatrix}2&3&-1\\1&1&2\\3&4&1\end{pmatrix} \Rightarrow \det(A_2) = 2(1-8)-3(1-6)+(-1)(4-3) = -14+15-1 = 0
+\]
+
+\[
+A_3 = \begin{pmatrix}2&1&3\\1&-1&1\\3&2&4\end{pmatrix} \Rightarrow \det(A_3) = 2(-4-2)-1(4-3)+3(2+3) = -12-1+15 = 2
+\]
+
+\[
+\boxed{x = \frac{-14}{-10} = \frac{7}{5},\quad y = \frac{0}{-10} = 0,\quad z = \frac{2}{-10} = -\frac{1}{5}}
+\]
+
+\begin{notebox}
+Cramer's Rule is elegant for small systems but computationally expensive for large $n$. Use Gaussian elimination for $n \geq 4$.
+\end{notebox}
+
+% ════════════════════════════════════════════════════════════
+\section{8.\ Orthogonal and Orthonormal Sets}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Orthogonal Set]
+A set of vectors $\{v_1, v_2, \ldots, v_k\}$ in $\mathbb{R}^n$ is \textbf{orthogonal} if every pair of distinct vectors is perpendicular:
+\[
+v_i \cdot v_j = 0 \quad \text{for all } i \neq j
+\]
+\end{defbox}
+
+\begin{defbox}[Orthonormal Set]
+An orthogonal set where each vector has unit length ($\|v_i\| = 1$) is called \textbf{orthonormal}. To convert an orthogonal set to orthonormal, normalize each vector:
+\[
+\hat{v}_i = \frac{v_i}{\|v_i\|}
+\]
+\end{defbox}
+
+\textbf{Example.} Check if $\{v_1, v_2, v_3\}$ is orthogonal:
+\[
+v_1 = \begin{pmatrix}1\\0\\0\end{pmatrix},\quad v_2 = \begin{pmatrix}0\\1\\0\end{pmatrix},\quad v_3 = \begin{pmatrix}0\\0\\1\end{pmatrix}
+\]
+$v_1\cdot v_2 = 0$, $v_1\cdot v_3 = 0$, $v_2\cdot v_3 = 0$ \textrightarrow\ \textbf{Orthogonal}. \\[4pt]
+$\|v_1\| = \|v_2\| = \|v_3\| = 1$ \textrightarrow\ also \textbf{Orthonormal} (standard basis).
+
+\textbf{Non-trivial Example.}
+\[
+u_1 = \begin{pmatrix}1\\1\\0\end{pmatrix},\quad u_2 = \begin{pmatrix}-1\\1\\0\end{pmatrix},\quad u_3 = \begin{pmatrix}0\\0\\1\end{pmatrix}
+\]
+$u_1\cdot u_2 = -1+1+0 = 0$\checkmark, $u_1\cdot u_3 = 0$\checkmark, $u_2\cdot u_3 = 0$\checkmark \textrightarrow\ Orthogonal.
+
+Normalize: $\hat{u}_1 = \frac{1}{\sqrt{2}}\begin{pmatrix}1\\1\\0\end{pmatrix}$, $\hat{u}_2 = \frac{1}{\sqrt{2}}\begin{pmatrix}-1\\1\\0\end{pmatrix}$, $\hat{u}_3 = \begin{pmatrix}0\\0\\1\end{pmatrix}$ \textrightarrow\ Orthonormal.
+
+\begin{thmbox}[Gram--Schmidt Process]
+Given a linearly independent set $\{x_1,\ldots,x_k\}$, produce an orthogonal set $\{v_1,\ldots,v_k\}$:
+\[
+v_1 = x_1, \qquad v_k = x_k - \sum_{j=1}^{k-1}\frac{x_k\cdot v_j}{\|v_j\|^2}\,v_j
+\]
+Then normalize to get an orthonormal set.
+\end{thmbox}
+
+% ════════════════════════════════════════════════════════════
+\section{9.\ Projection of a Vector}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Projection]
+The \textbf{orthogonal projection} of vector $u$ onto vector $v$ is:
+\[
+\text{proj}_v\,u = \frac{u\cdot v}{\|v\|^2}\,v = \frac{u\cdot v}{v\cdot v}\,v
+\]
+The \textbf{scalar projection} (component) of $u$ onto $v$ is:
+\[
+\text{comp}_v\,u = \frac{u\cdot v}{\|v\|}
+\]
+\end{defbox}
+
+\textbf{Example 1.} Project $u = (3,4)$ onto $v = (1,0)$:
+\[
+\text{proj}_v\,u = \frac{(3)(1)+(4)(0)}{1^2+0^2}\begin{pmatrix}1\\0\end{pmatrix} = 3\begin{pmatrix}1\\0\end{pmatrix} = \begin{pmatrix}3\\0\end{pmatrix}
+\]
+
+\textbf{Example 2.} Project $u = (2,1,3)$ onto $v = (1,2,2)$:
+\[
+u\cdot v = 2+2+6=10, \quad \|v\|^2 = 1+4+4=9
+\]
+\[
+\text{proj}_v\,u = \frac{10}{9}\begin{pmatrix}1\\2\\2\end{pmatrix} = \begin{pmatrix}10/9\\20/9\\20/9\end{pmatrix}
+\]
+
+\begin{keybox}
+\textbf{Projection onto a subspace} spanned by orthonormal basis $\{\hat{u}_1,\ldots,\hat{u}_k\}$:
+\[
+\text{proj}_W\,x = (x\cdot\hat{u}_1)\hat{u}_1 + (x\cdot\hat{u}_2)\hat{u}_2 + \cdots + (x\cdot\hat{u}_k)\hat{u}_k
+\]
+\end{keybox}
+
+\begin{formulabox}
+\textbf{Projection Matrix.} The projection matrix onto the column space of $A$ (with linearly independent columns) is:
+\[
+P = A(A^TA)^{-1}A^T
+\]
+Then $\text{proj}_{\text{col}(A)}\,b = Pb$.
+\end{formulabox}
+
+% ════════════════════════════════════════════════════════════
+\section{10.\ Group Theory}
+% ════════════════════════════════════════════════════════════
+
+\begin{defbox}[Group]
+A \textbf{group} is a set $G$ together with a binary operation $*$ satisfying four axioms:
+\begin{enumerate}[leftmargin=18pt, itemsep=4pt]
+  \item \textbf{Closure:} $\forall\, a,b \in G,\; a*b \in G$
+  \item \textbf{Associativity:} $\forall\, a,b,c \in G,\; (a*b)*c = a*(b*c)$
+  \item \textbf{Identity:} $\exists\, e \in G$ such that $a*e = e*a = a$
+  \item \textbf{Inverse:} $\forall\, a \in G,\; \exists\, a^{-1} \in G$ such that $a*a^{-1} = a^{-1}*a = e$
+\end{enumerate}
+If also $a*b = b*a$ for all $a,b \in G$, the group is \textbf{Abelian (commutative)}.
+\end{defbox}
+
+\subsection{Common Examples of Groups}
+
+\begin{tcolorbox}[enhanced, colback=lightbg, colframe=primary, arc=4pt, boxrule=1pt]
+\begin{tabular}{llll}
+\toprule
+\textbf{Group} & \textbf{Set} & \textbf{Operation} & \textbf{Abelian?} \\
+\midrule
+$(\mathbb{Z}, +)$ & Integers & Addition & Yes \\
+$(\mathbb{Q}\setminus\{0\}, \times)$ & Nonzero rationals & Multiplication & Yes \\
+$(GL_n(\mathbb{R}), \cdot)$ & Invertible $n\times n$ matrices & Matrix mult. & No ($n\geq 2$) \\
+$(\mathbb{Z}_n, +)$ & $\{0,1,\ldots,n-1\}$ & Addition mod $n$ & Yes \\
+$S_n$ & Permutations of $n$ elements & Composition & No ($n\geq 3$) \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\subsection{Subgroup}
+
+\begin{defbox}[Subgroup]
+A subset $H \subseteq G$ is a \textbf{subgroup} of $G$ if $H$ itself forms a group under the same operation. Equivalently, $H$ is a subgroup iff:
+\begin{itemize}[leftmargin=14pt]
+  \item $e \in H$
+  \item $a,b \in H \Rightarrow a*b \in H$ (closure)
+  \item $a \in H \Rightarrow a^{-1} \in H$
+\end{itemize}
+\end{defbox}
+
+\textbf{Example.} $(\mathbb{Z}, +)$ is a group. $H = 2\mathbb{Z} = \{\ldots,-4,-2,0,2,4,\ldots\}$ (even integers) is a subgroup: $0 \in H$, sum of evens is even, negative of even is even.
+
+\subsection{Order of a Group and Element}
+
+\begin{keybox}
+\textbf{Order of group} $|G|$: number of elements.\\
+\textbf{Order of element} $a$: smallest positive integer $n$ with $a^n = e$. If no such $n$, order is infinite.
+\end{keybox}
+
+\textbf{Example.} In $\mathbb{Z}_6 = \{0,1,2,3,4,5\}$ under addition mod 6:\\
+$\text{ord}(1) = 6$ (since $6\cdot1=6\equiv0$), $\text{ord}(2)=3$, $\text{ord}(3)=2$, $\text{ord}(0)=1$.
+
+\begin{thmbox}[Lagrange's Theorem]
+If $H$ is a subgroup of a finite group $G$, then $|H|$ divides $|G|$.
+\end{thmbox}
+
+% ════════════════════════════════════════════════════════════
+\section{Quick Reference}
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[
+  enhanced, arc=6pt, boxrule=2pt,
+  colback=lightbg, colframe=primary,
+  title={\bfseries\color{white}\Large Linear Algebra --- Cheat Sheet},
+  colbacktitle=primary, coltitle=white,
+  attach boxed title to top center={yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=4pt, colframe=primary, boxrule=0pt},
+  top=18pt, bottom=8pt,
+]
+
+\begin{tcolorbox}[enhanced, colback=rosebg, colframe=roseclr, arc=3pt, boxrule=1pt, left=8pt, top=6pt, bottom=6pt]
+{\small\bfseries\color{roseclr} DETERMINANTS \& INVERSES}\\[4pt]
+{\small
+$\det\begin{pmatrix}a&b\\c&d\end{pmatrix} = ad-bc$\hfill
+$A^{-1} = \dfrac{1}{\det A}\text{adj}(A)$\\[6pt]
+$\det(AB)=\det A\cdot\det B$\hfill
+$\det(A^T)=\det A$\\[6pt]
+Singular: $\det A = 0$\quad Non-singular: $\det A \neq 0$
+}
+\end{tcolorbox}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[enhanced, colback=amberbg, colframe=amberclr, arc=3pt, boxrule=1pt, left=8pt, top=6pt, bottom=6pt]
+{\small\bfseries\color{amberclr} SOLVING LINEAR SYSTEMS}\\[4pt]
+{\small
+\textbf{Gauss Elimination:} $[A|b] \to$ upper triangular $\to$ back-sub\\[4pt]
+\textbf{Gauss--Jordan:} $[A|b] \to$ RREF $\to$ read solution\\[4pt]
+\textbf{Cramer's Rule:} $x_i = \dfrac{\det(A_i)}{\det(A)}$ (replace col $i$ with $b$)\\[4pt]
+\textbf{Matrix Inverse:} $[A|I] \xrightarrow{\text{RREF}} [I|A^{-1}]$
+}
+\end{tcolorbox}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[enhanced, colback=tealbg, colframe=tealclr, arc=3pt, boxrule=1pt, left=8pt, top=6pt, bottom=6pt]
+{\small\bfseries\color{tealclr} VECTORS \& PROJECTIONS}\\[4pt]
+{\small
+$\text{proj}_v u = \dfrac{u\cdot v}{\|v\|^2}v$\hfill
+$\text{comp}_v u = \dfrac{u\cdot v}{\|v\|}$\\[6pt]
+Orthogonal: $u\cdot v = 0$\hfill Normalize: $\hat{v} = \dfrac{v}{\|v\|}$\\[6pt]
+Projection matrix: $P = A(A^TA)^{-1}A^T$
+}
+\end{tcolorbox}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[enhanced, colback=greenbg, colframe=greenclr, arc=3pt, boxrule=1pt, left=8pt, top=6pt, bottom=6pt]
+{\small\bfseries\color{greenclr} GROUP THEORY}\\[4pt]
+{\small
+Group $(G,*)$: Closure, Associativity, Identity $e$, Inverse $a^{-1}$\\[4pt]
+Abelian: $a*b=b*a$\hfill Subgroup: subset closed under $*$ and inverses\\[4pt]
+Lagrange: $|H|$ divides $|G|$\hfill $\text{ord}(a)$: smallest $n$ with $a^n = e$
+}
+\end{tcolorbox}
+
+\end{tcolorbox}
+
+% ════════════════════════════════════════════════════════════
+%  CONTACT
+% ════════════════════════════════════════════════════════════
+\vspace{20pt}
+\begin{tcolorbox}[
+  enhanced, arc=4pt, boxrule=1pt,
+  colback=lightbg, colframe=accent!60,
+  left=14pt, right=14pt, top=8pt, bottom=8pt,
+]
+\centering
+{\small\color{darktext}For feedback or to request additional topics, contact:}\\[4pt]
+{\normalsize\bfseries\color{primary}+92 304 2019543}
+\end{tcolorbox}
+
+\end{document}
