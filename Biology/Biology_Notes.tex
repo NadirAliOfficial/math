@@ -1,0 +1,604 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{titletoc}
+
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{examplebox*}[1][]{
+  enhanced, breakable,
+  colback=graybg, colframe=grayclr!80, arc=5pt, boxrule=1pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} #1},
+  colbacktitle=grayclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=grayclr, boxrule=0pt},
+}
+
+\geometry{margin=0.9in, top=1in, bottom=1in}
+
+% ── Original Blue Palette ───────────────────────────────
+\definecolor{primary}  {RGB}{27,  79, 114}
+\definecolor{accent}   {RGB}{46, 134, 193}
+\definecolor{lightbg}  {RGB}{234,244,251}
+\definecolor{tealclr}  {RGB}{0,  110,  90}
+\definecolor{tealbg}   {RGB}{220,245,240}
+\definecolor{amberclr} {RGB}{160, 90,   0}
+\definecolor{amberbg}  {RGB}{255,243,220}
+\definecolor{purpleclr}{RGB}{90,  20, 140}
+\definecolor{purplebg} {RGB}{240,228,255}
+\definecolor{redclr}   {RGB}{150,  20,  20}
+\definecolor{redbg}    {RGB}{255,228,228}
+\definecolor{greenclr} {RGB}{20, 120,  40}
+\definecolor{greenbg}  {RGB}{220,248,228}
+\definecolor{grayclr}  {RGB}{80,  80,  80}
+\definecolor{graybg}   {RGB}{245,245,245}
+\definecolor{darktext} {RGB}{44,  62,  80}
+\definecolor{gold}     {RGB}{183,149, 11}
+\definecolor{goldbg}   {RGB}{254,249,231}
+
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+\renewcommand{\contentsname}{}
+\titlecontents{section}[18pt]
+  {\addvspace{5pt}\bfseries\color{primary}}{}{}
+  {\color{accent!60}\titlerule*[5pt]{.}\textbf{\color{accent}\contentspage}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{General Biology}\;\textcolor{accent}{|}\;Complete Notes}
+\fancyhead[R]{\small\color{darktext}BS-II Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+\titleformat{\section}{\large\bfseries\color{primary}}{}{0em}{}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+\titleformat{\subsection}{\normalsize\bfseries\color{accent}}{}{0em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+\newtcolorbox{defbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=tealbg, colframe=tealclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Definition\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=tealclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=tealclr, boxrule=0pt},
+}
+\newtcolorbox{thmbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Key Point\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
+}
+\newtcolorbox{formulabox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=accent,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Summary},
+  colbacktitle=accent, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=accent, boxrule=0pt},
+}
+\newtcolorbox{keybox}[1][]{
+  enhanced, borderline west={4pt}{0pt}{purpleclr},
+  colback=purplebg!60, colframe=white, arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+\newtcolorbox{notebox}{
+  enhanced, borderline west={4pt}{0pt}{redclr},
+  colback=redbg!60, colframe=white, arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{tcolorbox}[enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=28pt, bottom=20pt,
+  borderline south={5pt}{0pt}{accent}]
+  \centering
+  {\fontsize{26}{32}\bfseries\color{white} General Biology\\[8pt] Complete Notes}\\[12pt]
+  {\large\color{lightbg}
+    Cell \textbf{·} Digestion \textbf{·} Respiration \textbf{·} Excretion \textbf{·} Skin \textbf{·} Brain
+  }
+\end{tcolorbox}
+
+\vspace{8pt}
+\begin{tcolorbox}[enhanced, arc=0pt, boxrule=0pt, colback=white, colframe=white,
+  borderline north={2pt}{0pt}{primary}, borderline south={2pt}{0pt}{primary},
+  left=0pt, right=0pt, top=0pt, bottom=0pt]
+\begin{tabular}{p{0.33\textwidth}|p{0.33\textwidth}|p{0.31\textwidth}}
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} DEPARTMENT}\\[4pt]
+    {\bfseries\color{primary} Mathematics}\\[3pt]
+    {\footnotesize\color{darktext} SALU, Khairpur}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} COMPOSED BY}\\[4pt]
+    {\bfseries\color{primary} Nadir Ali Khan}\\[3pt]
+    {\footnotesize\color{darktext} BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.28\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} SESSION}\\[4pt]
+    {\bfseries\color{primary} 2026}\\[3pt]
+    {\footnotesize\color{darktext} Seat No: MT-0123-052}
+  \vspace{8pt}\end{minipage}
+\end{tabular}
+\end{tcolorbox}
+\vspace{16pt}
+
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt, colback=white, colframe=primary,
+  left=10pt, right=10pt, top=4pt, bottom=8pt,
+  title={\bfseries\color{white} Table of Contents}, colbacktitle=primary,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt}]
+\vspace{4pt}\tableofcontents
+\end{tcolorbox}
+\newpage
+
+%=============================================================
+\section{1. Introduction to Biology}
+%=============================================================
+
+\begin{defbox}[Biology]
+\textbf{Biology} is the branch of science that deals with the study of living organisms — their structure, function, growth, origin, evolution, and distribution.
+\end{defbox}
+
+\subsection{Branches of Biology}
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|C{4cm}|C{8.5cm}|}
+\hline
+\rowcolor{primary}\hcell{Branch} & \hcell{Study of} \\
+\hline
+Zoology & Animals \\
+\rowcolor{lightbg} Botany & Plants \\
+Microbiology & Microorganisms \\
+\rowcolor{lightbg} Genetics & Heredity and variation \\
+Ecology & Organisms and their environment \\
+\rowcolor{lightbg} Physiology & Functions of organs and systems \\
+Anatomy & Structure of organisms \\
+\rowcolor{lightbg} Biochemistry & Chemical processes in living things \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Levels of Organization}
+\begin{keybox}
+Atom $\to$ Molecule $\to$ Organelle $\to$ Cell $\to$ Tissue $\to$ Organ $\to$ Organ System $\to$ Organism $\to$ Population $\to$ Ecosystem
+\end{keybox}
+
+\subsection{Characteristics of Living Things}
+\begin{multicols}{2}
+\begin{itemize}[leftmargin=14pt, itemsep=2pt]
+  \item Cellular organization
+  \item Metabolism
+  \item Growth and development
+  \item Reproduction
+  \item Response to stimuli
+  \item Homeostasis
+  \item Adaptation
+  \item Nutrition
+\end{itemize}
+\end{multicols}
+
+%=============================================================
+\section{2. Cell and Their Organelles}
+%=============================================================
+
+\begin{defbox}[Cell]
+The \textbf{cell} is the basic structural and functional unit of life. All living organisms are made of one or more cells. Proposed by \textbf{Robert Hooke} (1665).
+\end{defbox}
+
+\subsection{Types of Cells}
+\begin{itemize}[leftmargin=16pt, itemsep=4pt]
+  \item \textbf{Prokaryotic Cell:} No true membrane-bound nucleus. No membrane-bound organelles. e.g. Bacteria, Blue-green algae.
+  \item \textbf{Eukaryotic Cell:} Has a true nucleus enclosed in nuclear membrane. Has membrane-bound organelles. e.g. Plant cells, Animal cells.
+\end{itemize}
+
+\subsection{Cell Organelles and Their Functions}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{4.5cm}|C{8cm}|}
+\hline
+\rowcolor{primary}\hcell{Organelle} & \hcell{Function} \\
+\hline
+Cell Membrane & Controls movement of substances in/out of cell \\
+\rowcolor{lightbg} Cell Wall (plants) & Provides rigidity and support; made of cellulose \\
+Nucleus & Controls all cell activities; contains DNA \\
+\rowcolor{lightbg} Nucleolus & Synthesizes ribosomal RNA (rRNA) \\
+Mitochondria & Site of cellular respiration; produces ATP (``powerhouse'') \\
+\rowcolor{lightbg} Ribosome & Site of protein synthesis \\
+Endoplasmic Reticulum (ER) & Rough ER: protein synthesis; Smooth ER: lipid synthesis \\
+\rowcolor{lightbg} Golgi Apparatus & Packages and secretes proteins (``post office'') \\
+Lysosome & Contains digestive enzymes; destroys waste \\
+\rowcolor{lightbg} Vacuole & Storage of water, food, waste \\
+Chloroplast (plants) & Site of photosynthesis; contains chlorophyll \\
+\rowcolor{lightbg} Centrosome & Forms spindle fibers during cell division \\
+Cytoplasm & Jelly-like fluid; medium for chemical reactions \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{thmbox}[Cell Division]
+\textbf{Mitosis:} Cell divides to produce 2 identical daughter cells (growth, repair). Phases: Prophase $\to$ Metaphase $\to$ Anaphase $\to$ Telophase.\\[4pt]
+\textbf{Meiosis:} Cell divides to produce 4 genetically different cells with half the chromosomes (sexual reproduction).
+\end{thmbox}
+
+%=============================================================
+\section{3. Digestion System}
+%=============================================================
+
+\begin{defbox}[Digestion]
+\textbf{Digestion} is the process of breaking down complex food molecules into simpler absorbable forms using mechanical and chemical processes.
+\end{defbox}
+
+\subsection{Organs of the Digestive System}
+
+\begin{keybox}
+\textbf{Alimentary Canal (in order):}\\
+Mouth $\to$ Pharynx $\to$ Oesophagus $\to$ Stomach $\to$ Small Intestine $\to$ Large Intestine $\to$ Rectum $\to$ Anus
+\end{keybox}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{4cm}|C{8.5cm}|}
+\hline
+\rowcolor{primary}\hcell{Organ} & \hcell{Function} \\
+\hline
+Mouth & Mechanical digestion (chewing); salivary amylase breaks starch \\
+\rowcolor{lightbg} Oesophagus & Transports food to stomach via peristalsis \\
+Stomach & Churns food; HCl kills bacteria; pepsin digests proteins \\
+\rowcolor{lightbg} Small Intestine & Main site of digestion and absorption of nutrients \\
+Liver & Produces bile (emulsifies fats); detoxification \\
+\rowcolor{lightbg} Pancreas & Produces digestive enzymes (amylase, lipase, protease) \\
+Large Intestine & Absorbs water; forms faeces \\
+\rowcolor{lightbg} Rectum / Anus & Storage and elimination of undigested waste \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Digestive Enzymes}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{3.5cm}|C{3cm}|C{3cm}|C{3cm}|}
+\hline
+\rowcolor{primary}\hcell{Enzyme} & \hcell{Source} & \hcell{Substrate} & \hcell{Product} \\
+\hline
+Salivary Amylase & Salivary glands & Starch & Maltose \\
+\rowcolor{lightbg} Pepsin & Stomach & Proteins & Peptides \\
+Lipase & Pancreas & Fats & Fatty acids + Glycerol \\
+\rowcolor{lightbg} Trypsin & Pancreas & Proteins & Amino acids \\
+Maltase & Small intestine & Maltose & Glucose \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{thmbox}[Absorption]
+Nutrients are absorbed in the \textbf{small intestine} through finger-like projections called \textbf{villi} (singular: villus). Each villus has microvilli (brush border) to increase surface area. Glucose and amino acids pass into blood capillaries; fatty acids into lacteals (lymph vessels).
+\end{thmbox}
+
+%=============================================================
+\section{4. Respiratory System}
+%=============================================================
+
+\begin{defbox}[Respiration]
+\textbf{Respiration} is the process by which organisms exchange gases with their environment and release energy from organic molecules.
+\end{defbox}
+
+\subsection{Types of Respiration}
+\begin{itemize}[leftmargin=16pt, itemsep=3pt]
+  \item \textbf{Aerobic Respiration:} Uses oxygen; produces CO$_2$, H$_2$O, and energy (ATP).
+  \[
+    \text{C}_6\text{H}_{12}\text{O}_6 + 6\text{O}_2 \longrightarrow 6\text{CO}_2 + 6\text{H}_2\text{O} + \text{38 ATP}
+  \]
+  \item \textbf{Anaerobic Respiration:} No oxygen; less ATP produced.\\
+  In muscles: Glucose $\to$ Lactic acid + 2 ATP\\
+  In yeast: Glucose $\to$ Ethanol + CO$_2$ + 2 ATP
+\end{itemize}
+
+\subsection{Organs of the Respiratory System}
+\begin{keybox}
+\textbf{Pathway of air:}\\
+Nose $\to$ Pharynx $\to$ Larynx $\to$ Trachea $\to$ Bronchi $\to$ Bronchioles $\to$ Alveoli
+\end{keybox}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{4cm}|C{8.5cm}|}
+\hline
+\rowcolor{primary}\hcell{Structure} & \hcell{Function} \\
+\hline
+Nose & Filters, warms, and moistens air \\
+\rowcolor{lightbg} Trachea & Carries air to lungs; supported by C-shaped cartilage rings \\
+Bronchi & Two branches leading to left and right lungs \\
+\rowcolor{lightbg} Bronchioles & Smaller branches within lungs \\
+Alveoli & Tiny air sacs; site of gas exchange (O$_2$ in, CO$_2$ out) \\
+\rowcolor{lightbg} Diaphragm & Muscular sheet; controls breathing by changing lung volume \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Gas Exchange at Alveoli}
+\begin{itemize}[leftmargin=16pt, itemsep=3pt]
+  \item Alveoli are richly supplied with blood capillaries
+  \item O$_2$ diffuses from alveoli into blood (high $\to$ low concentration)
+  \item CO$_2$ diffuses from blood into alveoli
+  \item Features of alveoli: large surface area, moist thin walls, rich blood supply
+\end{itemize}
+
+\subsection{Breathing Mechanism}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|C{3.5cm}|C{4.5cm}|C{4.5cm}|}
+\hline
+\rowcolor{primary}\hcell{} & \hcell{Inhalation} & \hcell{Exhalation} \\
+\hline
+Diaphragm & Contracts (flattens) & Relaxes (domes up) \\
+\rowcolor{lightbg} Rib cage & Moves up and out & Moves down and in \\
+Lung volume & Increases & Decreases \\
+\rowcolor{lightbg} Air pressure & Decreases & Increases \\
+Air flow & Into lungs & Out of lungs \\
+\hline
+\end{tabular}
+\end{center}
+
+%=============================================================
+\section{5. Excretion System}
+%=============================================================
+
+\begin{defbox}[Excretion]
+\textbf{Excretion} is the removal of metabolic waste products from the body. These are substances produced during chemical reactions in cells that would be toxic if allowed to accumulate.
+\end{defbox}
+
+\subsection{Excretory Organs and Their Waste Products}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{4cm}|C{4.5cm}|C{4cm}|}
+\hline
+\rowcolor{primary}\hcell{Organ} & \hcell{Waste Excreted} & \hcell{Method} \\
+\hline
+Kidneys & Urea, excess water, salts & Urine \\
+\rowcolor{lightbg} Lungs & CO$_2$, water vapour & Exhalation \\
+Skin & Water, salts, small urea & Sweat \\
+\rowcolor{lightbg} Liver & Bile pigments (bilirubin) & Bile into gut \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{The Kidney}
+\begin{itemize}[leftmargin=16pt, itemsep=3pt]
+  \item Humans have two kidneys located in the abdominal cavity
+  \item Functional unit of kidney: \textbf{Nephron}
+  \item Each kidney contains approximately 1 million nephrons
+\end{itemize}
+
+\subsection{Nephron and Urine Formation}
+\begin{keybox}
+\textbf{Process:} Filtration $\to$ Reabsorption $\to$ Secretion $\to$ Urine formation\\[4pt]
+\textbf{Steps:}
+\begin{enumerate}[leftmargin=16pt, itemsep=2pt]
+  \item \textbf{Glomerular Filtration:} Blood filtered under pressure in Bowman's capsule; glucose, water, urea, salts pass into tubule
+  \item \textbf{Tubular Reabsorption:} Useful substances (glucose, water, amino acids) reabsorbed back into blood
+  \item \textbf{Tubular Secretion:} Additional wastes (H$^+$, K$^+$) secreted into tubule
+  \item \textbf{Urine:} Remaining fluid (urea, excess salts, water) passes to ureter $\to$ bladder $\to$ urethra
+\end{enumerate}
+\end{keybox}
+
+\begin{thmbox}[Osmoregulation]
+The kidneys regulate water balance of the body (osmoregulation) under the control of \textbf{ADH} (Anti-Diuretic Hormone) secreted by the pituitary gland. High ADH $\to$ more water reabsorbed $\to$ concentrated urine.
+\end{thmbox}
+
+%=============================================================
+\section{6. Skin}
+%=============================================================
+
+\begin{defbox}[Skin]
+The \textbf{skin} is the largest organ of the body. It forms the outer covering and serves as the primary barrier against the environment.
+\end{defbox}
+
+\subsection{Layers of the Skin}
+\begin{itemize}[leftmargin=16pt, itemsep=4pt]
+  \item \textbf{Epidermis} (outer layer):
+    \begin{itemize}[leftmargin=12pt]
+      \item Outermost layer: dead cornified cells (keratin)
+      \item Contains melanocytes (produce melanin — skin pigment)
+      \item No blood vessels; cells replaced continuously
+    \end{itemize}
+  \item \textbf{Dermis} (inner layer):
+    \begin{itemize}[leftmargin=12pt]
+      \item Contains hair follicles, sweat glands, sebaceous (oil) glands
+      \item Rich in blood vessels, nerve endings, lymph vessels
+      \item Contains collagen and elastin fibres
+    \end{itemize}
+  \item \textbf{Hypodermis} (subcutaneous layer):
+    \begin{itemize}[leftmargin=12pt]
+      \item Fat layer; insulation and energy storage
+    \end{itemize}
+\end{itemize}
+
+\subsection{Functions of the Skin}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{4cm}|C{8.5cm}|}
+\hline
+\rowcolor{primary}\hcell{Function} & \hcell{Details} \\
+\hline
+Protection & Barrier against pathogens, UV radiation, chemicals, dehydration \\
+\rowcolor{lightbg} Temperature regulation & Sweating cools body; blood vessels dilate/constrict \\
+Excretion & Removes water, salts, and small amounts of urea through sweat \\
+\rowcolor{lightbg} Sensation & Nerve endings detect touch, pain, pressure, temperature \\
+Vitamin D synthesis & UV light converts cholesterol to Vitamin D \\
+\rowcolor{lightbg} Waterproofing & Keratin prevents excessive water loss \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{thmbox}[Thermoregulation]
+When body is \textbf{too hot}: blood vessels dilate (vasodilation), sweat glands produce sweat, hair lies flat $\to$ body cools.\\[4pt]
+When body is \textbf{too cold}: blood vessels constrict (vasoconstriction), shivering generates heat, hair stands up (goosebumps) $\to$ body warms.
+\end{thmbox}
+
+%=============================================================
+\section{7. The Brain}
+%=============================================================
+
+\begin{defbox}[Brain]
+The \textbf{brain} is the main organ of the central nervous system (CNS), located in the cranium (skull). It controls all voluntary and involuntary activities of the body.
+\end{defbox}
+
+\subsection{Main Parts of the Brain}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|C{3.5cm}|C{9cm}|}
+\hline
+\rowcolor{primary}\hcell{Part} & \hcell{Functions} \\
+\hline
+Cerebrum & Largest part; controls thinking, memory, speech, voluntary movement, sensation \\
+\rowcolor{lightbg} Cerebellum & Coordinates movement, balance, and posture \\
+Medulla Oblongata & Controls involuntary actions: breathing, heartbeat, blood pressure, swallowing \\
+\rowcolor{lightbg} Hypothalamus & Regulates body temperature, hunger, thirst, sleep, emotional responses \\
+Thalamus & Relay station for sensory information to cerebrum \\
+\rowcolor{lightbg} Pituitary Gland & Master endocrine gland; controls other glands; attached to hypothalamus \\
+Brain Stem & Connects brain to spinal cord; controls basic life functions \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Lobes of the Cerebrum}
+\begin{itemize}[leftmargin=16pt, itemsep=3pt]
+  \item \textbf{Frontal lobe:} Personality, decision-making, voluntary movement, speech (Broca's area)
+  \item \textbf{Parietal lobe:} Processes touch, temperature, pain, spatial awareness
+  \item \textbf{Temporal lobe:} Hearing, language comprehension (Wernicke's area), memory
+  \item \textbf{Occipital lobe:} Vision and visual processing
+\end{itemize}
+
+\subsection{Neuron — Basic Unit of Nervous System}
+\begin{keybox}
+\textbf{Parts of a neuron:} Cell body (soma) $\to$ Dendrites (receive signals) $\to$ Axon (transmits signals) $\to$ Synaptic terminals\\[4pt]
+\textbf{Types:} Sensory neurons (carry signals TO brain), Motor neurons (carry signals FROM brain), Interneurons (connect sensory and motor).
+\end{keybox}
+
+\begin{thmbox}[Reflex Arc]
+A \textbf{reflex action} is an automatic, involuntary response to a stimulus. It does not involve the brain.\\
+Pathway: Stimulus $\to$ Receptor $\to$ Sensory neuron $\to$ Spinal cord $\to$ Motor neuron $\to$ Effector $\to$ Response
+\end{thmbox}
+
+%=============================================================
+\section{Quick Reference Cheat Sheet}
+%=============================================================
+
+\begin{tcolorbox}[enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=14pt, right=14pt, top=10pt, bottom=10pt,
+  borderline south={3pt}{0pt}{accent}]
+  \centering
+  {\large\bfseries\color{white} GENERAL BIOLOGY — MASTER SUMMARY}\\[4pt]
+  {\small\color{lightbg} All key topics at a glance}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt,
+  colback=tealbg, colframe=tealclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Systems Summary},
+  colbacktitle=tealclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=tealclr, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}ll@{}}
+  Digestion & Mouth $\to$ Stomach $\to$ Intestine \\
+  Absorption & Villi in small intestine \\
+  Respiration & Alveoli: O$_2$ in, CO$_2$ out \\
+  Aerobic & Glucose + O$_2$ $\to$ 38 ATP \\
+  Anaerobic & Glucose $\to$ Lactic acid + 2 ATP \\
+  Excretion & Kidneys: urea; Lungs: CO$_2$ \\
+  Nephron & Filtration $\to$ Reabsorption \\
+  ADH & Controls water reabsorption \\
+\end{tabular}
+\end{tcolorbox}
+\hfill
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt,
+  colback=lightbg, colframe=primary,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Cell Organelles},
+  colbacktitle=primary, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}ll@{}}
+  Nucleus & Control centre (DNA) \\
+  Mitochondria & ATP production \\
+  Ribosome & Protein synthesis \\
+  Golgi & Packaging proteins \\
+  Lysosome & Digests waste \\
+  Chloroplast & Photosynthesis \\
+  Cell wall & Support (plants) \\
+  Vacuole & Storage \\
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Brain Parts \& Skin Layers},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt}]
+\begin{multicols}{2}
+\textbf{Brain:}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt]
+  \item Cerebrum: thinking, memory
+  \item Cerebellum: balance
+  \item Medulla: heartbeat, breathing
+  \item Hypothalamus: temperature, hunger
+  \item Thalamus: sensory relay
+\end{itemize}
+\columnbreak
+\textbf{Skin Layers:}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt]
+  \item Epidermis: outer, keratin, melanin
+  \item Dermis: hair, sweat glands, nerves
+  \item Hypodermis: fat, insulation
+\end{itemize}
+\textbf{Skin Functions:}\\
+Protection, excretion, temperature regulation, sensation, Vitamin D
+\end{multicols}
+\end{tcolorbox}
+
+\vspace{20pt}
+\begin{center}
+  \color{grayclr}\rule{0.6\linewidth}{0.4pt}\\[8pt]
+  {\small\color{darktext} For feedback or to request additional topics:}\\[4pt]
+  {\normalsize\bfseries\color{primary} +92 304 2019543}
+\end{center}
+
+\end{document}
