@@ -1,0 +1,820 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{titletoc}
+% nicematrix not needed
+
+\tcbuselibrary{skins, breakable}
+
+\geometry{margin=0.9in, top=1in, bottom=1in}
+
+% ── Colour Palette: Warm Copper / Burgundy ──────────────
+\definecolor{primary}  {RGB}{120, 30,  50}   % burgundy
+\definecolor{accent}   {RGB}{195, 100, 50}   % copper
+\definecolor{lightbg}  {RGB}{255, 245, 238}  % warm cream
+\definecolor{jadeclr}  {RGB}{20,  110,  75}
+\definecolor{jadebg}   {RGB}{215, 245, 230}
+\definecolor{amberclr} {RGB}{150,  85,   0}
+\definecolor{amberbg}  {RGB}{255, 243, 215}
+\definecolor{purpleclr}{RGB}{80,  30, 130}
+\definecolor{purplebg} {RGB}{238, 228, 255}
+\definecolor{redclr}   {RGB}{160,  20,  20}
+\definecolor{redbg}    {RGB}{255, 228, 228}
+\definecolor{greenclr} {RGB}{20,  110,  50}
+\definecolor{greenbg}  {RGB}{215, 248, 228}
+\definecolor{grayclr}  {RGB}{85,  75,  70}
+\definecolor{graybg}   {RGB}{248, 245, 242}
+\definecolor{darktext} {RGB}{45,  30,  25}
+\definecolor{steelblu} {RGB}{50,  90, 140}
+\definecolor{steelbg}  {RGB}{225, 235, 250}
+
+% ── TOC ─────────────────────────────────────────────────
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+\renewcommand{\contentsname}{}
+\titlecontents{section}
+  [18pt]{\addvspace{5pt}\bfseries\color{primary}}
+  {}{}
+  {\color{accent!80}\titlerule*[5pt]{.}\textbf{\color{accent}\contentspage}}
+
+% ── Page style ──────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Linear Algebra}\;\textcolor{accent}{|}\;Past Paper Solutions}
+\fancyhead[R]{\small\color{darktext}BS-II Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ─────────────────────────────────────
+\titleformat{\section}{\large\bfseries\color{primary}}{}{0em}{}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+\titleformat{\subsection}{\normalsize\bfseries\color{accent}}{}{0em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+% ── tcolorbox environments ──────────────────────────────
+\newtcolorbox{qbox}[1]{
+  enhanced, arc=4pt, boxrule=2pt,
+  colback=lightbg, colframe=primary,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} #1},
+  colbacktitle=primary, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt},
+}
+
+\newtcolorbox{defbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=jadebg, colframe=jadeclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Definition\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=jadeclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=jadeclr, boxrule=0pt},
+}
+
+\newtcolorbox{thmbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Theorem\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
+}
+
+\newtcolorbox{solbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=steelbg, colframe=steelblu,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Solution\ifx&#1&\else\ ---\ #1\fi},
+  colbacktitle=steelblu, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=steelblu, boxrule=0pt},
+}
+
+\newtcolorbox{proofbox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=greenbg, colframe=greenclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Proof},
+  colbacktitle=greenclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=greenclr, boxrule=0pt},
+}
+
+\newtcolorbox{keybox}{
+  enhanced, borderline west={4pt}{0pt}{purpleclr},
+  colback=purplebg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newtcolorbox{notebox}{
+  enhanced, borderline west={4pt}{0pt}{redclr},
+  colback=redbg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\hcell}[1]{\textbf{\color{white}#1}}
+\newcommand{\mat}[1]{\begin{bmatrix}#1\end{bmatrix}}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════
+%  COVER
+% ════════════════════════════════════════════════════════════
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=28pt, bottom=20pt,
+  borderline south={5pt}{0pt}{accent},
+]
+  \centering
+  {\fontsize{24}{30}\bfseries\color{white} Linear Algebra\\[8pt] Past Paper — Full Solutions}\\[12pt]
+  {\large\color{lightbg}
+    BS-II (1\textsuperscript{st} Semester) \textbf{·} Final Test for Repeaters \textbf{·} Session 2025
+  }
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=white, colframe=white,
+  borderline north={2pt}{0pt}{primary},
+  borderline south={2pt}{0pt}{primary},
+  left=0pt, right=0pt, top=0pt, bottom=0pt,
+]
+\begin{tabular}{p{0.33\textwidth}|p{0.33\textwidth}|p{0.31\textwidth}}
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} SUBJECT}\\[4pt]
+    {\bfseries\color{primary} Linear Algebra}\\[3pt]
+    {\footnotesize\color{darktext} Max Marks: 80 | Attempt any 3}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} COMPOSED BY}\\[4pt]
+    {\bfseries\color{primary} Nadir Ali Khan}\\[3pt]
+    {\footnotesize\color{darktext} BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.28\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} DATE}\\[4pt]
+    {\bfseries\color{primary} 05-06-2025}\\[3pt]
+    {\footnotesize\color{darktext} 9:30 -- 11:30 AM}
+  \vspace{8pt}\end{minipage}
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{16pt}
+
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt,
+  colback=white, colframe=primary, left=10pt, right=10pt, top=4pt, bottom=8pt,
+  title={\bfseries\color{white} Table of Contents}, colbacktitle=primary,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=primary, boxrule=0pt}]
+\vspace{4pt}\tableofcontents
+\end{tcolorbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q.NO.1 — Concept, Purpose and Applications of Matrices}
+% ════════════════════════════════════════════════════════════
+
+\begin{qbox}{Q.NO.1}
+What is the concept of a Matrix and what is the purpose and applications of matrices? Justify through examples.
+\end{qbox}
+
+\subsection{Concept of a Matrix}
+
+\begin{defbox}[Matrix]
+A \textbf{matrix} is a rectangular array of numbers (real or complex) arranged in \textbf{rows} and \textbf{columns}, enclosed in square brackets. A matrix with $m$ rows and $n$ columns is called an $m \times n$ matrix.
+\[
+  A = \begin{bmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{bmatrix}_{m\times n}
+\]
+The element in the $i$-th row and $j$-th column is denoted $a_{ij}$.
+\end{defbox}
+
+\subsection{Types of Matrices}
+
+\begin{itemize}[leftmargin=16pt, itemsep=4pt]
+  \item \textbf{Square Matrix:} $m = n$. Example: $\mat{1&2\\3&4}$
+  \item \textbf{Zero (Null) Matrix:} All entries are 0. $O = \mat{0&0\\0&0}$
+  \item \textbf{Identity Matrix:} Square matrix with 1s on diagonal, 0s elsewhere. $I_2 = \mat{1&0\\0&1}$
+  \item \textbf{Diagonal Matrix:} Non-zero entries only on main diagonal.
+  \item \textbf{Symmetric:} $A^t = A$. Example: $\mat{1&2\\2&5}$
+  \item \textbf{Skew-Symmetric:} $A^t = -A$, diagonal entries = 0.
+  \item \textbf{Upper/Lower Triangular:} Zeros below/above diagonal.
+  \item \textbf{Singular:} $\det(A) = 0$ (no inverse). \textbf{Non-singular:} $\det(A) \neq 0$.
+\end{itemize}
+
+\subsection{Purpose of Matrices}
+
+\begin{itemize}[leftmargin=16pt, itemsep=3pt]
+  \item Compact representation of data and linear transformations
+  \item Efficient solution of systems of linear equations using row operations
+  \item Foundation of linear algebra and higher mathematics
+\end{itemize}
+
+\subsection{Applications of Matrices}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|C{3.5cm}|C{9cm}|}
+\hline
+\rowcolor{primary}
+\hcell{Field} & \hcell{Application} \\
+\hline
+Engineering & Structural analysis, circuit equations, control systems \\
+\rowcolor{lightbg}
+Computer Graphics & Rotation, scaling, translation of 2D/3D objects \\
+Economics & Input-output models (Leontief model) \\
+\rowcolor{lightbg}
+Statistics & Covariance matrices, regression, data analysis \\
+Physics & Quantum mechanics, tensor equations \\
+\rowcolor{lightbg}
+Cryptography & Encoding/decoding messages (Hill cipher) \\
+Network Theory & Adjacency matrices for graphs \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{keybox}
+\textbf{Example — Solving System of Equations:}
+\[
+  \begin{cases} 2x + y = 5 \\ x - y = 1 \end{cases}
+  \;\Longrightarrow\;
+  \underbrace{\mat{2&1\\1&-1}}_{A}\underbrace{\mat{x\\y}}_{\mathbf{x}} = \underbrace{\mat{5\\1}}_{\mathbf{b}}
+  \;\Longrightarrow\;
+  \mathbf{x} = A^{-1}\mathbf{b}
+\]
+$A^{-1} = \frac{1}{-3}\mat{-1&-1\\-1&2}$, so $x = 2, y = 1$.
+\end{keybox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q.NO.2(a) — Nilpotent, Hermitian, and Involuntary Matrices}
+% ════════════════════════════════════════════════════════════
+
+\begin{qbox}{Q.NO.2(a)}
+What do you know about the Nilpotent matrix, Hermitian matrix and Involuntary matrix? Prove through examples.
+\end{qbox}
+
+\subsection{Nilpotent Matrix}
+
+\begin{defbox}[Nilpotent Matrix]
+A square matrix $A$ is called \textbf{nilpotent} if there exists a positive integer $k$ such that:
+\[
+  A^k = O \quad \text{(zero matrix)}
+\]
+The smallest such $k$ is called the \textbf{index} of nilpotency.
+\end{defbox}
+
+\begin{proofbox}
+\textbf{Example:} Let $A = \mat{0&1&2\\0&0&3\\0&0&0}$
+
+\[
+  A^2 = \mat{0&1&2\\0&0&3\\0&0&0}\mat{0&1&2\\0&0&3\\0&0&0}
+       = \mat{0&0&3\\0&0&0\\0&0&0}
+\]
+\[
+  A^3 = A^2 \cdot A = \mat{0&0&3\\0&0&0\\0&0&0}\mat{0&1&2\\0&0&3\\0&0&0}
+       = \mat{0&0&0\\0&0&0\\0&0&0} = O
+\]
+So $A^3 = O$. \textbf{Index of nilpotency = 3.} $\checkmark$
+\end{proofbox}
+
+\begin{keybox}
+\textbf{Properties:} All eigenvalues of a nilpotent matrix are 0. Therefore $\det(A) = 0$ and $\text{tr}(A) = 0$.
+\end{keybox}
+
+\subsection{Hermitian Matrix}
+
+\begin{defbox}[Hermitian Matrix]
+A complex square matrix $A$ is \textbf{Hermitian} if it equals its own conjugate transpose:
+\[
+  A = A^* \quad \text{where } A^* = \overline{A}^t = \overline{(A^t)}
+\]
+\end{defbox}
+
+\begin{proofbox}
+\textbf{Example:} Let $A = \mat{2 & 1+i \\ 1-i & 3}$
+
+Conjugate: $\overline{A} = \mat{2 & 1-i \\ 1+i & 3}$
+
+Transpose of conjugate: $\overline{A}^t = \mat{2 & 1+i \\ 1-i & 3} = A$ \quad $\checkmark$
+
+So $A^* = A$, hence $A$ is \textbf{Hermitian.}
+\end{proofbox}
+
+\begin{keybox}
+\textbf{Properties:} Diagonal elements of a Hermitian matrix are always \textbf{real}. All eigenvalues are real.
+\end{keybox}
+
+\subsection{Involuntary Matrix}
+
+\begin{defbox}[Involuntary Matrix]
+A square matrix $A$ is \textbf{involuntary} if:
+\[
+  A^2 = I \quad \text{(identity matrix)}
+\]
+i.e., $A$ is its own inverse: $A^{-1} = A$.
+\end{defbox}
+
+\begin{proofbox}
+\textbf{Example:} Let $A = \mat{1&0&0\\0&-1&0\\0&0&1}$
+\[
+  A^2 = \mat{1&0&0\\0&-1&0\\0&0&1}\mat{1&0&0\\0&-1&0\\0&0&1}
+       = \mat{1&0&0\\0&1&0\\0&0&1} = I \quad \checkmark
+\]
+So $A$ is \textbf{involuntary}.
+\end{proofbox}
+
+\begin{keybox}
+\textbf{Properties:} Eigenvalues of an involuntary matrix are $\pm 1$. Every involutory matrix is non-singular with $\det(A) = \pm 1$.
+\end{keybox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q.NO.2(b) — Properties of Complex Conjugate}
+% ════════════════════════════════════════════════════════════
+
+\begin{qbox}{Q.NO.2(b)}
+Show that for any matrices $A$, $B$ over $\mathbb{C}$ and $k \in \mathbb{C}$:\\[4pt]
+\textbf{(i)} $\overline{A+B} = \overline{A} + \overline{B}$ \qquad \textbf{(ii)} $\overline{(\overline{A})^t} = (A^t)$ \quad i.e., $(\overline{A})^t = \overline{A^t}$
+\end{qbox}
+
+\subsection{(i) Proof: $\overline{A+B} = \overline{A} + \overline{B}$}
+
+\begin{proofbox}
+Let $A = [a_{ij}]$ and $B = [b_{ij}]$ be $m \times n$ matrices over $\mathbb{C}$.
+
+\medskip
+Then $A + B = [a_{ij} + b_{ij}]$.
+
+Taking the complex conjugate entry-wise:
+\[
+  \overline{A+B} = [\overline{a_{ij} + b_{ij}}]
+\]
+By the property of complex conjugates ($\overline{z_1 + z_2} = \overline{z_1} + \overline{z_2}$):
+\[
+  = [\overline{a_{ij}} + \overline{b_{ij}}] = [\overline{a_{ij}}] + [\overline{b_{ij}}] = \overline{A} + \overline{B}
+\]
+\[
+  \therefore \quad \overline{A+B} = \overline{A} + \overline{B} \qquad \blacksquare
+\]
+\end{proofbox}
+
+\subsection{(ii) Proof: $(\overline{A})^t = \overline{(A^t)}$}
+
+\begin{proofbox}
+Let $A = [a_{ij}]$ be an $m \times n$ matrix over $\mathbb{C}$.
+
+\medskip
+\textbf{Left side:} $\overline{A} = [\overline{a_{ij}}]$, so $(\overline{A})^t = [\overline{a_{ji}}]$
+
+\medskip
+\textbf{Right side:} $A^t = [a_{ji}]$, so $\overline{A^t} = [\overline{a_{ji}}]$
+
+\medskip
+Since both sides equal $[\overline{a_{ji}}]$:
+\[
+  (\overline{A})^t = \overline{A^t} \qquad \blacksquare
+\]
+This means the operations of \textbf{transposition} and \textbf{complex conjugation} \textbf{commute}.
+\end{proofbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q.NO.3 — Normal Form and Matrices P, Q}
+% ════════════════════════════════════════════════════════════
+
+\begin{qbox}{Q.NO.3}
+Reduce the matrix $A = \begin{bmatrix}1&1&2\\1&2&3\\0&-1&-1\end{bmatrix}$ to normal form. Find nonsingular matrices $P$ and $Q$ such that $PAQ$ is the normal form.
+\end{qbox}
+
+\begin{solbox}
+\textbf{Step 1 — Find the Rank.}
+
+We compute $\det(A)$:
+\[
+  \det(A) = 1(2(-1)-3(-1)) - 1(1(-1)-3(0)) + 2(1(-1)-2(0))
+           = 1(1) - 1(-1) + 2(-1) = 1+1-2 = 0
+\]
+Since $\det(A) = 0$, rank $< 3$. We will show rank $= 2$.
+
+\medskip
+\textbf{Step 2 — Row Operations (tracking $P$).}
+
+We apply row operations to $A$ and track the same operations on $P$ (starting as $I_3$):
+
+\medskip
+\textbf{Initial:}
+\[
+  A = \mat{1&1&2\\1&2&3\\0&-1&-1}, \qquad P = \mat{1&0&0\\0&1&0\\0&0&1}
+\]
+
+$R_2 \leftarrow R_2 - R_1$:
+\[
+  A \to \mat{1&1&2\\0&1&1\\0&-1&-1}, \qquad P \to \mat{1&0&0\\-1&1&0\\0&0&1}
+\]
+
+$R_3 \leftarrow R_3 + R_2$:
+\[
+  A \to \mat{1&1&2\\0&1&1\\0&0&0}, \qquad P \to \mat{1&0&0\\-1&1&0\\-1&1&1}
+\]
+
+$R_1 \leftarrow R_1 - R_2$:
+\[
+  A \to \mat{1&0&1\\0&1&1\\0&0&0}, \qquad P \to \mat{2&-1&0\\-1&1&0\\-1&1&1}
+\]
+
+\textbf{Step 3 — Column Operations (tracking $Q$).}
+
+Starting from $\mat{1&0&1\\0&1&1\\0&0&0}$, $Q = I_3$:
+
+\medskip
+$C_3 \leftarrow C_3 - C_1$:
+\[
+  A \to \mat{1&0&0\\0&1&1\\0&0&0}, \qquad Q \to \mat{1&0&-1\\0&1&0\\0&0&1}
+\]
+
+$C_3 \leftarrow C_3 - C_2$:
+\[
+  A \to \mat{1&0&0\\0&1&0\\0&0&0}, \qquad Q \to \mat{1&0&-1\\0&1&-1\\0&0&1}
+\]
+
+\textbf{Step 4 — Result.}
+
+\[
+  \boxed{P = \mat{2&-1&0\\-1&1&0\\-1&1&1}, \qquad Q = \mat{1&0&-1\\0&1&-1\\0&0&1}}
+\]
+
+\[
+  \text{Normal Form} = PAQ = \mat{1&0&0\\0&1&0\\0&0&0} = \begin{bmatrix}I_2 & 0 \\ 0 & 0\end{bmatrix}
+\]
+
+\textbf{Rank} of $A = 2$.
+\end{solbox}
+
+\begin{proofbox}
+\textbf{Verification} — Compute $PA$:
+\[
+  PA = \mat{2&-1&0\\-1&1&0\\-1&1&1}\mat{1&1&2\\1&2&3\\0&-1&-1}
+     = \mat{1&0&1\\0&1&1\\0&0&0}
+\]
+Then $(PA)Q$:
+\[
+  (PA)Q = \mat{1&0&1\\0&1&1\\0&0&0}\mat{1&0&-1\\0&1&-1\\0&0&1}
+        = \mat{1&0&0\\0&1&0\\0&0&0} \quad \checkmark
+\]
+\end{proofbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q.NO.4(a) — Echelon and Reduced Echelon Matrix}
+% ════════════════════════════════════════════════════════════
+
+\begin{qbox}{Q.NO.4(a)}
+Define the Echelon matrix and Reduced Echelon matrix with solution through any matrix of each.
+\end{qbox}
+
+\subsection{Echelon Form (Row Echelon Form)}
+
+\begin{defbox}[Echelon Matrix]
+A matrix is in \textbf{Row Echelon Form (REF)} if:
+\begin{enumerate}[leftmargin=20pt, itemsep=2pt]
+  \item All zero rows are at the \textbf{bottom}
+  \item The leading entry (pivot) of each nonzero row is strictly to the \textbf{right} of the pivot in the row above
+  \item All entries \textbf{below} each pivot are zero
+\end{enumerate}
+\end{defbox}
+
+\begin{solbox}[Example — Echelon Form]
+Reduce $B = \mat{1&2&3\\2&4&7\\3&6&10}$ to Echelon Form.
+
+$R_2 \leftarrow R_2 - 2R_1$: \quad $R_3 \leftarrow R_3 - 3R_1$:
+\[
+  \to \mat{1&2&3\\0&0&1\\0&0&1}
+\]
+$R_3 \leftarrow R_3 - R_2$:
+\[
+  \to \mat{1&2&3\\0&0&1\\0&0&0} \quad \leftarrow \textbf{Echelon Form}
+\]
+\end{solbox}
+
+\subsection{Reduced Row Echelon Form (RREF)}
+
+\begin{defbox}[Reduced Echelon Matrix]
+A matrix is in \textbf{Reduced Row Echelon Form (RREF)} if it satisfies all conditions of REF \textbf{plus}:
+\begin{enumerate}[leftmargin=20pt, itemsep=2pt]
+  \item Each pivot is \textbf{1}
+  \item All entries \textbf{above and below} each pivot are zero
+\end{enumerate}
+\end{defbox}
+
+\begin{solbox}[Example — RREF]
+Continuing from the echelon form above:
+
+$R_1 \leftarrow R_1 - 3R_2$:
+\[
+  \to \mat{1&2&0\\0&0&1\\0&0&0} \quad \leftarrow \textbf{Reduced Echelon Form (RREF)}
+\]
+Pivots are 1, and all entries above/below each pivot are zero. $\checkmark$
+\end{solbox}
+
+% ════════════════════════════════════════════════════════════
+\section{Q.NO.4(b) — Rank and Inverse of Matrix}
+% ════════════════════════════════════════════════════════════
+
+\begin{qbox}{Q.NO.4(b)}
+Find the inverse and rank of $A = \begin{bmatrix}5&9&3\\-3&5&6\\-1&-5&-3\end{bmatrix}$
+\end{qbox}
+
+\begin{solbox}
+
+\textbf{Step 1 — Compute $\det(A)$.}
+\begin{align*}
+  \det(A) &= 5\begin{vmatrix}5&6\\-5&-3\end{vmatrix}
+            - 9\begin{vmatrix}-3&6\\-1&-3\end{vmatrix}
+            + 3\begin{vmatrix}-3&5\\-1&-5\end{vmatrix} \\[6pt]
+          &= 5(5\cdot(-3) - 6\cdot(-5)) - 9((-3)(-3) - 6(-1)) + 3((-3)(-5) - 5(-1)) \\[4pt]
+          &= 5(-15+30) - 9(9+6) + 3(15+5) \\[4pt]
+          &= 5(15) - 9(15) + 3(20) \\[4pt]
+          &= 75 - 135 + 60 = \mathbf{0}
+\end{align*}
+
+\begin{notebox}
+Since $\det(A) = 0$, the matrix $A$ is \textbf{singular}. Therefore the \textbf{inverse does not exist}.
+\end{notebox}
+
+\textbf{Step 2 — Find the Rank by Row Reduction.}
+
+Swap $R_1 \leftrightarrow R_3$:
+\[
+  \to \mat{-1&-5&-3\\-3&5&6\\5&9&3}
+\]
+$R_2 \leftarrow R_2 - 3R_1$:
+\[
+  \to \mat{-1&-5&-3\\0&20&15\\5&9&3}
+\]
+$R_3 \leftarrow R_3 + 5R_1$:
+\[
+  \to \mat{-1&-5&-3\\0&20&15\\0&-16&-12}
+\]
+$R_3 \leftarrow R_3 + \dfrac{4}{5}R_2$ \quad (since $-16 + \tfrac{4}{5}\cdot20 = 0$):
+\[
+  \to \mat{-1&-5&-3\\0&20&15\\0&0&0}
+\]
+
+Two nonzero rows $\Rightarrow$ \textbf{Rank}$(A) = 2$.
+\end{solbox}
+
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Q.NO.5 — Row and Column Operations, Reduce Matrices}
+% ════════════════════════════════════════════════════════════
+
+\begin{qbox}{Q.NO.5}
+Define Row and Column operations with example of each. Reduce the given matrices to the specified forms.
+\end{qbox}
+
+\subsection{Row Operations}
+
+\begin{defbox}[Elementary Row Operations]
+Three types of elementary row operations:
+\begin{enumerate}[leftmargin=20pt, itemsep=3pt]
+  \item \textbf{Row Swap:} $R_i \leftrightarrow R_j$ — interchange two rows
+  \item \textbf{Row Scaling:} $R_i \leftarrow k\,R_i$ — multiply a row by nonzero scalar $k$
+  \item \textbf{Row Addition:} $R_i \leftarrow R_i + k\,R_j$ — add $k$ times row $j$ to row $i$
+\end{enumerate}
+\end{defbox}
+
+\subsection{Column Operations}
+
+\begin{defbox}[Elementary Column Operations]
+Three analogous column operations:
+\begin{enumerate}[leftmargin=20pt, itemsep=3pt]
+  \item \textbf{Column Swap:} $C_i \leftrightarrow C_j$
+  \item \textbf{Column Scaling:} $C_i \leftarrow k\,C_i$
+  \item \textbf{Column Addition:} $C_i \leftarrow C_i + k\,C_j$
+\end{enumerate}
+\end{defbox}
+
+\subsection{Matrix 1 — Reduce to Reduced Echelon Form}
+
+\[
+  B = \begin{bmatrix}1&3&-1&2\\0&11&-5&3\\2&-5&3&1\\4&1&1&5\end{bmatrix}
+\]
+
+\begin{solbox}[RREF Solution]
+
+$R_3 \leftarrow R_3 - 2R_1$:
+\[
+  \to \begin{bmatrix}1&3&-1&2\\0&11&-5&3\\0&-11&5&-3\\4&1&1&5\end{bmatrix}
+\]
+$R_4 \leftarrow R_4 - 4R_1$:
+\[
+  \to \begin{bmatrix}1&3&-1&2\\0&11&-5&3\\0&-11&5&-3\\0&-11&5&-3\end{bmatrix}
+\]
+$R_3 \leftarrow R_3 + R_2$:
+\[
+  \to \begin{bmatrix}1&3&-1&2\\0&11&-5&3\\0&0&0&0\\0&-11&5&-3\end{bmatrix}
+\]
+$R_4 \leftarrow R_4 + R_2$:
+\[
+  \to \begin{bmatrix}1&3&-1&2\\0&11&-5&3\\0&0&0&0\\0&0&0&0\end{bmatrix}
+\]
+$R_2 \leftarrow \dfrac{1}{11}R_2$:
+\[
+  \to \begin{bmatrix}1&3&-1&2\\0&1&-5/11&3/11\\0&0&0&0\\0&0&0&0\end{bmatrix}
+\]
+$R_1 \leftarrow R_1 - 3R_2$:
+\[
+  \boxed{
+    \text{RREF} = \begin{bmatrix}1&0&\;4/11&\;13/11\\[4pt]0&1&-5/11&\;3/11\\[4pt]0&0&0&0\\0&0&0&0\end{bmatrix}
+  }
+\]
+\textbf{Rank} = 2 \quad (two nonzero rows).
+\end{solbox}
+
+\subsection{Matrix 2 — Reduce to Echelon Form}
+
+\[
+  C = \begin{bmatrix}1&2&-1&2&1\\2&4&1&-2&3\\3&6&2&-6&3\end{bmatrix}
+\]
+
+\begin{solbox}[Echelon Form Solution]
+
+$R_2 \leftarrow R_2 - 2R_1$:
+\[
+  \to \begin{bmatrix}1&2&-1&2&1\\0&0&3&-6&1\\3&6&2&-6&3\end{bmatrix}
+\]
+$R_3 \leftarrow R_3 - 3R_1$:
+\[
+  \to \begin{bmatrix}1&2&-1&2&1\\0&0&3&-6&1\\0&0&5&-12&0\end{bmatrix}
+\]
+$R_3 \leftarrow R_3 - \dfrac{5}{3}R_2$ \quad (eliminates position (3,3)):
+\[
+  \to \begin{bmatrix}1&2&-1&2&1\\0&0&3&-6&1\\0&0&0&-2&-5/3\end{bmatrix}
+\]
+\[
+  \boxed{
+    \text{Echelon Form} = \begin{bmatrix}1&2&-1&2&1\\0&0&3&-6&1\\0&0&0&-2&-5/3\end{bmatrix}
+  }
+\]
+\textbf{Rank} = 3 \quad (three nonzero rows — full row rank).
+\end{solbox}
+
+% ════════════════════════════════════════════════════════════
+\section{Quick Reference — Linear Algebra}
+% ════════════════════════════════════════════════════════════
+
+\begin{tcolorbox}[enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=14pt, right=14pt, top=10pt, bottom=10pt,
+  borderline south={3pt}{0pt}{accent}]
+  \centering
+  {\large\bfseries\color{white} LINEAR ALGEBRA — MASTER FORMULA SHEET}\\[4pt]
+  {\small\color{lightbg} Key definitions, properties, and results for the exam}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt,
+  colback=jadebg, colframe=jadeclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Special Matrices},
+  colbacktitle=jadeclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=jadeclr, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter]
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}ll@{}}
+  Nilpotent & $A^k = O$ \\
+  Hermitian & $A = A^* = \overline{A}^t$ \\
+  Involuntary & $A^2 = I$ \\
+  Symmetric & $A^t = A$ \\
+  Skew-Sym. & $A^t = -A$ \\
+  Idempotent & $A^2 = A$ \\
+  Orthogonal & $A^t = A^{-1}$ \\
+  Unitary & $A^* = A^{-1}$ \\
+\end{tabular}
+\end{tcolorbox}
+\hfill
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt,
+  colback=steelbg, colframe=steelblu,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Conjugate Properties},
+  colbacktitle=steelblu, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=steelblu, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter]
+\begin{align*}
+  \overline{A+B} &= \overline{A}+\overline{B} \\
+  \overline{AB} &= \overline{A}\,\overline{B} \\
+  \overline{kA} &= \bar{k}\,\overline{A} \\
+  (\overline{A})^t &= \overline{A^t} \\
+  (A^*)^* &= A \\
+  (AB)^* &= B^*A^* \\
+  (A^t)^t &= A \\
+  (AB)^t &= B^t A^t
+\end{align*}
+\end{tcolorbox}
+
+\vspace{10pt}
+
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Normal Form and Rank},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt}]
+\[
+  \text{Normal Form of rank } r = \begin{bmatrix}I_r & 0 \\ 0 & 0\end{bmatrix}
+  \qquad
+  PAQ = \begin{bmatrix}I_r & 0 \\ 0 & 0\end{bmatrix}
+\]
+\[
+  \text{Rank} = \text{number of nonzero rows in echelon form}
+  = \text{number of pivots}
+\]
+\[
+  \text{Rank}(A) + \text{Nullity}(A) = n \quad \text{(number of columns)}
+\]
+\end{tcolorbox}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt,
+  colback=purplebg!60, colframe=purpleclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} REF vs RREF},
+  colbacktitle=purpleclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=purpleclr, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter]
+\textbf{REF (Echelon Form):}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt]
+  \item Zero rows at bottom
+  \item Pivot strictly right of row above
+  \item Zeros below each pivot
+\end{itemize}
+
+\textbf{RREF (Reduced):}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt]
+  \item All REF conditions
+  \item Each pivot $= 1$
+  \item Zeros above AND below pivot
+\end{itemize}
+\end{tcolorbox}
+\hfill
+\begin{tcolorbox}[enhanced, arc=4pt, boxrule=1.5pt,
+  colback=greenbg, colframe=greenclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Inverse Formula ($2\times2$)},
+  colbacktitle=greenclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=greenclr, boxrule=0pt},
+  width=0.48\linewidth, nobeforeafter]
+\[
+  A = \mat{a&b\\c&d}, \quad \det(A) = ad-bc
+\]
+\[
+  A^{-1} = \frac{1}{ad-bc}\mat{d&-b\\-c&a}
+\]
+Inverse exists $\iff \det(A) \neq 0$.\\[4pt]
+For $3\times3$: use adjoint method or row reduction on $[A\,|\,I]$.
+\end{tcolorbox}
+
+\vspace{20pt}
+\begin{center}
+  \color{grayclr}\rule{0.6\linewidth}{0.4pt}\\[8pt]
+  {\small\color{darktext} For feedback or to request additional topics:}\\[4pt]
+  {\normalsize\bfseries\color{primary} +92 304 2019543}
+\end{center}
+
+\end{document}
