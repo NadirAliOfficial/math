@@ -1,52 +1,97 @@
-# Math Notes — BS-IV Mathematics
+# BS Mathematics Notes
 
-Personal notes, assignments, and midterm papers for BS-IV Mathematics at the Department of Mathematics.
+Professional LaTeX notes, past paper solutions, and midterm papers for BS Mathematics at SALU Khairpur.
 
-**Teacher:** Dr. Hisam Uddin Shaikh, Chairman — Department of Mathematics  
-**Student:** Nadir Ali Khan
+**Student:** Nadir Ali Khan  
+**Teacher:** Dr. Hisam Uddin Shaikh, Chairman — Department of Mathematics
 
 ---
 
-## Folder Structure
+## Subjects
 
-### Numerical_Analysis
-Notes and midterms for Numerical Analysis I.
-
+### Calculus I
 | File | Description |
 |------|-------------|
-| `Numerical_Analysis.tex / .pdf` | Chapter 1 — Full theoretical treatment of 5 root-finding methods (37 pages) |
-| `Numerical_Analysis_I_MidTerm_2026.tex / .pdf` | Midterm paper 2026 |
-| `midterm.tex / .pdf` | Midterm solutions |
-| `questions.tex` | Root-finding practice questions |
-| `Numerical Methods f(x)...pdf` | Reference: $f(x) = x^3 - 2x - 5 = 0$ worked example |
+| `Calculus_I.tex / .pdf` | Complete notes — Functions, Limits, Differentiation, Integration (blue palette) |
 
-**Topics covered in Chapter 1:**
-1. Bisection Method
-2. Regula Falsi Method (+ Illinois, Pegasus, Anderson-Björck variants)
-3. Newton-Raphson Method (+ Halley's, systems via Jacobian)
-4. Secant Method (+ Muller's, IQI, Brent's)
-5. Fixed Point Iteration (+ Steffensen's, Banach theorem, connections to ODEs/eigenvalues)
+**Topics:** Functions & Graphs, Limits & Continuity, Differentiation Rules, Mean Value Theorem, Curve Sketching, Integration Techniques, Applications of Integration
 
 ---
 
-### Operations_Research
+### Fluid Dynamics I
+| File | Description |
+|------|-------------|
+| `Fluid_Dynamics_I.tex / .pdf` | Complete notes — Statics through Dimensional Analysis (deep ocean palette) |
+
+**Topics:** Fluid Statics, Kinematics, Continuity Equation, Euler & Bernoulli, Navier-Stokes, Irrotational Flow, Dimensional Analysis
+
+---
+
+### Linear Algebra
+| File | Description |
+|------|-------------|
+| `Linear_Algebra_Notes.tex / .pdf` | Complete notes — Matrix Operations through Group Theory (purple palette) |
+| `Linear_Algebra_Past_Paper.tex / .pdf` | Full solutions — BS-II Past Paper Session 2025 (copper palette) |
+
+**Topics (Notes):** Matrix Operations, Determinants, Singular/Non-Singular, Minors & Cofactors, Gauss Elimination, Gauss-Jordan, Cramer's Rule, Orthogonal & Orthonormal Sets, Vector Projection, Group Theory  
+**Topics (Past Paper):** Normal Form, PAQ Decomposition, Rank, Conjugate Matrix, Echelon Form, RREF
+
+---
+
+### Biology
+| File | Description |
+|------|-------------|
+| `Biology_Notes.tex / .pdf` | Complete notes — Cell to Brain (blue palette) |
+
+**Topics:** Cell & Organelles, Digestion, Respiratory System, Excretion, Skin Layers, Brain Anatomy
+
+---
+
+### Numerical Analysis
+| File | Description |
+|------|-------------|
+| `Numerical_Analysis.tex / .pdf` | Chapter 1 — 5 root-finding methods, full theoretical treatment (37 pages) |
+| `Numerical_Analysis_I_MidTerm_2026.tex / .pdf` | Midterm paper 2026 |
+| `midterm.tex / .pdf` | Midterm solutions |
+
+**Topics:** Bisection, Regula Falsi (+ Illinois, Pegasus, Anderson-Björck), Newton-Raphson (+ Halley's, Jacobian), Secant (+ Muller's, Brent's), Fixed Point Iteration
+
+---
+
+### Differential Geometry
+| File | Description |
+|------|-------------|
+| `Differential_Geometry.tex / .pdf` | Complete notes |
+| `Differential_Geometry_Past_Paper_2025.pdf` | Past paper 2025 |
+
+---
+
+### Transform Theory
+| File | Description |
+|------|-------------|
+| `Transform_Theory.tex / .pdf` | Complete notes |
+| `Transform_Theory_Past_Paper_2025.pdf` | Past paper 2025 |
+
+---
+
+### Operations Research
 | File | Description |
 |------|-------------|
 | `Operations_Research_MidTerm_2026.tex / .pdf` | Midterm paper 2026 |
 
 ---
 
-### Statistical_Inference
+### Statistical Inference
 | File | Description |
 |------|-------------|
 | `Statistical_Inference_MidTerm_2025.tex / .pdf` | Midterm paper 2025 |
 
 ---
 
-### Laplace_Transform
+### Laplace Transform
 | File | Description |
 |------|-------------|
-| `Assignment_Laplace_Transform.tex / .pdf` | Assignment on Laplace Transforms |
+| `Assignment_Laplace_Transform.tex / .pdf` | Assignment solutions |
 
 ---
 
@@ -59,10 +104,15 @@ Notes and midterms for Numerical Analysis I.
 
 ## Compiling
 
-All `.tex` files require **XeLaTeX** (for Unicode support):
-
 ```bash
-xelatex Numerical_Analysis.tex
+pdflatex filename.tex
+pdflatex filename.tex   # run twice for TOC
 ```
 
-Required LaTeX packages: `amsmath`, `amssymb`, `tcolorbox`, `tikz`, `booktabs`, `multicol`, `enumitem`, `titlesec`, `fancyhdr`, `geometry`, `xcolor`, `multirow`.
+Required packages: `amsmath`, `amssymb`, `tcolorbox`, `tikz`, `booktabs`, `multicol`, `enumitem`, `titlesec`, `fancyhdr`, `geometry`, `xcolor`, `multirow`, `microtype`
+
+---
+
+## Contact
+
+For feedback or to request additional topics: **+92 304 2019543**
