@@ -1,0 +1,359 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{booktabs,array,multirow,graphicx,enumitem}
+\usepackage[expansion=false]{microtype}
+
+\tcbuselibrary{skins,breakable}
+\geometry{margin=0.85in,top=1in,bottom=1in}
+
+\definecolor{primary}  {RGB}{27, 79,114}
+\definecolor{accent}   {RGB}{46,134,193}
+\definecolor{lightbg}  {RGB}{234,244,251}
+\definecolor{darktext} {RGB}{44, 62, 80}
+\definecolor{purpleclr}{RGB}{90, 20,140}
+\definecolor{purplebg} {RGB}{240,228,255}
+
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Mathematical Physics}\;\textcolor{accent}{|}\;Solved Past Paper 2025}
+\fancyhead[R]{\small\color{darktext}BS-III Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+\newtcolorbox{qbox}[1]{enhanced,arc=0pt,boxrule=0pt,
+  colback=primary,colframe=primary,left=14pt,right=14pt,top=10pt,bottom=8pt,
+  borderline south={4pt}{0pt}{accent},fontupper=\bfseries\color{white},
+  title={\small\bfseries\color{accent!80}#1},coltitle=accent!80,
+  attach title to upper=\\[2pt]}
+
+\newtcolorbox{ansbox}{enhanced,arc=4pt,boxrule=1.5pt,breakable,
+  colback=purplebg!50,colframe=purpleclr,left=10pt,right=10pt,top=8pt,bottom=8pt,
+  title={\small\bfseries\color{white}Solution},colbacktitle=purpleclr,coltitle=white,
+  attach boxed title to top left={xshift=10pt,yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt,colframe=purpleclr,boxrule=0pt}}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\begin{document}
+
+% ── COVER PAGE ─────────────────────────────────────────────
+\thispagestyle{empty}
+\begin{tcolorbox}[enhanced,arc=0pt,boxrule=0pt,colback=primary,colframe=primary,
+  left=20pt,right=20pt,top=28pt,bottom=20pt,borderline south={5pt}{0pt}{accent}]
+  \centering
+  {\fontsize{26}{32}\bfseries\color{white}Mathematical Physics\\[8pt]Solved Past Paper}\\[12pt]
+  {\large\color{lightbg}Heat Equation \textbf{·} Wave Equation \textbf{·} D'Alembert \textbf{·} Separation of Variables}
+\end{tcolorbox}
+
+\vspace{8pt}
+\begin{tcolorbox}[enhanced,arc=0pt,boxrule=0pt,colback=white,colframe=white,
+  borderline north={2pt}{0pt}{primary},borderline south={2pt}{0pt}{primary},
+  left=0pt,right=0pt,top=0pt,bottom=0pt]
+\begin{tabular}{p{0.47\textwidth}|p{0.47\textwidth}}
+  \hspace{12pt}\begin{minipage}[t]{0.43\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent}COMPOSED BY}\\[4pt]
+    {\bfseries\color{primary}Nadir Ali Khan}\\[3pt]
+    {\footnotesize\color{darktext}BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}&
+  \hspace{12pt}\begin{minipage}[t]{0.43\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent}TEACHER}\\[4pt]
+    {\bfseries\color{primary}Sir Darshan}\\[3pt]
+    {\footnotesize\color{darktext}Mathematical Physics}
+  \vspace{8pt}\end{minipage}
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{16pt}
+\begin{tcolorbox}[colback=lightbg,colframe=accent,arc=4pt,boxrule=1pt,
+  left=12pt,right=12pt,top=10pt,bottom=10pt]
+\begin{tabular}{ll}
+  \textcolor{accent}{\bfseries Exam:} & Final Examinations 2025\quad\textcolor{accent}{\bfseries Class:} BS-III\\
+  \textcolor{accent}{\bfseries Total Marks:} & 50\quad(Attempt any \textbf{Three} questions)\quad\textcolor{accent}{\bfseries Time:} 2 Hours\\
+  \textcolor{accent}{\bfseries Date:} & Tuesday, June 02, 2025\\
+\end{tabular}
+\end{tcolorbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q1
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 1 \textemdash\ Heat Equation on a Circular Wire (Periodic BCs)}
+\end{qbox}
+
+\medskip
+Find the temperature $u(x,t)$ in a thin wire on $[-2,2]$ bent into a circle (ends $x=-2$ and $x=2$ joined), satisfying:
+\[
+  k\,\frac{\partial^2 u}{\partial x^2} = \frac{\partial u}{\partial t},\quad -2<x<2,\;t>0
+\]
+\[
+  u(-2,t)=u(2,t),\quad \frac{\partial u}{\partial x}\Big|_{x=-2}=\frac{\partial u}{\partial x}\Big|_{x=2},\quad t>0;\qquad u(x,0)=1,\quad -2<x<2.
+\]
+
+\begin{ansbox}
+\textbf{Step 1 — Assume a Fourier series solution.}
+
+For periodic BCs on $[-L,L]$ with $L=2$, the solution takes the form:
+\[
+  u(x,t)=\frac{a_0}{2}+\sum_{n=1}^{\infty}\left[a_n\cos\!\left(\frac{n\pi x}{2}\right)+b_n\sin\!\left(\frac{n\pi x}{2}\right)\right]e^{-k(n\pi/2)^2\,t}
+\]
+
+\textbf{Step 2 — Find Fourier coefficients from $u(x,0)=1$.}
+
+\[
+  a_0 = \frac{1}{2}\int_{-2}^{2}1\,dx = \frac{1}{2}(4) = 2
+\]
+\[
+  a_n = \frac{1}{2}\int_{-2}^{2}\cos\!\left(\frac{n\pi x}{2}\right)dx
+      = \frac{1}{2}\left[\frac{2}{n\pi}\sin\!\left(\frac{n\pi x}{2}\right)\right]_{-2}^{2}
+      = \frac{1}{n\pi}\bigl[\sin(n\pi)-\sin(-n\pi)\bigr] = 0
+\]
+\[
+  b_n = \frac{1}{2}\int_{-2}^{2}\sin\!\left(\frac{n\pi x}{2}\right)dx = 0
+  \quad\text{(odd integrand on symmetric interval)}
+\]
+
+\textbf{Step 3 — Write the solution.}
+
+Since all $a_n=b_n=0$ for $n\geq1$ and $a_0=2$:
+\[
+  \boxed{u(x,t)=1}
+\]
+
+\textbf{Physical interpretation:} The initial temperature is uniform ($u=1$ everywhere). With periodic (insulating) boundary conditions and no heat loss, the temperature remains uniformly $1$ for all time $t>0$.
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q2
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 2 \textemdash\ Vibrating String (Wave Equation)}
+\end{qbox}
+
+\medskip
+The vibration of a string of length 1 (both ends fixed) is governed by:
+\[
+  4\,\frac{\partial^2 u}{\partial x^2}=\frac{\partial^2 u}{\partial t^2},\quad 0<x<1,\;t>0
+\]
+with $u(0,t)=u(1,t)=0$, initial velocity $u_t(x,0)=0$, and initial deflection $u(x,0)=x$. Find $u(x,t)$.
+
+\begin{ansbox}
+\textbf{Step 1 — Identify wave speed.}
+
+Compare with $c^2 u_{xx}=u_{tt}$: here $c^2=4$, so $c=2$.
+
+\medskip
+\textbf{Step 2 — Separation of Variables.} Let $u(x,t)=X(x)T(t)$:
+\[
+  \frac{X''}{X}=\frac{T''}{4T}=-\lambda
+\]
+
+\textbf{Spatial problem:} $X''+\lambda X=0$, $X(0)=X(1)=0$.
+
+Eigenvalues: $\lambda_n = n^2\pi^2$,\quad Eigenfunctions: $X_n = \sin(n\pi x)$,\; $n=1,2,3,\ldots$
+
+\textbf{Temporal problem:} $T''+4n^2\pi^2 T=0$
+\[
+  T_n(t)=A_n\cos(2n\pi t)+B_n\sin(2n\pi t)
+\]
+
+\textbf{Step 3 — Apply initial condition $u_t(x,0)=0$.}
+
+$u_t = \sum\bigl[-2n\pi A_n\sin(2n\pi t)+2n\pi B_n\cos(2n\pi t)\bigr]\sin(n\pi x)$
+
+At $t=0$: $\sum 2n\pi B_n\sin(n\pi x)=0\;\Rightarrow\;B_n=0$.
+
+General solution:
+\[
+  u(x,t)=\sum_{n=1}^{\infty}a_n\cos(2n\pi t)\sin(n\pi x)
+\]
+
+\textbf{Step 4 — Apply initial deflection $u(x,0)=x$.}
+\[
+  x = \sum_{n=1}^{\infty}a_n\sin(n\pi x)
+  \quad\Rightarrow\quad
+  a_n = 2\int_0^1 x\sin(n\pi x)\,dx
+\]
+
+\textbf{Integration by parts:}
+\[
+  \int_0^1 x\sin(n\pi x)\,dx
+  = \left[-\frac{x\cos(n\pi x)}{n\pi}\right]_0^1+\frac{1}{n\pi}\int_0^1\cos(n\pi x)\,dx
+  = -\frac{\cos(n\pi)}{n\pi}+0
+  = \frac{(-1)^{n+1}}{n\pi}
+\]
+\[
+  a_n = \frac{2(-1)^{n+1}}{n\pi}
+\]
+
+\textbf{Step 5 — Final solution:}
+\[
+  \boxed{u(x,t)=\frac{2}{\pi}\sum_{n=1}^{\infty}\frac{(-1)^{n+1}}{n}\cos(2n\pi t)\sin(n\pi x)}
+\]
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q3
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 3 \textemdash\ D'Alembert's Formula}
+\end{qbox}
+
+\medskip
+Define and use D'Alembert's formula to solve:
+\[
+  \frac{\partial^2 u}{\partial x^2}=\frac{\partial^2 u}{\partial t^2},\quad -\infty<x<+\infty,\;t>0;\qquad
+  u(x,0)=\sin x,\quad \frac{\partial u}{\partial t}\Big|_{t=0}=1.
+\]
+
+\begin{ansbox}
+\textbf{D'Alembert's Formula (Definition):}
+
+For the wave equation $u_{tt}=c^2 u_{xx}$ on $(-\infty,+\infty)$ with initial conditions $u(x,0)=f(x)$ and $u_t(x,0)=g(x)$, the unique solution is:
+\[
+  u(x,t)=\frac{f(x+ct)+f(x-ct)}{2}+\frac{1}{2c}\int_{x-ct}^{x+ct}g(s)\,ds
+\]
+
+\medskip
+\textbf{Identify parameters:} $c=1$, $f(x)=\sin x$, $g(x)=1$.
+
+\medskip
+\textbf{Step 1 — Apply the formula:}
+\[
+  u(x,t)=\frac{\sin(x+t)+\sin(x-t)}{2}+\frac{1}{2}\int_{x-t}^{x+t}1\,ds
+\]
+
+\textbf{Step 2 — Evaluate the integral:}
+\[
+  \frac{1}{2}\int_{x-t}^{x+t}ds=\frac{1}{2}\bigl[(x+t)-(x-t)\bigr]=\frac{1}{2}(2t)=t
+\]
+
+\textbf{Step 3 — Simplify using sum-to-product identity:}
+\[
+  \sin(x+t)+\sin(x-t)=2\sin x\cos t
+  \quad\Bigl[\sin A+\sin B=2\sin\!\tfrac{A+B}{2}\cos\!\tfrac{A-B}{2}\Bigr]
+\]
+\[
+  \frac{\sin(x+t)+\sin(x-t)}{2}=\sin x\cos t
+\]
+
+\textbf{Step 4 — Final solution:}
+\[
+  \boxed{u(x,t)=\sin x\cos t+t}
+\]
+
+\textbf{Verification:}
+\begin{itemize}[nosep]
+  \item $u(x,0)=\sin x\cos 0+0=\sin x$\;\checkmark
+  \item $u_t=-\sin x\sin t+1$;\quad $u_t(x,0)=0+1=1$\;\checkmark
+  \item $u_{xx}=-\sin x\cos t$;\quad $u_{tt}=-\sin x\cos t$;\quad $u_{xx}=u_{tt}$\;\checkmark
+\end{itemize}
+\end{ansbox}
+
+\newpage
+
+%══════════════════════════════════════════════════════════
+% Q4
+%══════════════════════════════════════════════════════════
+\begin{qbox}{Q.No.\ 4 \textemdash\ Product Solution \textbf{+} Heat Equation in a Bar}
+\end{qbox}
+
+\medskip
+\textbf{(a)} Find the product solution of $\;x\,\dfrac{\partial u}{\partial x}=y\,\dfrac{\partial u}{\partial y}$.
+
+\begin{ansbox}
+\textbf{Assume} $u(x,y)=X(x)\,Y(y)$. Substituting:
+\[
+  x\,X'(x)\,Y(y)=y\,X(x)\,Y'(y)
+\]
+Separate variables (divide both sides by $X(x)Y(y)$):
+\[
+  \frac{x\,X'}{X}=\frac{y\,Y'}{Y}=k\quad\text{(separation constant)}
+\]
+
+\textbf{Solve for $X(x)$:}\quad $\dfrac{X'}{X}=\dfrac{k}{x}$
+\[
+  \ln X = k\ln x+C_1\;\Rightarrow\; X(x)=A\,x^k
+\]
+
+\textbf{Solve for $Y(y)$:}\quad $\dfrac{Y'}{Y}=\dfrac{k}{y}$
+\[
+  \ln Y = k\ln y+C_2\;\Rightarrow\; Y(y)=B\,y^k
+\]
+
+\textbf{Product solution:}
+\[
+  \boxed{u(x,y)=C\,(xy)^k}
+\]
+where $C$ and $k$ are arbitrary constants. One can verify: $x\cdot C\,k(xy)^{k-1}\,y = y\cdot C\,k(xy)^{k-1}\,x$\;\checkmark.
+\end{ansbox}
+
+\medskip
+\textbf{(b)} Find the temperature in a bar of length $\pi$, ends kept at zero, lateral surface insulated, with initial temperature $u(x,0)=x(\pi-x)$.
+
+\begin{ansbox}
+\textbf{The BVP:}
+\[
+  \frac{\partial u}{\partial t}=\frac{\partial^2 u}{\partial x^2},\quad 0<x<\pi,\;t>0;\qquad
+  u(0,t)=u(\pi,t)=0;\qquad u(x,0)=x(\pi-x).
+\]
+
+\textbf{Step 1 — General solution} (Fourier sine series):
+\[
+  u(x,t)=\sum_{n=1}^{\infty}b_n\,\sin(nx)\,e^{-n^2 t}
+\]
+
+\textbf{Step 2 — Find coefficients} $b_n=\dfrac{2}{\pi}\displaystyle\int_0^{\pi}x(\pi-x)\sin(nx)\,dx$.
+
+\textbf{Expand the integral:}
+\[
+  I=\int_0^{\pi}(\pi x-x^2)\sin(nx)\,dx
+  =\pi\int_0^{\pi}x\sin(nx)\,dx-\int_0^{\pi}x^2\sin(nx)\,dx
+\]
+
+\textit{Integral 1} (by parts, $u=x$, $dv=\sin(nx)\,dx$):
+\[
+  \int_0^{\pi}x\sin(nx)\,dx
+  =\left[-\frac{x\cos(nx)}{n}\right]_0^{\pi}+\frac{1}{n}\int_0^{\pi}\cos(nx)\,dx
+  =-\frac{\pi(-1)^n}{n}+0=\frac{\pi(-1)^{n+1}}{n}
+\]
+
+\textit{Integral 2} (by parts, $u=x^2$, $dv=\sin(nx)\,dx$):
+\[
+  \int_0^{\pi}x^2\sin(nx)\,dx
+  =\left[-\frac{x^2\cos(nx)}{n}\right]_0^{\pi}+\frac{2}{n}\int_0^{\pi}x\cos(nx)\,dx
+  =-\frac{\pi^2(-1)^n}{n}+\frac{2}{n}\cdot\frac{(-1)^n-1}{n^2}
+\]
+where $\displaystyle\int_0^{\pi}x\cos(nx)\,dx=\frac{(-1)^n-1}{n^2}$ (by parts).
+
+\textit{Combining:}
+\begin{align*}
+  I &= \pi\cdot\frac{\pi(-1)^{n+1}}{n}-\left[-\frac{\pi^2(-1)^n}{n}+\frac{2((-1)^n-1)}{n^3}\right]\\
+    &= \frac{\pi^2(-1)^{n+1}}{n}+\frac{\pi^2(-1)^n}{n}-\frac{2((-1)^n-1)}{n^3}\\
+    &= \frac{\pi^2(-1)^n(-1+1)}{n}+\frac{2(1-(-1)^n)}{n^3}
+     = \frac{2\bigl(1-(-1)^n\bigr)}{n^3}
+\end{align*}
+
+\textbf{Step 3 — Evaluate $b_n$:}
+\[
+  b_n=\frac{2}{\pi}\cdot\frac{2(1-(-1)^n)}{n^3}=\frac{4(1-(-1)^n)}{\pi n^3}
+\]
+\[
+  b_n=\begin{cases}0 & n\text{ even}\\[4pt]\dfrac{8}{\pi n^3} & n\text{ odd}\end{cases}
+\]
+
+\textbf{Step 4 — Final solution:}
+\[
+  \boxed{u(x,t)=\frac{8}{\pi}\sum_{n=1}^{\infty}\frac{\sin\bigl((2n-1)x\bigr)}{(2n-1)^3}\,e^{-(2n-1)^2 t}}
+\]
+
+\textit{Note:} At $t=0$: $(8/\pi)\sum_{n=1}^{\infty}\sin((2n-1)x)/(2n-1)^3 = x(\pi-x)$ for $0<x<\pi$\;\checkmark (standard Fourier sine result).
+\end{ansbox}
+
+\end{document}
