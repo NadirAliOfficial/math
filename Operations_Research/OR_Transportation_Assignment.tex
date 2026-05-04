@@ -1,0 +1,738 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+
+\tcbuselibrary{skins, breakable}
+
+\geometry{margin=1in, top=1in, bottom=1in}
+
+% ── Colour palette ───────────────────────────────────────────────────────────
+\definecolor{primary} {RGB}{38,  50,  56}
+\definecolor{accent}  {RGB}{0,  188, 212}
+\definecolor{lightbg} {RGB}{224,247,250}
+\definecolor{gold}    {RGB}{255,152,  0}
+\definecolor{goldbg}  {RGB}{255,243,224}
+\definecolor{softgray}{RGB}{245,246,247}
+\definecolor{darktext}{RGB}{33,  33,  33}
+\definecolor{green1}  {RGB}{0,  150, 136}
+\definecolor{greenbg} {RGB}{224,242,241}
+
+% ── Headers / Footers ────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Operations Research}\;\textcolor{accent}{|}\;Transportation Problem}
+\fancyhead[R]{\small\color{darktext}Nadir Ali Khan \textbar\ MT-0123-052}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ──────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}{}
+  {0em}{}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}{}
+  {0em}{}
+
+% ── tcolorbox styles ─────────────────────────────────────────────────────────
+\newtcolorbox{problembox}{
+  enhanced,
+  colback=lightbg, colframe=primary, arc=5pt, boxrule=2pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Problem Statement},
+  colbacktitle=primary, coltitle=white,
+}
+
+\newtcolorbox{notebox}{
+  enhanced,
+  borderline west={4pt}{0pt}{gold},
+  colback=goldbg, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newtcolorbox{stepbox}[1]{
+  enhanced,
+  colback=lightbg!60, colframe=accent, arc=4pt, boxrule=1.2pt,
+  left=10pt, right=10pt, top=7pt, bottom=7pt,
+  title={\small\bfseries #1},
+  colbacktitle=accent!80, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=accent, colback=accent!70, boxrule=1pt},
+}
+
+\newtcolorbox{answerbox}{
+  enhanced,
+  colback=greenbg, colframe=green1, arc=5pt, boxrule=1.5pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  title={\small\bfseries Optimal Solution},
+  colbacktitle=green1!85, coltitle=white,
+  attach boxed title to top left={xshift=12pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=green1, colback=green1!70, boxrule=1pt},
+}
+
+\newtcolorbox{iterbox}[1]{
+  enhanced,
+  colback=softgray, colframe=primary!40, arc=4pt, boxrule=1pt,
+  left=10pt, right=10pt, top=6pt, bottom=6pt,
+  title={\small\bfseries #1},
+  colbacktitle=primary!80, coltitle=white,
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+\thispagestyle{empty}
+
+% ── Title Banner ─────────────────────────────────────────────────────────────
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=18pt, bottom=14pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  \centering
+  {\huge\bfseries\color{white} Operations Research}\\[4pt]
+  {\large\color{accent} Transportation Problem --- Complete Solution}\\[8pt]
+  \color{lightbg}\rule{0.5\textwidth}{0.4pt}\\[8pt]
+  \begin{tabular}{rl}
+    {\color{lightbg}\textbf{Name:}}       & {\color{white} Nadir Ali Khan} \\[3pt]
+    {\color{lightbg}\textbf{Roll No:}}    & {\color{white} MT-0123-052} \\[3pt]
+    {\color{lightbg}\textbf{Subject:}}    & {\color{white} Operations Research} \\[3pt]
+    {\color{lightbg}\textbf{Instructor:}} & {\color{white} Sir Darshan} \\[3pt]
+    {\color{lightbg}\textbf{Department:}} & {\color{white} BS Mathematics} \\
+  \end{tabular}
+\end{tcolorbox}
+
+\vspace{14pt}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{problembox}
+Given the following transportation problem:
+
+\vspace{8pt}
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Origin}} &
+  {\color{white}\textbf{1}} &
+  {\color{white}\textbf{2}} &
+  {\color{white}\textbf{3}} &
+  {\color{white}\textbf{4}} &
+  {\color{white}\textbf{Supply}} \\
+  \hline
+  \rowcolor{lightbg!50} A & 6 & 9 & 7 & 15 & 50 \\
+  \hline
+  B & 3 & 5 & 8 & 10 & 80 \\
+  \hline
+  \rowcolor{lightbg!50} C & 15 & 6 & 4 & 7 & 40 \\
+  \hline
+  D & 3 & 9 & 6 & 4 & 90 \\
+  \hline
+  \rowcolor{accent!20}
+  \textbf{Demand} & 50 & 40 & 70 & 80 & \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+\textbf{(a)} Find the initial feasible solution using \textbf{Vogel's Approximation Method}. Obtain an optimal solution using the \textbf{Stepping-Stone Method}.\\[4pt]
+\textbf{(b)} Find the initial feasible solution using \textbf{Least Cost Method}. Obtain an optimal solution using the \textbf{Modified Distribution (MODI) Method}.
+\end{problembox}
+
+\vspace{10pt}
+
+% ── Balance Check ────────────────────────────────────────────────────────────
+\begin{notebox}
+\textbf{Balance Check:}\quad
+Total Supply $= 50+80+40+90 = 260$,\quad
+Total Demand $= 50+40+70+80 = 240$.\\[3pt]
+Supply $>$ Demand by $\mathbf{20}$. Add a \textbf{dummy destination D5} with demand 20 and zero costs.
+\end{notebox}
+
+\vspace{6pt}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Origin}} &
+  {\color{white}\textbf{1}} &
+  {\color{white}\textbf{2}} &
+  {\color{white}\textbf{3}} &
+  {\color{white}\textbf{4}} &
+  {\color{white}\textbf{D5}} &
+  {\color{white}\textbf{Supply}} \\
+  \hline
+  \rowcolor{lightbg!50} A & 6 & 9 & 7 & 15 & 0 & 50 \\
+  \hline
+  B & 3 & 5 & 8 & 10 & 0 & 80 \\
+  \hline
+  \rowcolor{lightbg!50} C & 15 & 6 & 4 & 7 & 0 & 40 \\
+  \hline
+  D & 3 & 9 & 6 & 4 & 0 & 90 \\
+  \hline
+  \rowcolor{accent!20}
+  \textbf{Demand} & 50 & 40 & 70 & 80 & 20 & 260 \\
+  \hline
+\end{tabular}
+\end{center}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Part (a): Vogel's Approximation Method + Stepping Stone Method}
+
+\subsection*{VAM --- Penalty Iterations}
+
+Compute the \textbf{row and column penalties} (2nd minimum $-$ minimum cost). Allocate to the minimum-cost cell of the highest-penalty row/column.
+
+\vspace{6pt}
+
+\begin{iterbox}{Iteration 1}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  & {\color{white}\textbf{1}} & {\color{white}\textbf{2}} &
+    {\color{white}\textbf{3}} & {\color{white}\textbf{4}} &
+    {\color{white}\textbf{D5}} & {\color{white}\textbf{Supply}} & {\color{white}\textbf{Penalty}} \\
+  \hline
+  \rowcolor{gold!25} A & 6 & 9 & 7 & 15 & 0 & 50 & $\mathbf{6}$ \\
+  \hline
+  B & 3 & 5 & 8 & 10 & 0 & 80 & 3 \\
+  \hline
+  C & 15 & 6 & 4 & 7 & 0 & 40 & 4 \\
+  \hline
+  D & 3 & 9 & 6 & 4 & 0 & 90 & 3 \\
+  \hline
+  \rowcolor{accent!15}
+  \textbf{Penalty} & 0 & 1 & 2 & 3 & 0 & & \\
+  \hline
+\end{tabular}
+\end{center}
+Max penalty $= \mathbf{6}$ (Row A). Min cost in Row A $= 0$ (D5).
+Allocate $x_{A,D5} = \min(50,20) = \mathbf{20}$. \textbf{D5 eliminated.} Remaining supply of A $= 30$.
+\end{iterbox}
+
+\vspace{6pt}
+
+\begin{iterbox}{Iteration 2 — D5 removed}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  & {\color{white}\textbf{1}} & {\color{white}\textbf{2}} &
+    {\color{white}\textbf{3}} & {\color{white}\textbf{4}} &
+    {\color{white}\textbf{Supply}} & {\color{white}\textbf{Penalty}} \\
+  \hline
+  A & 6 & 9 & 7 & 15 & 30 & 1 \\
+  \hline
+  B & 3 & 5 & 8 & 10 & 80 & 2 \\
+  \hline
+  C & 15 & 6 & 4 & 7 & 40 & 2 \\
+  \hline
+  D & 3 & 9 & 6 & 4 & 90 & 1 \\
+  \hline
+  \rowcolor{accent!15}
+  \textbf{Penalty} & 0 & 1 & 2 & \cellcolor{gold!40}$\mathbf{3}$ & & \\
+  \hline
+\end{tabular}
+\end{center}
+Max penalty $= \mathbf{3}$ (Col 4). Min cost in Col 4 $= 4$ (Row D).
+Allocate $x_{D,4} = \min(90,80) = \mathbf{80}$. \textbf{Col 4 eliminated.} Remaining supply of D $= 10$.
+\end{iterbox}
+
+\vspace{6pt}
+
+\begin{iterbox}{Iteration 3 — Col 4 removed}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  & {\color{white}\textbf{1}} & {\color{white}\textbf{2}} &
+    {\color{white}\textbf{3}} & {\color{white}\textbf{Supply}} & {\color{white}\textbf{Penalty}} \\
+  \hline
+  A & 6 & 9 & 7 & 30 & 1 \\
+  \hline
+  B & 3 & 5 & 8 & 80 & 2 \\
+  \hline
+  C & 15 & 6 & 4 & 40 & 2 \\
+  \hline
+  \rowcolor{gold!25} D & 3 & 9 & 6 & 10 & $\mathbf{3}$ \\
+  \hline
+  \rowcolor{accent!15}
+  \textbf{Penalty} & 0 & 1 & 2 & & \\
+  \hline
+\end{tabular}
+\end{center}
+Max penalty $= \mathbf{3}$ (Row D). Min cost in Row D $= 3$ (Col 1).
+Allocate $x_{D,1} = \min(10,50) = \mathbf{10}$. \textbf{Row D eliminated.} Remaining demand Col 1 $= 40$.
+\end{iterbox}
+
+\vspace{6pt}
+
+\begin{iterbox}{Iteration 4 — Row D removed}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  & {\color{white}\textbf{1}} & {\color{white}\textbf{2}} &
+    {\color{white}\textbf{3}} & {\color{white}\textbf{Supply}} & {\color{white}\textbf{Penalty}} \\
+  \hline
+  A & 6 & 9 & 7 & 30 & 1 \\
+  \hline
+  B & 3 & 5 & 8 & 80 & 2 \\
+  \hline
+  C & 15 & 6 & 4 & 40 & 2 \\
+  \hline
+  \rowcolor{accent!15}
+  \textbf{Penalty} & \cellcolor{gold!40}$\mathbf{3}$ & 1 & \cellcolor{gold!40}$\mathbf{3}$ & & \\
+  \hline
+\end{tabular}
+\end{center}
+Max penalty $= \mathbf{3}$ (Col 1 \& Col 3 tie; choose Col 1). Min cost $= 3$ (Row B).
+Allocate $x_{B,1} = \min(80,40) = \mathbf{40}$. \textbf{Col 1 eliminated.} Remaining supply of B $= 40$.
+\end{iterbox}
+
+\vspace{6pt}
+
+\begin{iterbox}{Iterations 5--7}
+\textbf{Iter 5:} Max penalty 3 (Row B / Col 3 tie; choose Col 3). Min cost in Col 3 $= 4$ (Row C).
+$x_{C,3}=\min(40,70)=\mathbf{40}$. Row C eliminated. Col 3 remaining $= 30$.\\[4pt]
+\textbf{Iter 6:} Max penalty 4 (Col 2). Min cost $= 5$ (Row B). $x_{B,2}=\min(40,40)=\mathbf{40}$. Both Row B \& Col 2 eliminated.\\[4pt]
+\textbf{Iter 7:} Only Row A, Col 3 remain. $x_{A,3}=\min(30,30)=\mathbf{30}$. Done.
+\end{iterbox}
+
+\vspace{8pt}
+
+\begin{stepbox}{VAM Initial Basic Feasible Solution}
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|C{2.8cm}|C{2.4cm}|C{2cm}|C{2.6cm}|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Route}} &
+  {\color{white}\textbf{Units}} &
+  {\color{white}\textbf{Cost}} &
+  {\color{white}\textbf{Total}} \\
+  \hline
+  \rowcolor{lightbg!60} $A \;\to\; \text{D5}$ & 20 & 0 & 0 \\
+  \hline
+  $A \;\to\; 3$ & 30 & 7 & 210 \\
+  \hline
+  \rowcolor{lightbg!60} $B \;\to\; 1$ & 40 & 3 & 120 \\
+  \hline
+  $B \;\to\; 2$ & 40 & 5 & 200 \\
+  \hline
+  \rowcolor{lightbg!60} $C \;\to\; 3$ & 40 & 4 & 160 \\
+  \hline
+  $D \;\to\; 1$ & 10 & 3 & 30 \\
+  \hline
+  \rowcolor{lightbg!60} $D \;\to\; 4$ & 80 & 4 & 320 \\
+  \hline
+  \rowcolor{accent!30}
+  \multicolumn{3}{|r|}{\textbf{Initial Transportation Cost}} & \textbf{1040} \\
+  \hline
+\end{tabular}
+\end{center}
+\textit{Note: 7 allocations vs. $m+n-1=8$ required $\Rightarrow$ \textbf{degenerate}. Add $\varepsilon \approx 0$ at cell $(C,2)$ to complete the basis.}
+\end{stepbox}
+
+\vspace{8pt}
+
+\subsection*{Stepping Stone Method --- Optimality Check}
+
+Compute dual variables $u_i, v_j$ (with $u_A=0$) using $c_{ij} = u_i + v_j$ for each basic cell:
+
+\begin{center}
+\begin{tabular}{ll@{\hspace{30pt}}ll}
+  $(A,3)$: & $v_3 = 7$ & $(A,\text{D5})$: & $v_{D5}=0$ \\
+  $(C,3)$: & $u_C = -3$ & $(C,2)=\varepsilon$: & $v_2 = 9$ \\
+  $(B,2)$: & $u_B = -4$ & $(B,1)$: & $v_1 = 7$ \\
+  $(D,1)$: & $u_D = -4$ & $(D,4)$: & $v_4 = 8$ \\
+\end{tabular}
+\end{center}
+
+Improvement index $\Delta_{ij} = c_{ij} - u_i - v_j$ for all non-basic cells:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Cell}} &
+  {\color{white}$c_{ij}$} &
+  {\color{white}$u_i + v_j$} &
+  {\color{white}$\Delta_{ij}$} &
+  {\color{white}\textbf{Status}} \\
+  \hline
+  \rowcolor{red!15} $(A,1)$ & 6 & $0+7=7$ & $-1$ & \textbf{Enter (most negative)} \\
+  \hline
+  $(A,2)$ & 9 & $0+9=9$ & $0$ & Alternative optimum \\
+  \hline
+  $(A,4)$ & 15 & $0+8=8$ & $+7$ & \\
+  \hline
+  $(B,3)$ & 8 & $-4+7=3$ & $+5$ & \\
+  \hline
+  $(B,4)$ & 10 & $-4+8=4$ & $+6$ & \\
+  \hline
+  $(C,1)$ & 15 & $-3+7=4$ & $+11$ & \\
+  \hline
+  $(C,4)$ & 7 & $-3+8=5$ & $+2$ & \\
+  \hline
+  $(D,2)$ & 9 & $-4+9=5$ & $+4$ & \\
+  \hline
+  $(D,3)$ & 6 & $-4+7=3$ & $+3$ & \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+Cell $(A,1)$ has $\Delta_{A,1} = -1$. Trace the \textbf{stepping stone loop}:
+
+\[
+  \underbrace{(A,1)}_{+} \;\longrightarrow\;
+  \underbrace{(A,2)}_{\displaystyle-\,\varepsilon} \;\longrightarrow\;
+  \underbrace{(B,2)}_{+} \;\longrightarrow\;
+  \underbrace{(B,1)}_{-} \;\longrightarrow\; (A,1)
+\]
+
+$\theta = \min\{\varepsilon,\,40\} = \varepsilon$. \textbf{Degenerate pivot}: $(A,1)$ enters at $\varepsilon$, $(C,2)$ exits. Allocations numerically unchanged.
+
+\medskip
+Re-evaluating with new basis ($v_1=6, v_2=8, v_4=7$; $u_B=u_C=u_D=-3$):
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Cell}} &
+  {\color{white}$c_{ij}$} &
+  {\color{white}$u_i+v_j$} &
+  {\color{white}$\Delta_{ij}$} &
+  {\color{white}\textbf{Status}} \\
+  \hline
+  $(A,2)$ & 9 & 8 & $+1$ & \\
+  \hline
+  $(A,4)$ & 15 & 7 & $+8$ & \\
+  \hline
+  $(B,3)$ & 8 & 4 & $+4$ & \\
+  \hline
+  $(B,4)$ & 10 & 4 & $+6$ & \\
+  \hline
+  $(C,1)$ & 15 & 3 & $+12$ & \\
+  \hline
+  $(C,2)$ & 6 & 5 & $+1$ & \\
+  \hline
+  $(C,4)$ & 7 & 4 & $+3$ & \\
+  \hline
+  $(D,2)$ & 9 & 5 & $+4$ & \\
+  \hline
+  $(D,3)$ & 6 & 4 & $+2$ & \\
+  \hline
+\end{tabular}
+\end{center}
+
+All $\Delta_{ij} \geq 0$ \textrightarrow\ \textbf{Optimal.}
+
+\begin{answerbox}
+\textbf{Optimal Allocation (Part a):}
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|C{2.8cm}|C{2.4cm}|C{2cm}|C{2.6cm}|}
+  \hline
+  \rowcolor{green1!30}
+  \textbf{Route} & \textbf{Units} & \textbf{Cost} & \textbf{Total} \\
+  \hline
+  $A \to 3$ & 30 & 7 & 210 \\
+  \hline
+  $B \to 1$ & 40 & 3 & 120 \\
+  \hline
+  $B \to 2$ & 40 & 5 & 200 \\
+  \hline
+  $C \to 3$ & 40 & 4 & 160 \\
+  \hline
+  $D \to 1$ & 10 & 3 & 30 \\
+  \hline
+  $D \to 4$ & 80 & 4 & 320 \\
+  \hline
+  \rowcolor{green1!40}
+  \multicolumn{3}{|r|}{\Large\textbf{Minimum Cost}} & \Large\textbf{1040} \\
+  \hline
+\end{tabular}
+\end{center}
+\textit{Origin A holds 20 units at the dummy destination (unused supply).}
+\end{answerbox}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Part (b): Least Cost Method + MODI Method}
+
+\subsection*{Least Cost Method --- Allocations}
+
+Repeatedly assign to the \textbf{globally cheapest available cell}.
+
+\begin{iterbox}{LCM Step-by-Step}
+\begin{enumerate}[leftmargin=*, label=\textbf{Step \arabic*.}, itemsep=4pt]
+  \item Min cost $= 0$ (D5 column). Allocate $x_{A,D5} = \min(50,20) = \mathbf{20}$.
+        D5 column removed. Remaining A $= 30$.
+  \item Min cost $= 3$ at $(B,1)$ \& $(D,1)$; choose $(B,1)$.
+        $x_{B,1} = \min(80,50) = \mathbf{50}$. Col 1 removed. Remaining B $= 30$.
+  \item Min cost $= 4$ at $(C,3)$ \& $(D,4)$; choose $(C,3)$.
+        $x_{C,3} = \min(40,70) = \mathbf{40}$. Row C removed. Col 3 remaining $= 30$.
+  \item Min cost $= 4$ at $(D,4)$.
+        $x_{D,4} = \min(90,80) = \mathbf{80}$. Col 4 removed. Remaining D $= 10$.
+  \item Min cost $= 5$ at $(B,2)$.
+        $x_{B,2} = \min(30,40) = \mathbf{30}$. Row B removed. Col 2 remaining $= 10$.
+  \item Min cost $= 6$ at $(D,3)$.
+        $x_{D,3} = \min(10,30) = \mathbf{10}$. Row D removed. Col 3 remaining $= 20$.
+  \item Min cost $= 7$ at $(A,3)$.
+        $x_{A,3} = \min(30,20) = \mathbf{20}$. Col 3 removed. Remaining A $= 10$.
+  \item Only $(A,2)$ left. $x_{A,2} = \mathbf{10}$.
+\end{enumerate}
+\end{iterbox}
+
+\vspace{8pt}
+
+\begin{stepbox}{LCM Initial Basic Feasible Solution}
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|C{2.8cm}|C{2.4cm}|C{2cm}|C{2.6cm}|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Route}} &
+  {\color{white}\textbf{Units}} &
+  {\color{white}\textbf{Cost}} &
+  {\color{white}\textbf{Total}} \\
+  \hline
+  \rowcolor{lightbg!60} $A \to \text{D5}$ & 20 & 0 & 0 \\
+  \hline
+  $A \to 2$ & 10 & 9 & 90 \\
+  \hline
+  \rowcolor{lightbg!60} $A \to 3$ & 20 & 7 & 140 \\
+  \hline
+  $B \to 1$ & 50 & 3 & 150 \\
+  \hline
+  \rowcolor{lightbg!60} $B \to 2$ & 30 & 5 & 150 \\
+  \hline
+  $C \to 3$ & 40 & 4 & 160 \\
+  \hline
+  \rowcolor{lightbg!60} $D \to 3$ & 10 & 6 & 60 \\
+  \hline
+  $D \to 4$ & 80 & 4 & 320 \\
+  \hline
+  \rowcolor{accent!30}
+  \multicolumn{3}{|r|}{\textbf{Initial Cost}} & \textbf{1070} \\
+  \hline
+\end{tabular}
+\end{center}
+8 basic allocations $= m+n-1 = 8$. Non-degenerate. $\checkmark$
+\end{stepbox}
+
+\vspace{8pt}
+
+\subsection*{MODI Method --- Iteration 1}
+
+Set $u_A = 0$ and solve $c_{ij} = u_i + v_j$ for each basic cell:
+
+\begin{center}
+\begin{tabular}{ll@{\hspace{20pt}}ll}
+  $(A,D5)$: & $v_{D5}=0$ & $(A,2)$: & $v_2=9$ \\
+  $(A,3)$: & $v_3=7$ & $(B,2)$: & $u_B=-4$ \\
+  $(B,1)$: & $v_1=7$ & $(C,3)$: & $u_C=-3$ \\
+  $(D,3)$: & $u_D=-1$ & $(D,4)$: & $v_4=5$ \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Cell}} &
+  {\color{white}$c_{ij}$} &
+  {\color{white}$u_i+v_j$} &
+  {\color{white}$\Delta_{ij}$} &
+  {\color{white}\textbf{Status}} \\
+  \hline
+  $(A,1)$ & 6 & 7 & $-1$ & \\
+  \hline
+  $(A,4)$ & 15 & 5 & $+10$ & \\
+  \hline
+  $(B,3)$ & 8 & 3 & $+5$ & \\
+  \hline
+  $(B,4)$ & 10 & 3 & $+9$ & \\
+  \hline
+  $(C,1)$ & 15 & 4 & $+11$ & \\
+  \hline
+  $(C,2)$ & 6 & 6 & $0$ & \\
+  \hline
+  $(C,4)$ & 7 & 4 & $+5$ & \\
+  \hline
+  \rowcolor{red!15} $(D,1)$ & 3 & 6 & $-3$ & \textbf{Enter (most negative)} \\
+  \hline
+  $(D,2)$ & 9 & 8 & $+1$ & \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+Enter $(D,1)$. Stepping stone loop:
+\[
+  \underbrace{(D,1)}_{+} \to
+  \underbrace{(D,3)}_{-} \to
+  \underbrace{(A,3)}_{+} \to
+  \underbrace{(A,2)}_{-} \to
+  \underbrace{(B,2)}_{+} \to
+  \underbrace{(B,1)}_{-} \to (D,1)
+\]
+$\theta = \min\{x_{D,3},\, x_{A,2},\, x_{B,1}\} = \min\{10,\,10,\,50\} = \mathbf{10}$
+
+Tie between $(D,3)$ and $(A,2)$. Remove $(D,3)$; retain $(A,2)=\varepsilon$.
+
+\medskip
+Updated allocations after $\theta = 10$:
+\[
+  x_{D,1} \mathrel{+}= 10,\quad x_{A,3} \mathrel{+}= 10,\quad x_{B,2} \mathrel{+}= 10,\quad
+  x_{D,3} = 0\text{ (out)},\quad x_{A,2} = \varepsilon,\quad x_{B,1} \mathrel{-}= 10
+\]
+
+\[
+  \text{Cost improvement} = \theta \times |\Delta_{D,1}| = 10 \times 3 = 30
+  \implies \text{New cost} = 1070 - 30 = \mathbf{1040}
+\]
+
+\subsection*{MODI Method --- Iteration 2}
+
+New dual variables with $(A,2)=\varepsilon$ in basis:
+$v_1=7,\; v_2=9,\; v_3=7,\; v_4=8;\; u_B=-4,\; u_C=-3,\; u_D=-4$.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Cell}} &
+  {\color{white}$c_{ij}$} &
+  {\color{white}$u_i+v_j$} &
+  {\color{white}$\Delta_{ij}$} &
+  {\color{white}\textbf{Status}} \\
+  \hline
+  \rowcolor{red!15} $(A,1)$ & 6 & 7 & $-1$ & \textbf{Enter} \\
+  \hline
+  $(A,4)$ & 15 & 8 & $+7$ & \\
+  \hline
+  $(B,3)$ & 8 & 3 & $+5$ & \\
+  \hline
+  $(B,4)$ & 10 & 4 & $+6$ & \\
+  \hline
+  $(C,1)$ & 15 & 4 & $+11$ & \\
+  \hline
+  $(C,2)$ & 6 & 6 & $0$ & \\
+  \hline
+  $(C,4)$ & 7 & 5 & $+2$ & \\
+  \hline
+  $(D,2)$ & 9 & 5 & $+4$ & \\
+  \hline
+  $(D,3)$ & 6 & 3 & $+3$ & \\
+  \hline
+\end{tabular}
+\end{center}
+
+Enter $(A,1)$. Loop: $(A,1)^{+} \to (A,2)^{-}_\varepsilon \to (B,2)^{+} \to (B,1)^{-} \to (A,1)$
+
+$\theta = \min\{\varepsilon,\,40\} = \varepsilon$. \textbf{Degenerate pivot}. $(A,2)$ exits, $(A,1)=\varepsilon$ enters. Cost change $\approx 0$.
+
+\subsection*{MODI Method --- Final Verification}
+
+New duals: $v_1=6,\; v_2=8,\; v_3=7,\; v_4=7;\; u_B=u_C=u_D=-3$.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Cell}} &
+  {\color{white}$c_{ij}$} &
+  {\color{white}$u_i+v_j$} &
+  {\color{white}$\Delta_{ij}$} &
+  {\color{white}\textbf{Status}} \\
+  \hline
+  $(A,2)$ & 9 & 8 & $+1$ & \\
+  \hline
+  $(A,4)$ & 15 & 7 & $+8$ & \\
+  \hline
+  $(B,3)$ & 8 & 4 & $+4$ & \\
+  \hline
+  $(B,4)$ & 10 & 4 & $+6$ & \\
+  \hline
+  $(C,1)$ & 15 & 3 & $+12$ & \\
+  \hline
+  $(C,2)$ & 6 & 5 & $+1$ & \\
+  \hline
+  $(C,4)$ & 7 & 4 & $+3$ & \\
+  \hline
+  $(D,2)$ & 9 & 5 & $+4$ & \\
+  \hline
+  $(D,3)$ & 6 & 4 & $+2$ & \\
+  \hline
+\end{tabular}
+\end{center}
+
+All $\Delta_{ij} \geq 0$ \textrightarrow\ \textbf{Optimal solution reached.}
+
+\begin{answerbox}
+\textbf{Optimal Allocation (Part b):}
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|C{2.8cm}|C{2.4cm}|C{2cm}|C{2.6cm}|}
+  \hline
+  \rowcolor{green1!30}
+  \textbf{Route} & \textbf{Units} & \textbf{Cost} & \textbf{Total} \\
+  \hline
+  $A \to 3$ & 30 & 7 & 210 \\
+  \hline
+  $B \to 1$ & 40 & 3 & 120 \\
+  \hline
+  $B \to 2$ & 40 & 5 & 200 \\
+  \hline
+  $C \to 3$ & 40 & 4 & 160 \\
+  \hline
+  $D \to 1$ & 10 & 3 & 30 \\
+  \hline
+  $D \to 4$ & 80 & 4 & 320 \\
+  \hline
+  \rowcolor{green1!40}
+  \multicolumn{3}{|r|}{\Large\textbf{Minimum Cost}} & \Large\textbf{1040} \\
+  \hline
+\end{tabular}
+\end{center}
+\textit{Both methods converge to the same minimum transportation cost of \textbf{Rs.~1040}.\\
+Origin A holds 20 units at the dummy destination (excess supply, not shipped).}
+\end{answerbox}
+
+\vspace{20pt}
+\noindent\color{accent}\rule{\linewidth}{1.5pt}
+\begin{center}
+  \small\color{darktext}\textit{End of Assignment \quad\textbullet\quad Operations Research \quad\textbullet\quad Nadir Ali Khan \quad\textbullet\quad MT-0123-052}
+\end{center}
+
+\end{document}

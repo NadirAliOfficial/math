@@ -5,3 +5,7 @@
 *.synctex.gz
 *.fls
 *.fdb_latexmk
+
+# Private assignments
+Laplace_Transform/Sufyan_Laplace_Assignment.*
+Laplace_Transform/Palwasha_Laplace_Assignment.*
