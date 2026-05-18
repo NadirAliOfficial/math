@@ -1,0 +1,590 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{tabularx}
+
+\tcbuselibrary{skins, breakable}
+\geometry{margin=1in, top=1in, bottom=1in}
+
+\definecolor{primary} {RGB}{38,  50,  56}
+\definecolor{accent}  {RGB}{0,  188, 212}
+\definecolor{lightbg} {RGB}{224,247,250}
+\definecolor{gold}    {RGB}{255,152,  0}
+\definecolor{goldbg}  {RGB}{255,243,224}
+\definecolor{softgray}{RGB}{245,246,247}
+\definecolor{darktext}{RGB}{33,  33,  33}
+\definecolor{green1}  {RGB}{0,  150, 136}
+\definecolor{greenbg} {RGB}{224,242,241}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Operations Research}\;\textcolor{accent}{|}\;LP Formulation}
+\fancyhead[R]{\small\color{darktext}Nadir Ali Khan \textbar\ MT-0123-052}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+\titleformat{\section}{\large\bfseries\color{primary}}{}{0em}{}[\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+\titleformat{\subsection}{\normalsize\bfseries\color{accent}}{}{0em}{}
+
+\newtcolorbox{problembox}{enhanced, colback=lightbg, colframe=primary, arc=5pt, boxrule=2pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Problem Statement}, colbacktitle=primary, coltitle=white}
+
+\newtcolorbox{notebox}{enhanced, borderline west={4pt}{0pt}{gold},
+  colback=goldbg, colframe=white, arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt}
+
+\newtcolorbox{defbox}{enhanced, borderline west={4pt}{0pt}{accent},
+  colback=lightbg!60, colframe=white, arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt}
+
+\newtcolorbox{stepbox}[1]{enhanced, colback=lightbg!60, colframe=accent, arc=4pt, boxrule=1.2pt,
+  left=10pt, right=10pt, top=7pt, bottom=7pt,
+  title={\small\bfseries #1}, colbacktitle=accent!80, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=accent, colback=accent!70, boxrule=1pt}}
+
+\newtcolorbox{answerbox}{enhanced, colback=greenbg, colframe=green1, arc=5pt, boxrule=1.5pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  title={\small\bfseries Optimal Solution}, colbacktitle=green1!85, coltitle=white,
+  attach boxed title to top left={xshift=12pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=green1, colback=green1!70, boxrule=1pt}}
+
+\newtcolorbox{iterbox}[1]{enhanced, colback=softgray, colframe=primary!40, arc=4pt, boxrule=1pt,
+  left=10pt, right=10pt, top=6pt, bottom=6pt,
+  title={\small\bfseries #1}, colbacktitle=primary!80, coltitle=white}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{tcolorbox}[enhanced, arc=0pt, boxrule=0pt, colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=18pt, bottom=14pt, borderline south={4pt}{0pt}{accent}]
+  \centering
+  {\huge\bfseries\color{white} Operations Research}\\[4pt]
+  {\large\color{accent} Transportation Problem --- LP Formulation \& Solution}\\[8pt]
+  \color{lightbg}\rule{0.5\textwidth}{0.4pt}\\[8pt]
+  \begin{tabular}{rl}
+    {\color{lightbg}\textbf{Name:}}       & {\color{white} Nadir Ali Khan} \\[3pt]
+    {\color{lightbg}\textbf{Roll No:}}    & {\color{white} MT-0123-052} \\[3pt]
+    {\color{lightbg}\textbf{Subject:}}    & {\color{white} Operations Research} \\[3pt]
+    {\color{lightbg}\textbf{Question:}}   & {\color{white} Question No.\ 1} \\[3pt]
+    {\color{lightbg}\textbf{Department:}} & {\color{white} BS Mathematics} \\
+  \end{tabular}
+\end{tcolorbox}
+
+\vspace{14pt}
+
+\begin{problembox}
+\textbf{Question No.\ 1}\\[6pt]
+\textbf{(a)} Define a transportation problem in operations research. Look at the network diagram given below and develop a linear programming problem.\\[6pt]
+\textbf{(b)} Discuss balanced and unbalanced transportation problems with examples.
+\end{problembox}
+
+\vspace{10pt}
+
+\begin{stepbox}{Transportation Cost Matrix (from Network Diagram)}
+\vspace{4pt}
+\begin{center}
+\renewcommand{\arraystretch}{1.55}
+\begin{tabular}{|c|C{2.2cm}|C{2.2cm}|C{2.2cm}|C{2.2cm}|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Source $\backslash$ Dest.}} &
+  {\color{white}\textbf{$D_1$}} &
+  {\color{white}\textbf{$D_2$}} &
+  {\color{white}\textbf{$D_3$}} &
+  {\color{white}\textbf{Supply $a_i$}} \\
+  \hline
+  \rowcolor{lightbg!50}
+  \textbf{$S_1$} &
+  $c_{11} = 3$ & $c_{12} = 4$ & $c_{13} = 2$ &
+  \textbf{5} \\
+  \hline
+  \textbf{$S_2$} &
+  $c_{21} = 2$ & $c_{22} = 2$ & $c_{23} = 3$ &
+  \textbf{7} \\
+  \hline
+  \rowcolor{lightbg!50}
+  \textbf{$S_3$} &
+  $c_{31} = 3$ & $c_{32} = 1$ & $c_{33} = 3$ &
+  \textbf{3} \\
+  \hline
+  \rowcolor{accent!20}
+  \textbf{Demand $b_j$} & \textbf{7} & \textbf{3} & \textbf{5} &
+  \textbf{15} \\
+  \hline
+\end{tabular}
+\end{center}
+\vspace{4pt}
+{\small $c_{ij}$ = per-unit shipping cost from source $S_i$ to destination $D_j$.
+Each cell entry is read from the arrow labels in the network diagram.}
+\end{stepbox}
+
+\vspace{10pt}
+
+%=============================================================================
+\section{Part (a): Definition and LP Formulation}
+
+\subsection*{Definition of Transportation Problem}
+
+\begin{defbox}
+A \textbf{transportation problem} is a special class of linear programming problem concerned with distributing a homogeneous commodity from $m$ \emph{sources} (origins) to $n$ \emph{destinations} at \textbf{minimum total cost}.
+
+Each source $S_i$ possesses a fixed supply $a_i$ and each destination $D_j$ requires a fixed demand $b_j$. The unit shipping cost from $S_i$ to $D_j$ is $c_{ij}$. The decision variables $x_{ij} \geq 0$ represent the quantity shipped on each route. A feasible solution must satisfy every supply and demand constraint exactly (for a balanced problem) or within bounds (for unbalanced cases).
+
+Transportation problems arise in logistics, supply chain management, facility location, and production planning.
+\end{defbox}
+
+\vspace{8pt}
+
+\subsection*{Decision Variables}
+
+Let $x_{ij}$ = number of units transported from source $S_i$ to destination $D_j$\; ($i=1,2,3;\; j=1,2,3$).
+
+\vspace{8pt}
+
+\subsection*{LP Formulation}
+
+\begin{stepbox}{Objective Function --- Minimise Total Transportation Cost}
+\vspace{4pt}
+\begin{align*}
+\text{Minimise}\quad Z
+  &= 3x_{11} + 4x_{12} + 2x_{13} \\
+  &\quad + 2x_{21} + 2x_{22} + 3x_{23} \\
+  &\quad + 3x_{31} + x_{32} + 3x_{33}
+\end{align*}
+\end{stepbox}
+
+\vspace{8pt}
+
+\begin{stepbox}{Supply and Demand Constraints}
+\textbf{Supply constraints} (total shipped from each source $=$ its supply):
+\begin{alignat}{2}
+  x_{11} + x_{12} + x_{13} &= 5 \qquad &&(S_1) \notag\\
+  x_{21} + x_{22} + x_{23} &= 7 \qquad &&(S_2) \notag\\
+  x_{31} + x_{32} + x_{33} &= 3 \qquad &&(S_3) \notag
+\end{alignat}
+
+\textbf{Demand constraints} (total received at each destination $=$ its demand):
+\begin{alignat}{2}
+  x_{11} + x_{21} + x_{31} &= 7 \qquad &&(D_1) \notag\\
+  x_{12} + x_{22} + x_{32} &= 3 \qquad &&(D_2) \notag\\
+  x_{13} + x_{23} + x_{33} &= 5 \qquad &&(D_3) \notag
+\end{alignat}
+
+\textbf{Non-negativity:}\quad $x_{ij} \geq 0$ for all $i,j$.
+\end{stepbox}
+
+\vspace{8pt}
+
+\begin{notebox}
+\textbf{Balance Check:}\quad
+Total Supply $= 5+7+3 = 15$,\quad Total Demand $= 7+3+5 = 15$.\\[3pt]
+Supply $=$ Demand $\Rightarrow$ \textbf{Balanced Transportation Problem.} No dummy variable needed.
+\end{notebox}
+
+\vspace{10pt}
+
+\subsection*{Solution: North-West Corner Method (Initial BFS)}
+
+\begin{iterbox}{NWC Step-by-Step Allocations}
+Start at cell $(1,1)$ and move right/down, always allocating $\min(\text{remaining supply, remaining demand})$.
+\vspace{6pt}
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  & {\color{white}$D_1$\;[7]} & {\color{white}$D_2$\;[3]} & {\color{white}$D_3$\;[5]} & {\color{white}\textbf{Supply}} \\
+  \hline
+  \rowcolor{lightbg!50}
+  $S_1$\;[5] & \cellcolor{gold!35}$\mathbf{5}$\;(3) & 4 & 2 & 5 \\
+  \hline
+  $S_2$\;[7] & \cellcolor{gold!35}$\mathbf{2}$\;(2) & \cellcolor{gold!35}$\mathbf{3}$\;(2) & \cellcolor{gold!35}$\mathbf{2}$\;(3) & 7 \\
+  \hline
+  \rowcolor{lightbg!50}
+  $S_3$\;[3] & 3 & 1 & \cellcolor{gold!35}$\mathbf{3}$\;(3) & 3 \\
+  \hline
+\end{tabular}
+\end{center}
+\vspace{4pt}
+{\small Bold = allocation, parentheses = unit cost.}
+\end{iterbox}
+
+\vspace{6pt}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|C{2.6cm}|C{2.2cm}|C{1.8cm}|C{2.4cm}|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Route}} & {\color{white}\textbf{Units}} & {\color{white}\textbf{Cost}} & {\color{white}\textbf{Total}} \\
+  \hline
+  \rowcolor{lightbg!50} $S_1 \to D_1$ & 5 & 3 & 15 \\
+  \hline
+  $S_2 \to D_1$ & 2 & 2 & 4 \\
+  \hline
+  \rowcolor{lightbg!50} $S_2 \to D_2$ & 3 & 2 & 6 \\
+  \hline
+  $S_2 \to D_3$ & 2 & 3 & 6 \\
+  \hline
+  \rowcolor{lightbg!50} $S_3 \to D_3$ & 3 & 3 & 9 \\
+  \hline
+  \rowcolor{accent!25}
+  \multicolumn{3}{|r|}{\textbf{Initial Cost}} & \textbf{40} \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+Number of basic variables $= 5 = m+n-1 = 3+3-1$.\quad Non-degenerate. $\checkmark$
+
+\vspace{10pt}
+
+\subsection*{Optimality Test: MODI Method --- Iteration 1}
+
+Set $u_1 = 0$. Compute duals $u_i,\,v_j$ via $c_{ij} = u_i + v_j$ for each basic cell:
+
+\[
+  v_1=3,\quad u_2=-1,\quad v_2=3,\quad v_3=4,\quad u_3=-1
+\]
+
+Reduced cost $\Delta_{ij} = c_{ij} - u_i - v_j$ for non-basic cells:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Cell}} & {\color{white}$c_{ij}$} &
+  {\color{white}$u_i+v_j$} & {\color{white}$\Delta_{ij}$} & {\color{white}\textbf{Status}} \\
+  \hline
+  $(1,2)$ & 4 & $0+3=3$ & $+1$ & \\
+  \hline
+  \rowcolor{red!15}$(1,3)$ & 2 & $0+4=4$ & $\mathbf{-2}$ & \textbf{Enter (most negative)} \\
+  \hline
+  $(3,1)$ & 3 & $-1+3=2$ & $+1$ & \\
+  \hline
+  $(3,2)$ & 1 & $-1+3=2$ & $-1$ & \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+Enter $(1,3)$.\quad
+Loop:\;$(1,3)^+ \to (2,3)^- \to (2,1)^+ \to (1,1)^-$
+
+$\theta = \min\{x_{23}=2,\;x_{11}=5\} = \mathbf{2}$
+
+Updated: $x_{13}=2,\;x_{23}=0\text{ (leaves)},\;x_{21}=4,\;x_{11}=3$.\quad
+Cost $= 40 - 2\times 2 = \mathbf{36}$
+
+\vspace{10pt}
+
+\subsection*{MODI Method --- Iteration 2}
+
+New BFS: $x_{11}=3,\;x_{21}=4,\;x_{22}=3,\;x_{13}=2,\;x_{33}=3$
+
+Duals ($u_1=0$): $v_1=3,\;v_3=2,\;u_2=-1,\;v_2=3,\;u_3=1$
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Cell}} & {\color{white}$c_{ij}$} &
+  {\color{white}$u_i+v_j$} & {\color{white}$\Delta_{ij}$} & {\color{white}\textbf{Status}} \\
+  \hline
+  $(1,2)$ & 4 & $0+3=3$ & $+1$ & \\
+  \hline
+  $(2,3)$ & 3 & $-1+2=1$ & $+2$ & \\
+  \hline
+  $(3,1)$ & 3 & $1+3=4$ & $-1$ & \\
+  \hline
+  \rowcolor{red!15}$(3,2)$ & 1 & $1+3=4$ & $\mathbf{-3}$ & \textbf{Enter (most negative)} \\
+  \hline
+\end{tabular}
+\end{center}
+
+Enter $(3,2)$.\quad
+Loop:\;$(3,2)^+ \to (2,2)^- \to (2,1)^+ \to (1,1)^- \to (1,3)^+ \to (3,3)^-$
+
+$\theta = \min\{x_{22}=3,\;x_{11}=3,\;x_{33}=3\} = \mathbf{3}$
+
+Three cells tie; remove $(2,2)$. Cells $(1,1)$ and $(3,3)$ become $0$ (degenerate basic variables).
+
+Updated allocations: $x_{32}=3,\;x_{21}=7,\;x_{13}=5$;\; $x_{11}=0,\;x_{33}=0$ (degenerate in basis).
+
+Cost $= 36 - 3\times 3 = \mathbf{27}$
+
+\vspace{10pt}
+
+\subsection*{MODI Method --- Iteration 3 (Degenerate Pivot)}
+
+BFS: $\{x_{11}=0,\;x_{21}=7,\;x_{13}=5,\;x_{32}=3,\;x_{33}=0\}$
+
+Duals ($u_1=0$): $v_1=3,\;v_3=2,\;u_2=-1,\;u_3=1,\;v_2=0$
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Cell}} & {\color{white}$c_{ij}$} &
+  {\color{white}$u_i+v_j$} & {\color{white}$\Delta_{ij}$} & {\color{white}\textbf{Status}} \\
+  \hline
+  $(1,2)$ & 4 & $0+0=0$ & $+4$ & \\
+  \hline
+  $(2,2)$ & 2 & $-1+0=-1$ & $+3$ & \\
+  \hline
+  $(2,3)$ & 3 & $-1+2=1$ & $+2$ & \\
+  \hline
+  \rowcolor{red!15}$(3,1)$ & 3 & $1+3=4$ & $-1$ & Enter \\
+  \hline
+\end{tabular}
+\end{center}
+
+Enter $(3,1)$.\quad Loop:\;$(3,1)^+ \to (1,1)^- \to (1,3)^+ \to (3,3)^-$
+
+$\theta = \min\{x_{11}=0,\;x_{33}=0\} = 0$\quad (pure degenerate pivot; no cost change)
+
+Remove $(1,1)$; replace with $(3,1)=\varepsilon$. Cost remains $\mathbf{27}$.
+
+\medskip
+New BFS: $\{x_{31}=\varepsilon,\;x_{21}=7,\;x_{13}=5,\;x_{32}=3,\;x_{33}=0\}$
+
+Recomputed duals: $u_1=0,\;u_2=0,\;u_3=1;\;v_1=2,\;v_2=0,\;v_3=2$
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Cell}} & {\color{white}$c_{ij}$} &
+  {\color{white}$u_i+v_j$} & {\color{white}$\Delta_{ij}$} & {\color{white}\textbf{Status}} \\
+  \hline
+  $(1,1)$ & 3 & $0+2=2$ & $+1$ & \\
+  \hline
+  $(1,2)$ & 4 & $0+0=0$ & $+4$ & \\
+  \hline
+  $(2,2)$ & 2 & $0+0=0$ & $+2$ & \\
+  \hline
+  $(2,3)$ & 3 & $0+2=2$ & $+1$ & \\
+  \hline
+\end{tabular}
+\end{center}
+
+All $\Delta_{ij} \geq 0$ $\Rightarrow$ \textbf{Optimal solution reached.}
+
+\begin{answerbox}
+\textbf{Optimal Allocation:}
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{|C{2.8cm}|C{2.4cm}|C{2cm}|C{2.6cm}|}
+  \hline
+  \rowcolor{green1!30}
+  \textbf{Route} & \textbf{Units} & \textbf{Unit Cost} & \textbf{Total} \\
+  \hline
+  $S_1 \to D_3$ & 5 & 2 & 10 \\
+  \hline
+  $S_2 \to D_1$ & 7 & 2 & 14 \\
+  \hline
+  $S_3 \to D_2$ & 3 & 1 & 3 \\
+  \hline
+  \rowcolor{green1!40}
+  \multicolumn{3}{|r|}{\Large\textbf{Minimum Transportation Cost}} & \Large\textbf{27} \\
+  \hline
+\end{tabular}
+\end{center}
+\vspace{4pt}
+Verification:\quad $S_1$: $5=5$\checkmark\; $S_2$: $7=7$\checkmark\; $S_3$: $3=3$\checkmark\quad
+$D_1$: $7=7$\checkmark\; $D_2$: $3=3$\checkmark\; $D_3$: $5=5$\checkmark
+\end{answerbox}
+
+%=============================================================================
+\section{Part (b): Balanced and Unbalanced Transportation Problems}
+
+\subsection*{1. Balanced Transportation Problem}
+
+\begin{defbox}
+A transportation problem is \textbf{balanced} when total supply equals total demand:
+\[
+  \sum_{i=1}^{m} a_i \;=\; \sum_{j=1}^{n} b_j
+\]
+Balanced problems are solved directly using standard methods (NWCM, VAM, LCM + MODI).
+\end{defbox}
+
+\textbf{Example} (the problem above):
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}} & {\color{white}$D_1$} & {\color{white}$D_2$} & {\color{white}$D_3$} & {\color{white}Supply} \\
+  \hline
+  \rowcolor{lightbg!50} $S_1$ & 3 & 4 & 2 & 5 \\
+  \hline
+  $S_2$ & 2 & 2 & 3 & 7 \\
+  \hline
+  \rowcolor{lightbg!50} $S_3$ & 3 & 1 & 3 & 3 \\
+  \hline
+  \rowcolor{accent!20}\textbf{Demand} & 7 & 3 & 5 & \textbf{15 = 15} \\
+  \hline
+\end{tabular}
+\end{center}
+
+Total Supply $= 5+7+3 = 15\;=\;$ Total Demand $= 7+3+5 = 15$.\quad \textbf{Balanced.}
+
+\vspace{10pt}
+
+\subsection*{2. Unbalanced Transportation Problem}
+
+\begin{defbox}
+A transportation problem is \textbf{unbalanced} when total supply $\neq$ total demand. Two cases arise:
+
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Excess Supply} ($\sum a_i > \sum b_j$): Add a \textbf{dummy destination} $D_{n+1}$ with demand $= \sum a_i - \sum b_j$ and zero transportation costs $c_{i,n+1}=0$. Allocations to the dummy represent surplus (unsent) goods.
+  \item \textbf{Excess Demand} ($\sum b_j > \sum a_i$): Add a \textbf{dummy source} $S_{m+1}$ with supply $= \sum b_j - \sum a_i$ and zero transportation costs $c_{m+1,j}=0$. Allocations from the dummy represent unmet (unsatisfied) demand.
+\end{itemize}
+
+After inserting the dummy, the problem becomes balanced and is solved by the standard algorithm.
+\end{defbox}
+
+\vspace{8pt}
+
+\textbf{Example A --- Excess Supply ($\sum a_i > \sum b_j$):}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}} & {\color{white}$D_1$} & {\color{white}$D_2$} & {\color{white}$D_3$} & {\color{white}Supply} \\
+  \hline
+  \rowcolor{lightbg!50} $S_1$ & 5 & 3 & 6 & 20 \\
+  \hline
+  $S_2$ & 4 & 7 & 2 & 30 \\
+  \hline
+  \rowcolor{accent!20}\textbf{Demand} & 15 & 20 & 10 & \\
+  \hline
+\end{tabular}
+\end{center}
+
+Total Supply $= 50$,\quad Total Demand $= 45$,\quad Excess $= 5$.
+
+Add dummy destination $D_4$ with demand $= 5$ and costs $= 0$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}} & {\color{white}$D_1$} & {\color{white}$D_2$} & {\color{white}$D_3$} &
+  {\color{white}$D_4$ (Dummy)} & {\color{white}Supply} \\
+  \hline
+  \rowcolor{lightbg!50} $S_1$ & 5 & 3 & 6 & 0 & 20 \\
+  \hline
+  $S_2$ & 4 & 7 & 2 & 0 & 30 \\
+  \hline
+  \rowcolor{accent!20}\textbf{Demand} & 15 & 20 & 10 & 5 & \textbf{50 = 50} \\
+  \hline
+\end{tabular}
+\end{center}
+
+Problem is now balanced and solvable. Units allocated to $D_4$ remain unsent at the origin.
+
+\vspace{10pt}
+
+\textbf{Example B --- Excess Demand ($\sum b_j > \sum a_i$):}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}} & {\color{white}$D_1$} & {\color{white}$D_2$} & {\color{white}$D_3$} & {\color{white}Supply} \\
+  \hline
+  \rowcolor{lightbg!50} $S_1$ & 2 & 8 & 5 & 10 \\
+  \hline
+  $S_2$ & 4 & 3 & 9 & 15 \\
+  \hline
+  \rowcolor{accent!20}\textbf{Demand} & 10 & 12 & 8 & \\
+  \hline
+\end{tabular}
+\end{center}
+
+Total Supply $= 25$,\quad Total Demand $= 30$,\quad Shortage $= 5$.
+
+Add dummy source $S_3$ with supply $= 5$ and costs $= 0$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}} & {\color{white}$D_1$} & {\color{white}$D_2$} & {\color{white}$D_3$} & {\color{white}Supply} \\
+  \hline
+  \rowcolor{lightbg!50} $S_1$ & 2 & 8 & 5 & 10 \\
+  \hline
+  $S_2$ & 4 & 3 & 9 & 15 \\
+  \hline
+  \rowcolor{lightbg!50} $S_3$ (Dummy) & 0 & 0 & 0 & 5 \\
+  \hline
+  \rowcolor{accent!20}\textbf{Demand} & 10 & 12 & 8 & \textbf{30 = 30} \\
+  \hline
+\end{tabular}
+\end{center}
+
+Problem is now balanced. Units allocated from $S_3$ represent demand that cannot be fulfilled.
+
+\vspace{10pt}
+
+\begin{notebox}
+\textbf{Comparison Summary:}
+\vspace{6pt}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\linewidth}{|l|p{3.8cm}|X|}
+  \hline
+  \rowcolor{primary}
+  {\color{white}\textbf{Type}} &
+  {\color{white}\textbf{Condition}} &
+  {\color{white}\textbf{Remedy}} \\
+  \hline
+  \rowcolor{lightbg!50}
+  Balanced &
+  $\displaystyle\sum a_i = \sum b_j$ &
+  Solve directly using standard methods (NWCM, VAM, LCM + MODI). \\
+  \hline
+  Unbalanced\\(excess supply) &
+  $\displaystyle\sum a_i > \sum b_j$ &
+  Add a \textbf{dummy destination} $D_{n+1}$ with demand $= \sum a_i - \sum b_j$ and zero costs. \\
+  \hline
+  \rowcolor{lightbg!50}
+  Unbalanced\\(excess demand) &
+  $\displaystyle\sum b_j > \sum a_i$ &
+  Add a \textbf{dummy source} $S_{m+1}$ with supply $= \sum b_j - \sum a_i$ and zero costs. \\
+  \hline
+\end{tabularx}
+\end{center}
+\end{notebox}
+
+\vspace{20pt}
+\noindent\color{accent}\rule{\linewidth}{1.5pt}
+\begin{center}
+  \small\color{darktext}\textit{End of Question No.\ 1\quad\textbullet\quad Operations Research\quad\textbullet\quad Nadir Ali Khan\quad\textbullet\quad MT-0123-052}
+\end{center}
+
+\end{document}

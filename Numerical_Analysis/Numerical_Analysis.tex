@@ -14,18 +14,32 @@
 \usepackage{titletoc}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, calc, decorations.pathreplacing}
+% Manual needspace implementation (avoids package dependency)
+\makeatletter
+\newcommand\needspace[1]{%
+  \begingroup
+    \setlength\dimen@{#1}%
+    \vskip\z@\@plus\dimen@
+    \penalty -200%
+    \vskip\z@\@plus-\dimen@
+    \vskip\dimen@
+    \penalty 9999%
+    \vskip-\dimen@
+    \vskip\z@skip
+  \endgroup}
+\makeatother
 
 \tcbuselibrary{skins, breakable}
 
 % Breakable example box for worked examples
 \newtcolorbox{examplebox*}[1][]{
   enhanced, breakable,
-  colback=graybg, colframe=grayclr!80, arc=5pt, boxrule=1pt,
+  colback=white, colframe=amberclr, arc=5pt, boxrule=1.5pt,
   left=12pt, right=12pt, top=8pt, bottom=8pt,
   title={\small\bfseries\color{white} #1},
-  colbacktitle=grayclr, coltitle=white,
+  colbacktitle=amberclr, coltitle=white,
   attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
-  boxed title style={arc=3pt, colframe=grayclr, boxrule=0pt},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
 }
 
 \geometry{margin=0.9in, top=1in, bottom=1in}
@@ -71,13 +85,13 @@
 
 % ── Section styling ─────────────────────────────────────────
 \titleformat{\section}
-  {\large\bfseries\color{primary}}{}
+  {\needspace{10\baselineskip}\large\bfseries\color{primary}}{}
   {0em}{}
   [\color{accent}\rule{\linewidth}{2pt}]
 \titlespacing*{\section}{0pt}{20pt}{10pt}
 
 \titleformat{\subsection}
-  {\normalsize\bfseries\color{accent}}{}
+  {\needspace{5\baselineskip}\normalsize\bfseries\color{accent}}{}
   {0em}{}
 \titlespacing*{\subsection}{0pt}{12pt}{4pt}
 
@@ -264,6 +278,10 @@
   \item Newton's Backward Formula
   \item Gauss Forward Formula
   \item Gauss Backward Formula
+  \item Stirling's Formula
+  \item Bessel's Formula
+  \item Lagrange's Formula
+  \item Newton's Divided Difference
 \end{enumerate}
 \end{multicols}
 \vspace{4pt}
@@ -393,13 +411,13 @@ In practice, a combination of criteria is used. Stop when \textit{any} (or \text
 \rowcolor{primary}
 \hcell{Category} & \hcell{Methods} & \hcell{Key Characteristic} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Bracketing Methods & Bisection, Regula Falsi & Require $f(a)\cdot f(b)<0$; guaranteed convergence \\
 Open Methods & Newton-Raphson, Secant & Start from 1--2 initial guesses; may diverge \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Fixed Point Methods & Fixed Point Iteration & Rewrite $f(x)=0$ as $x=g(x)$; converge if $|g'|<1$ \\
 Hybrid Methods & Brent's Method, Illinois & Combine bracketing safety with open-method speed \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Higher-Order & Halley's, Steffensen & Cubic or better convergence; specialised use \\
 \bottomrule
 \end{tabular}
@@ -433,13 +451,13 @@ A sequence $\{x_n\}$ converging to $x^*$ has \textbf{order of convergence} $p\ge
 \rowcolor{primary}
 \hcell{$n$} & \hcell{Linear ($p=1,C=0.5$)} & \hcell{Superlinear ($p\approx 1.618$)} & \hcell{Quadratic ($p=2$)} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 0 & $10^{-1}$ & $10^{-1}$ & $10^{-1}$ \\
 1 & $5\times10^{-2}$ & $\sim10^{-1.6}$ & $10^{-2}$ \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 2 & $2.5\times10^{-2}$ & $\sim10^{-2.6}$ & $10^{-4}$ \\
 3 & $1.25\times10^{-2}$ & $\sim10^{-4.2}$ & $10^{-8}$ \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 4 & $6.25\times10^{-3}$ & $\sim10^{-6.9}$ & $10^{-16}$ \\
 \bottomrule
 \end{tabular}
@@ -500,7 +518,7 @@ The Bisection Method embodies one of humanity's oldest problem-solving strategie
 \end{tikzpicture}
 \end{center}
 
-\bigskip
+\newpage
 
 \section*{Mathematical Foundation}
 
@@ -688,7 +706,7 @@ The Regula Falsi (Latin for \textit{Rule of False Position}) is one of the \text
 \end{tikzpicture}
 \end{center}
 
-\bigskip
+\newpage
 
 \section*{Mathematical Foundation}
 
@@ -784,13 +802,13 @@ Also achieves order $\approx 1.64$ and adapts based on current function values.
 \rowcolor{primary}
 \hcell{Method} & \hcell{Conv.\ Order} & \hcell{Bracket?} & \hcell{Extra Cost} & \hcell{Note} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Regula Falsi (plain) & 1 (stagnates) & Yes & None & May be very slow \\
 Illinois & $\approx 1.44$ & Yes & One test/step & Simple fix \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Pegasus & $\approx 1.64$ & Yes & One multiply & Best of variants \\
 Anderson-Björck & $\approx 1.64$ & Yes & One comparison & Adaptive \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Brent's Method & up to $\approx 1.618$ & Yes & Moderate & Production gold standard \\
 \bottomrule
 \end{tabular}
@@ -905,7 +923,7 @@ Regula Falsi and its variants are widely used because they guarantee convergence
 \end{tikzpicture}
 \end{center}
 
-\bigskip
+\newpage
 
 \section*{Derivation}
 
@@ -1121,7 +1139,7 @@ The Secant Method is closely related to Regula Falsi and has roots going back to
 \end{tikzpicture}
 \end{center}
 
-\bigskip
+\newpage
 
 \section*{Derivation}
 
@@ -1151,13 +1169,13 @@ Geometrically, this is the $x$-intercept of the \textbf{secant line} through $(x
 \rowcolor{primary}
 \hcell{Feature} & \hcell{Regula Falsi} & \hcell{Secant Method} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Bracket required & Yes & No \\
 Points used & $a$ and $b$ (bracket ends) & $x_{n-1}$ and $x_n$ (last two) \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Convergence & Linear (may stagnate) & Superlinear \\
 Sign change enforced & Yes & No \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Guaranteed convergence & Yes & No \\
 \bottomrule
 \end{tabular}
@@ -1322,7 +1340,7 @@ Fixed point theory is a cornerstone of modern mathematics. The \textbf{Banach Fi
 \end{tikzpicture}
 \end{center}
 
-\bigskip
+\newpage
 
 \section*{Mathematical Foundation}
 
@@ -1414,10 +1432,10 @@ If $g'(x^*) = g''(x^*) = \cdots = g^{(p-1)}(x^*) = 0$ but $g^{(p)}(x^*) \neq 0$,
 \rowcolor{primary}
 \hcell{$g'(x^*)$} & \hcell{Order} & \hcell{Convergence Type} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $0 < |g'(x^*)| < 1$ & 1 & Linear \\
 $g'(x^*) = 0$, $g''(x^*) \neq 0$ & 2 & Quadratic \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $g'(x^*)=g''(x^*)=0$, $g'''(x^*)\neq 0$ & 3 & Cubic \\
 \bottomrule
 \end{tabular}
@@ -1526,13 +1544,13 @@ This achieves quadratic convergence without requiring $f'(x)$, making it a power
 \rowcolor{primary}
 \hcell{Method} & \hcell{Conv.\ Order} & \hcell{Bracket?} & \hcell{Derivative?} & \hcell{Start Values} & \hcell{Key Property} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Bisection      & 1 (ratio 0.5)  & Yes & No       & 1 bracket & Guaranteed; slow \\
 Regula Falsi   & 1 (varies)     & Yes & No       & 1 bracket & Uses slope info \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Newton-Raphson & 2 (quadratic)  & No  & Yes $f'$ & 1 point   & Fastest; local \\
 Secant         & 1.618 (golden) & No  & No       & 2 points  & Fast; no deriv. \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Fixed Point    & 1 (if $|g'|<1$) & No & No      & 1 point   & Flexible; $g$ matters \\
 \bottomrule
 \end{tabular}
@@ -1549,13 +1567,13 @@ Fixed Point    & 1 (if $|g'|<1$) & No & No      & 1 point   & Flexible; $g$ matt
 \rowcolor{primary}
 \hcell{Method} & \hcell{Error Formula / Bound} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Bisection & $|e_n|\leq\dfrac{b_0-a_0}{2^{n+1}}$ \quad(a priori, guaranteed) \\[6pt]
 Regula Falsi & $|e_{n+1}|\approx\left(1-\dfrac{f'(x^*)}{f'(x^*)+K}\right)|e_n|$ \quad(linear; $K$ curvature-related) \\[6pt]
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Newton-Raphson & $|e_{n+1}|\approx\dfrac{|f''(x^*)|}{2|f'(x^*)|}|e_n|^2$ \quad(quadratic) \\[6pt]
 Secant & $|e_{n+1}|\approx C|e_n|^{1.618}$ \quad(golden-ratio superlinear) \\[6pt]
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Fixed Point & $|e_{n+1}|\approx|g'(x^*)||e_n|$ \quad(linear);\quad $|x_n-x^*|\leq\dfrac{L^n}{1-L}|x_1-x_0|$ \\
 \bottomrule
 \end{tabular}
@@ -1574,13 +1592,13 @@ Starting with error $|e_0| = 10^{-1}$ (1 correct digit), number of correct digit
 \rowcolor{primary}
 \hcell{Step} & \hcell{Bisection} & \hcell{Regula Falsi} & \hcell{Newton-Raphson} & \hcell{Secant} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 1 & $\sim$1 digit  & $\sim$1--2 digits & $\sim$2 digits  & $\sim$2 digits \\
 2 & $\sim$1 digit  & $\sim$2 digits    & $\sim$4 digits  & $\sim$3 digits \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 3 & $\sim$1 digit  & $\sim$2--3 digits & $\sim$8 digits  & $\sim$4 digits \\
 4 & $\sim$1 digit  & $\sim$3 digits    & $\sim$15 digits & $\sim$7 digits \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 5 & $\sim$2 digits & $\sim$3--4 digits & machine zero    & $\sim$11 digits \\
 \bottomrule
 \end{tabular}
@@ -1597,16 +1615,16 @@ Starting with error $|e_0| = 10^{-1}$ (1 correct digit), number of correct digit
 \rowcolor{primary}
 \hcell{Method} & \hcell{Order $p$} & \hcell{Evals/step} & \hcell{Efficiency Index $p^{1/q}$} & \hcell{Digits/eval} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Bisection & 1 (factor 0.5) & 1 & 1.00 & 0.30 \\
 Regula Falsi & $\approx 1$ & 1 & $\approx 1.00$ & $\approx 0.30$ \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Fixed Point & $\approx 1$ & 1 & $\approx 1.00$ & $\approx 0.30$ \\
 Newton-Raphson & 2 & 2 & 1.414 & 0.65 \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Secant & 1.618 & 1 & 1.618 & 0.72 \\
 Halley's Method & 3 & 3 & 1.442 & 0.72 \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Steffensen & 2 & 2 & 1.414 & 0.65 \\
 \bottomrule
 \end{tabular}
@@ -1626,16 +1644,16 @@ The Secant Method's efficiency index $\approx 1.618$ is \textbf{higher} than New
 \rowcolor{primary}
 \hcell{Property} & \hcell{Bisection} & \hcell{Reg.\ Falsi} & \hcell{Newton} & \hcell{Secant} & \hcell{Fixed Pt} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Guaranteed convergence & Yes & Yes & No & No & No \\
 A priori error bound & Yes & No & No & No & Yes (Banach) \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Global convergence & Yes & Yes & No & No & No \\
 Derivative required & No & No & Yes & No & No \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Multiple starting pts & No & No & No & Yes & No \\
 Can find complex roots & No & No & Yes & No & No \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Order of convergence & 1 & 1 & 2 & 1.618 & $\geq 1$ \\
 Extends to $n$-dim & No & No & Yes (Jacobian) & Partial & Yes \\
 \bottomrule
@@ -1671,16 +1689,16 @@ Extends to $n$-dim & No & No & Yes (Jacobian) & Partial & Yes \\
 \rowcolor{primary}
 \hcell{Method} & \hcell{Iteration Formula} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Bisection & $c_n = \dfrac{a_n+b_n}{2}$ \\[6pt]
 Regula Falsi & $c_n = \dfrac{a_n f(b_n)-b_n f(a_n)}{f(b_n)-f(a_n)}$ \\[6pt]
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Newton-Raphson & $x_{n+1} = x_n - \dfrac{f(x_n)}{f'(x_n)}$ \\[6pt]
 Modified Newton & $x_{n+1} = x_n - \dfrac{f(x_n)f'(x_n)}{[f'(x_n)]^2 - f(x_n)f''(x_n)}$ \\[6pt]
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Halley & $x_{n+1} = x_n - \dfrac{2f(x_n)f'(x_n)}{2[f'(x_n)]^2 - f(x_n)f''(x_n)}$ \\[6pt]
 Secant & $x_{n+1} = x_n - f(x_n)\cdot\dfrac{x_n-x_{n-1}}{f(x_n)-f(x_{n-1})}$ \\[6pt]
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Fixed Point & $x_{n+1} = g(x_n)$ \\[6pt]
 Steffensen & $x_{n+1} = x_n - \dfrac{(g(x_n)-x_n)^2}{g(g(x_n))-2g(x_n)+x_n}$ \\
 \bottomrule
@@ -1965,13 +1983,13 @@ Equivalently, the spectral radius of the iteration matrix satisfies $\rho(D^{-1}
 \rowcolor{primary}
 \hcell{$k$} & \hcell{$x_1^{(k)}$} & \hcell{$x_2^{(k)}$} & \hcell{Error $\|e\|$} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 0 & 0.0000 & 0.0000 & --- \\
 1 & 3.4000 & 2.6000 & 1.0198 \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 2 & 2.8800 & 1.9200 & 0.1697 \\
 3 & 3.0160 & 2.0240 & 0.0284 \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 4 & 2.9952 & 1.9968 & 0.0057 \\
 5 & 3.0006 & 2.0010 & 0.0011 \\
 \bottomrule
@@ -2018,10 +2036,10 @@ Updated values $x_j^{(k+1)}$ (already computed in the \textit{current} sweep) ar
 \rowcolor{primary}
 \hcell{Feature} & \hcell{Jacobi} & \hcell{Gauss-Seidel} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Update rule & Uses $\mathbf{x}^{(k)}$ only & Uses latest available values \\
 Convergence rate & Slower & $\approx 2\times$ faster \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Parallelizable & Yes (all at once) & No (sequential) \\
 Memory & Needs two vectors & One vector sufficient \\
 \bottomrule
@@ -2049,13 +2067,13 @@ Memory & Needs two vectors & One vector sufficient \\
 \rowcolor{primary}
 \hcell{$k$} & \hcell{$x_1^{(k)}$} & \hcell{$x_2^{(k)}$} & \hcell{Error $\|e\|$} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 0 & 0.0000 & 0.0000 & --- \\
 1 & 3.4000 & 1.9200 & 0.4123 \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 2 & 3.0160 & 1.9968 & 0.0161 \\
 3 & 3.0006 & 1.9999 & 0.0006 \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 4 & 3.0000 & 2.0000 & $< 10^{-4}$ \\
 \bottomrule
 \end{tabular}
@@ -2122,7 +2140,10 @@ Converges in \textbf{4 iterations} vs.\ 5+ for Jacobi — noticeably faster on t
   \item Newton's Backward Interpolation
   \item Gauss Forward Interpolation
   \item Gauss Backward Interpolation
-  \item Comparison and Applications
+  \item Stirling's Interpolation Formula
+  \item Bessel's Interpolation Formula
+  \item Lagrange's Interpolation Formula
+  \item Newton's Divided Difference Method
 \end{enumerate}
 \end{multicols}
 \end{tcolorbox}
@@ -2195,22 +2216,22 @@ Given $n+1$ data points, the forward difference table is constructed as:
 \rowcolor{primary}
 \hcell{$x$} & \hcell{$y$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} & \hcell{$\Delta^4 y$} & \hcell{$\Delta^5 y$} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_0$ & $y_0$ & & & & & \\
       &       & $\Delta y_0$ & & & & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_1$ & $y_1$ & & $\Delta^2 y_0$ & & & \\
       &       & $\Delta y_1$ & & $\Delta^3 y_0$ & & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_2$ & $y_2$ & & $\Delta^2 y_1$ & & $\Delta^4 y_0$ & \\
       &       & $\Delta y_2$ & & $\Delta^3 y_1$ & & $\Delta^5 y_0$ \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_3$ & $y_3$ & & $\Delta^2 y_2$ & & $\Delta^4 y_1$ & \\
       &       & $\Delta y_3$ & & $\Delta^3 y_2$ & & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_4$ & $y_4$ & & $\Delta^2 y_3$ & & & \\
       &       & $\Delta y_4$ & & & & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_5$ & $y_5$ & & & & & \\
 \bottomrule
 \end{tabular}
@@ -2226,13 +2247,13 @@ $x_5$ & $y_5$ & & & & & \\
 \rowcolor{primary}
 \hcell{$x$} & \hcell{$y$} & \hcell{$\nabla y$} & \hcell{$\nabla^2 y$} & \hcell{$\nabla^3 y$} & \hcell{$\nabla^4 y$} & \hcell{$\nabla^5 y$} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_0$ & $y_0$ & & & & & \\
 $x_1$ & $y_1$ & $\nabla y_1$ & & & & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_2$ & $y_2$ & $\nabla y_2$ & $\nabla^2 y_2$ & & & \\
 $x_3$ & $y_3$ & $\nabla y_3$ & $\nabla^2 y_3$ & $\nabla^3 y_3$ & & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_4$ & $y_4$ & $\nabla y_4$ & $\nabla^2 y_4$ & $\nabla^3 y_4$ & $\nabla^4 y_4$ & \\
 $x_5$ & $y_5$ & $\nabla y_5$ & $\nabla^2 y_5$ & $\nabla^3 y_5$ & $\nabla^4 y_5$ & $\nabla^5 y_5$ \\
 \bottomrule
@@ -2325,14 +2346,14 @@ for some $\xi \in (x_0, x_n)$.
 \rowcolor{primary}
 \hcell{$x$} & \hcell{$y$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 1 & 1 & & & \\
   &   & 3 & & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 2 & 4 & & 2 & \\
   &   & 5 & & 0 \\
 3 & 9 & & 2 & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
   &   & 7 & & \\
 4 & 16 & & & \\
 \bottomrule
@@ -2417,13 +2438,13 @@ for some $\xi \in (x_0, x_n)$.
 \rowcolor{primary}
 \hcell{$x$} & \hcell{$y$} & \hcell{$\nabla y$} & \hcell{$\nabla^2 y$} & \hcell{$\nabla^3 y$} & \hcell{$\nabla^4 y$} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 1 & 1    &    &    &   &   \\
 2 & 8    &  7 &    &   &   \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 3 & 27   & 19 & 12 &   &   \\
 4 & 64   & 37 & 18 & 6 &   \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 5 & 125  & 61 & 24 & 6 & 0 \\
 \bottomrule
 \end{tabular}
@@ -2497,17 +2518,17 @@ The even-order differences are taken \textbf{one step above} the central row; od
 \rowcolor{primary}
 \hcell{$x$} & \hcell{$y$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} & \hcell{$\Delta^4 y$} & \hcell{$\Delta^5 y$} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_{-2}$ & $y_{-2}$ & & & & & \\
          &          & $\Delta y_{-2}$ & & & & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $x_{-1}$ & $y_{-1}$ & & $\Delta^2 y_{-2}$ & & & \\
          &          & $\Delta y_{-1}$ & & $\Delta^3 y_{-2}$ & & \\
 $x_0$ & $y_0$ & & $\Delta^2 y_{-1}$ & & $\Delta^4 y_{-2}$ & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
       &       & $\Delta y_0$ & & $\Delta^3 y_{-1}$ & & $\Delta^5 y_{-2}$ \\
 $x_1$ & $y_1$ & & $\Delta^2 y_0$ & & $\Delta^4 y_{-1}$ & \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
       &       & $\Delta y_1$ & & $\Delta^3 y_0$ & & \\
 $x_2$ & $y_2$ & & $\Delta^2 y_1$ & & & \\
 \bottomrule
@@ -2534,17 +2555,17 @@ The truncation error in Gauss Forward Interpolation after $n$ terms is:
 \rowcolor{primary}
 \hcell{$\theta$} & \hcell{$\sin\theta$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} & \hcell{$\Delta^4 y$} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $10°$ & 0.1736 &        &           &           &        \\
       &        & 0.1684 &           &           &        \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 $20°$ & 0.3420 &        & $-0.0104$ &           &        \\
       &        & 0.1580 &           & $-0.0048$ &        \\
 $30°$ & 0.5000 &        & $-0.0152$ &           & 0.0004 \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
       &        & 0.1428 &           & $-0.0044$ &        \\
 $40°$ & 0.6428 &        & $-0.0196$ &           &        \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
       &        & 0.1232 &           &           &        \\
 $50°$ & 0.7660 &        &           &           &        \\
 \bottomrule
@@ -2611,13 +2632,13 @@ where the differences proceed \textbf{backward} through the central difference t
 \rowcolor{primary}
 \hcell{Feature} & \hcell{Gauss Forward} & \hcell{Gauss Backward} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Starting point & $y_0$ & $y_0$ \\
 First difference & $\Delta y_0$ & $\nabla y_0$ \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Direction & Forward diagonal & Backward diagonal \\
 Best used when & $p > 0$ (above centre) & $p < 0$ (below centre) \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 2nd term sign & $p(p-1)$ & $p(p+1)$ \\
 \bottomrule
 \end{tabular}
@@ -2667,10 +2688,10 @@ y_{-0.5} &= 0.5000 + (-0.5)(0.1580) + \frac{(-0.5)(0.5)}{2}(-0.0104) + \frac{(-0
 \rowcolor{primary}
 \hcell{Formula} & \hcell{Operator} & \hcell{Differences Used} & \hcell{Best For} & \hcell{$p$ Range} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Newton Forward & $\Delta$ & $\Delta^k y_0$ & Near start of table & $0 < p < 1$ \\
 Newton Backward & $\nabla$ & $\nabla^k y_n$ & Near end of table & $-1 < p < 0$ \\
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Gauss Forward & $\Delta$ & Forward diagonal from $y_0$ & Near middle, $p>0$ & $0 < p < 1$ \\
 Gauss Backward & $\nabla$ & Backward diagonal from $y_0$ & Near middle, $p<0$ & $-1 < p < 0$ \\
 \bottomrule
@@ -2687,12 +2708,470 @@ Gauss Backward & $\nabla$ & Backward diagonal from $y_0$ & Near middle, $p<0$ & 
 \rowcolor{primary}
 \hcell{Formula} & \hcell{Expression} \\
 \midrule
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Newton Forward & $y_p = y_0 + p\Delta y_0 + \dfrac{p(p-1)}{2!}\Delta^2 y_0 + \dfrac{p(p-1)(p-2)}{3!}\Delta^3 y_0 + \cdots$ \\[10pt]
 Newton Backward & $y_p = y_n + p\nabla y_n + \dfrac{p(p+1)}{2!}\nabla^2 y_n + \dfrac{p(p+1)(p+2)}{3!}\nabla^3 y_n + \cdots$ \\[10pt]
-\rowcolor{lightbg!40}
+\rowcolor{amberbg}
 Gauss Forward & $y_p = y_0 + p\Delta y_0 + \dfrac{p(p-1)}{2!}\Delta^2 y_{-1} + \dfrac{p(p-1)(p+1)}{3!}\Delta^3 y_{-1} + \cdots$ \\[10pt]
 Gauss Backward & $y_p = y_0 + p\nabla y_0 + \dfrac{p(p+1)}{2!}\nabla^2 y_0 + \dfrac{p(p+1)(p-1)}{3!}\nabla^3 y_0 + \cdots$ \\[10pt]
+\bottomrule
+\end{tabular}
+}\end{center}
+
+
+\newpage
+% ────────────────────────────────────────────────────────────
+\section{Stirling's Interpolation Formula}
+\addcontentsline{toc}{section}{Stirling's Interpolation Formula}
+% ────────────────────────────────────────────────────────────
+
+\begin{methodtitle}{Central Differences}{}
+  Stirling's Interpolation Formula
+\end{methodtitle}
+
+\begin{defbox}[Central Differences --- Stirling's Formula]
+Stirling's formula is a \textbf{central difference} interpolation formula derived by taking the arithmetic mean of the Gauss Forward and Gauss Backward formulae. It is most accurate when the interpolation parameter $p = \dfrac{x - x_0}{h}$ is close to $\mathbf{0}$, i.e.\ when $x$ is near the centre of the table.
+\end{defbox}
+
+\subsection*{Stirling's Difference Table}
+
+The table is centred at $x_0$, using values symmetrically on both sides:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{C{1.4cm} C{1.4cm} C{1.8cm} C{1.8cm} C{1.8cm} C{1.8cm} C{1.8cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{$y$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} & \hcell{$\Delta^4 y$} & \hcell{$\Delta^5 y$} \\
+\midrule
+$x_{-2}$ & $y_{-2}$ & & & & & \\
+\rowcolor{amberbg}
+ & & $\Delta y_{-2}$ & & & & \\
+$x_{-1}$ & $y_{-1}$ & & $\Delta^2 y_{-2}$ & & & \\
+\rowcolor{amberbg}
+ & & $\Delta y_{-1}$ & & $\Delta^3 y_{-2}$ & & \\
+\rowcolor{accent!12}
+$\boldsymbol{x_0}$ & $\boldsymbol{y_0}$ & & $\Delta^2 y_{-1}$ & & $\Delta^4 y_{-2}$ & \\
+\rowcolor{amberbg}
+ & & $\Delta y_0$ & & $\Delta^3 y_{-1}$ & & $\Delta^5 y_{-2}$ \\
+$x_1$ & $y_1$ & & $\Delta^2 y_0$ & & $\Delta^4 y_{-1}$ & \\
+\rowcolor{amberbg}
+ & & $\Delta y_1$ & & $\Delta^3 y_0$ & & \\
+$x_2$ & $y_2$ & & $\Delta^2 y_1$ & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Derivation}
+
+\begin{derivbox}[Stirling from Gauss Forward + Backward]
+\textbf{Gauss Forward:}
+\[
+  y_p = y_0 + p\Delta y_0 + \frac{p(p-1)}{2!}\Delta^2 y_{-1}
+  + \frac{(p+1)p(p-1)}{3!}\Delta^3 y_{-1}
+  + \frac{(p+1)p(p-1)(p-2)}{4!}\Delta^4 y_{-2} + \cdots
+\]
+\textbf{Gauss Backward:}
+\[
+  y_p = y_0 + p\nabla y_0 + \frac{p(p+1)}{2!}\nabla^2 y_0
+  + \frac{(p+1)p(p-1)}{3!}\nabla^3 y_0
+  + \frac{(p+2)(p+1)p(p-1)}{4!}\nabla^4 y_0 + \cdots
+\]
+Adding both and dividing by 2 gives \textbf{Stirling's formula}.
+\end{derivbox}
+
+\begin{thmbox}[Stirling's Interpolation Formula]
+\begin{align*}
+  y_p &= y_0
+  + p\!\left[\frac{\Delta y_0 + \Delta y_{-1}}{2}\right]
+  + \frac{p^2}{2!}\,\Delta^2 y_{-1}
+  + \frac{p(p^2-1)}{3!}\!\left[\frac{\Delta^3 y_{-1}+\Delta^3 y_{-2}}{2}\right]\\[6pt]
+  &\quad + \frac{p^2(p^2-1)}{4!}\,\Delta^4 y_{-2}
+  + \frac{p(p^2-1)(p^2-4)}{5!}\!\left[\frac{\Delta^5 y_{-2}+\Delta^5 y_{-3}}{2}\right]
+  + \cdots
+\end{align*}
+where $p = \dfrac{x - x_0}{h}$.
+\end{thmbox}
+
+\begin{keybox}
+\textbf{Notes:}
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Odd-factorial} terms use the \emph{mean} of two adjacent differences (from both sides of $x_0$).
+  \item \textbf{Even-factorial} terms use a single central difference.
+  \item Odd factorial coefficients involve $p$;\; even factorial coefficients involve $p^2$.
+\end{enumerate}
+\end{keybox}
+
+\subsection*{Solved Example}
+
+\begin{examplebox*}[Stirling's Formula --- Find $y(1.3)$]
+\textbf{Given:}
+\begin{center}
+\begin{tabular}{C{1.4cm} C{1.6cm} C{1.6cm} C{1.6cm} C{1.6cm} C{1.6cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{1.0} & \hcell{1.2} & \hcell{1.4} & \hcell{1.6} & \hcell{1.8} \\
+\midrule
+$y = e^x$ & 2.7183 & 3.3201 & 4.0552 & 4.9530 & 6.0496 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$h = 0.2$,\; take $x_0 = 1.4$,\; $p = \dfrac{1.3 - 1.4}{0.2} = -0.5$.
+
+\medskip\textbf{Difference Table:}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{C{1.2cm} C{1.6cm} C{1.6cm} C{1.6cm} C{1.6cm} C{1.6cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{$y$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} & \hcell{$\Delta^4 y$} \\
+\midrule
+1.0 & 2.7183 & & & & \\
+\rowcolor{amberbg}
+ & & 0.6018 & & & \\
+1.2 & 3.3201 & & 0.1333 & & \\
+\rowcolor{amberbg}
+ & & 0.7351 & & 0.0294 & \\
+\rowcolor{accent!12}
+\textbf{1.4} & \textbf{4.0552} & & \textbf{0.1627} & & \textbf{0.0066} \\
+\rowcolor{amberbg}
+ & & 0.8978 & & 0.0360 & \\
+1.6 & 4.9530 & & 0.1987 & & \\
+\rowcolor{amberbg}
+ & & 1.0966 & & & \\
+1.8 & 6.0496 & & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+At $x_0 = 1.4$: $\Delta y_0 = 0.8978$,\; $\Delta y_{-1} = 0.7351$,\; $\Delta^2 y_{-1} = 0.1627$,\\
+$\Delta^3 y_{-1} = 0.0360$,\; $\Delta^3 y_{-2} = 0.0294$,\; $\Delta^4 y_{-2} = 0.0066$.
+
+\begin{align*}
+y_{1.3} &= 4.0552 + (-0.5)\!\left[\frac{0.8978+0.7351}{2}\right]
++ \frac{0.25}{2}(0.1627)\\[4pt]
+&\quad + \frac{(-0.5)(0.25-1)}{6}\!\left[\frac{0.0360+0.0294}{2}\right]
++ \frac{0.25(0.25-1)}{24}(0.0066)\\[4pt]
+&= 4.0552 - 0.4082 + 0.0203 + 0.0020 - 0.00005 \\[4pt]
+&\approx \boxed{3.6693}
+\end{align*}
+\textit{(Exact: $e^{1.3} = 3.6693$ \checkmark)}
+\end{examplebox*}
+
+\newpage
+% ────────────────────────────────────────────────────────────
+\section{Bessel's Interpolation Formula}
+\addcontentsline{toc}{section}{Bessel's Interpolation Formula}
+% ────────────────────────────────────────────────────────────
+
+\begin{methodtitle}{Central Differences}{}
+  Bessel's Interpolation Formula
+\end{methodtitle}
+
+\begin{defbox}[When to Use Bessel's Formula]
+Bessel's formula is a central difference interpolation formula most accurate when $p \approx \tfrac{1}{2}$, i.e.\ when the interpolation point lies near the \textbf{midpoint} between two consecutive tabulated values.
+\end{defbox}
+
+\subsection*{Derivation}
+
+\begin{derivbox}[Bessel from Gauss Forward]
+Starting from Gauss Forward and using the identities:
+\[
+  \Delta^3 y_{-1} = \Delta^2 y_0 - \Delta^2 y_{-1}, \qquad
+  \Delta^5 y_{-2} = \Delta^4 y_{-1} - \Delta^4 y_{-2}
+\]
+and substituting into Gauss Forward, then rearranging, yields Bessel's formula.
+\end{derivbox}
+
+\begin{thmbox}[Bessel's Interpolation Formula]
+\begin{align*}
+  y_p &= \frac{y_0+y_1}{2}
+  + \!\left(p-\frac{1}{2}\right)\Delta y_0
+  + \frac{p(p-1)}{2!}\cdot\frac{\Delta^2 y_{-1}+\Delta^2 y_0}{2} \\[6pt]
+  &\quad + \frac{\!\left(p-\frac{1}{2}\right)p(p-1)}{3!}\,\Delta^3 y_{-1}
+  + \frac{p(p-1)(p+1)(p-2)}{4!}\cdot\frac{\Delta^4 y_{-2}+\Delta^4 y_{-1}}{2}
+  + \cdots
+\end{align*}
+where $p = \dfrac{x - x_0}{h}$ and $y_1$ is the tabulated value at $x_1 = x_0 + h$.
+\end{thmbox}
+
+\begin{keybox}
+At $p = \tfrac{1}{2}$: all terms containing the factor $\left(p - \tfrac{1}{2}\right)$ vanish, leaving only even-order difference terms. This makes the formula \textbf{maximally efficient} at the midpoint.
+\end{keybox}
+
+\subsection*{Solved Example}
+
+\begin{examplebox*}[Bessel's Formula --- Find $y(25)$]
+\textbf{Given:}
+\begin{center}
+\begin{tabular}{C{1.4cm} C{1.4cm} C{1.4cm} C{1.4cm} C{1.4cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{10} & \hcell{20} & \hcell{30} & \hcell{40} \\
+\midrule
+$y$ & 46 & 66 & 81 & 93 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$h=10$,\; take $x_0=20$,\; $p = \dfrac{25-20}{10} = 0.5$.
+
+\medskip\textbf{Difference Table:}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{C{1.2cm} C{1.2cm} C{1.4cm} C{1.4cm} C{1.4cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{$y$} & \hcell{$\Delta y$} & \hcell{$\Delta^2 y$} & \hcell{$\Delta^3 y$} \\
+\midrule
+10 & 46 & & & \\
+\rowcolor{amberbg}
+ & & 20 & & \\
+\rowcolor{accent!12}
+\textbf{20} & \textbf{66} & & $-5$ & \\
+\rowcolor{amberbg}
+ & & \textbf{15} & & \textbf{2} \\
+\textbf{30} & \textbf{81} & & $-3$ & \\
+\rowcolor{amberbg}
+ & & 12 & & \\
+40 & 93 & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$y_0=66$,\; $y_1=81$,\; $\Delta y_0=15$,\; $\Delta^2 y_{-1}=-5$,\; $\Delta^2 y_0=-3$,\; $\Delta^3 y_{-1}=2$.
+
+\begin{align*}
+y_{25} &= \frac{66+81}{2} + \!\left(0.5-0.5\right)(15)
++ \frac{(0.5)(0.5-1)}{2}\cdot\frac{-5+(-3)}{2}
++ \frac{(0.5-0.5)(0.5)(0.5-1)}{6}(2) \\[4pt]
+&= 73.5 + 0 + \frac{(-0.25)}{2}(-4) + 0 \\[4pt]
+&= 73.5 + 0.5 = \boxed{74}
+\end{align*}
+\end{examplebox*}
+
+\newpage
+% ────────────────────────────────────────────────────────────
+\section{Lagrange's Interpolation Formula}
+\addcontentsline{toc}{section}{Lagrange's Interpolation Formula}
+% ────────────────────────────────────────────────────────────
+
+\begin{methodtitle}{Unequally Spaced Data}{}
+  Lagrange's Interpolation Formula
+\end{methodtitle}
+
+\begin{defbox}[Lagrange Polynomials]
+Lagrange's method constructs an interpolating polynomial through $n+1$ data points that may be \textbf{unequally spaced}. No difference table is needed. It is the standard method when the $x$-values are not uniformly distributed.
+\end{defbox}
+
+\subsection*{Formula}
+
+\begin{thmbox}[Lagrange Interpolating Polynomial]
+Given $(x_0,y_0),(x_1,y_1),\ldots,(x_n,y_n)$:
+\[
+  P(x) = \sum_{i=0}^{n} L_i(x)\,y_i
+  = L_0(x)\,y_0 + L_1(x)\,y_1 + \cdots + L_n(x)\,y_n
+\]
+The \textbf{basis (cardinal) polynomials} are:
+\[
+  L_i(x) = \prod_{\substack{j=0\\j\neq i}}^{n}\frac{x-x_j}{x_i-x_j}
+\]
+Explicitly:
+\begin{align*}
+  L_0(x) &= \frac{(x-x_1)(x-x_2)\cdots(x-x_n)}{(x_0-x_1)(x_0-x_2)\cdots(x_0-x_n)} \\[4pt]
+  L_1(x) &= \frac{(x-x_0)(x-x_2)\cdots(x-x_n)}{(x_1-x_0)(x_1-x_2)\cdots(x_1-x_n)}
+\end{align*}
+\end{thmbox}
+
+\begin{keybox}
+\textbf{Key property:} $L_i(x_j) = \delta_{ij}$ — each basis polynomial equals 1 at its own node and 0 at all others. This guarantees $P(x_i) = y_i$ for all $i$.
+\end{keybox}
+
+\subsection*{Solved Example}
+
+\begin{examplebox*}[Lagrange's Formula --- Find $y(1.5)$]
+\textbf{Given:} $y = x^3$
+\begin{center}
+\begin{tabular}{C{1.4cm} C{1.4cm} C{1.4cm} C{1.4cm} C{1.4cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{1} & \hcell{2} & \hcell{3} & \hcell{4} \\
+\midrule
+$y$ & 1 & 8 & 27 & 64 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Find $y(1.5)$. \textbf{Compute basis polynomials at $x = 1.5$:}
+
+\begin{align*}
+  L_0(1.5) &= \frac{(1.5-2)(1.5-3)(1.5-4)}{(1-2)(1-3)(1-4)}
+  = \frac{(-0.5)(-1.5)(-2.5)}{(-1)(-2)(-3)} = \frac{-1.875}{-6} = 0.3125\\[6pt]
+  L_1(1.5) &= \frac{(1.5-1)(1.5-3)(1.5-4)}{(2-1)(2-3)(2-4)}
+  = \frac{(0.5)(-1.5)(-2.5)}{(1)(-1)(-2)} = \frac{1.875}{2} = 0.9375\\[6pt]
+  L_2(1.5) &= \frac{(1.5-1)(1.5-2)(1.5-4)}{(3-1)(3-2)(3-4)}
+  = \frac{(0.5)(-0.5)(-2.5)}{(2)(1)(-1)} = \frac{0.625}{-2} = -0.3125\\[6pt]
+  L_3(1.5) &= \frac{(1.5-1)(1.5-2)(1.5-3)}{(4-1)(4-2)(4-3)}
+  = \frac{(0.5)(-0.5)(-1.5)}{(3)(2)(1)} = \frac{0.375}{6} = 0.0625
+\end{align*}
+
+\textbf{Interpolated value:}
+\[
+  P(1.5) = 1(0.3125) + 8(0.9375) + 27(-0.3125) + 64(0.0625)
+  = 0.3125 + 7.5 - 8.4375 + 4 = \boxed{3.375}
+\]
+\textit{(Exact: $(1.5)^3 = 3.375$ \checkmark)}
+\end{examplebox*}
+
+\newpage
+% ────────────────────────────────────────────────────────────
+\section{Newton's Divided Difference Method}
+\addcontentsline{toc}{section}{Newton's Divided Difference Method}
+% ────────────────────────────────────────────────────────────
+
+\begin{methodtitle}{Unequally Spaced Data}{}
+  Newton's Divided Difference Method
+\end{methodtitle}
+
+\begin{histbox}
+Lagrange's formula has the drawback that if a new data point is inserted, \textbf{all coefficients must be recomputed} from scratch. Newton's Divided Difference method avoids this by building the interpolating polynomial \textit{incrementally} — adding a new point only requires one additional divided difference column.
+\end{histbox}
+
+\subsection*{Divided Differences}
+
+\begin{defbox}[Divided Difference Notation]
+Let $y_0, y_1, \ldots, y_n$ be values of $f(x)$ at distinct (not necessarily equally spaced) points $x_0, x_1, \ldots, x_n$.
+
+\medskip
+\textbf{Zero-th order:}\quad $f[x_i] = y_i$
+
+\medskip
+\textbf{First order:}\quad $f[x_i, x_{i+1}] = \dfrac{y_{i+1} - y_i}{x_{i+1} - x_i}$
+
+\medskip
+\textbf{Second order:}\quad $f[x_i, x_{i+1}, x_{i+2}] = \dfrac{f[x_{i+1},x_{i+2}] - f[x_i,x_{i+1}]}{x_{i+2} - x_i}$
+
+\medskip
+\textbf{$k$-th order:}\quad $f[x_0,\ldots,x_k] = \dfrac{f[x_1,\ldots,x_k] - f[x_0,\ldots,x_{k-1}]}{x_k - x_0}$
+\end{defbox}
+
+\begin{thmbox}[Newton's Divided Difference Formula]
+\begin{align*}
+P(x) &= f[x_0]
++ (x-x_0)\,f[x_0,x_1]
++ (x-x_0)(x-x_1)\,f[x_0,x_1,x_2] \\
+&\quad + (x-x_0)(x-x_1)(x-x_2)\,f[x_0,x_1,x_2,x_3]
++ \cdots
+\end{align*}
+\end{thmbox}
+
+\subsection*{Solved Example}
+
+\begin{examplebox*}[Newton's Divided Difference --- Find $f(2)$]
+\textbf{Given:}
+\begin{center}
+\begin{tabular}{C{1.4cm} C{1.4cm} C{1.4cm} C{1.4cm} C{1.4cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{0} & \hcell{1} & \hcell{3} & \hcell{4} \\
+\midrule
+$f(x)$ & 5 & 6 & 50 & 105 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Divided Difference Table:}
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{C{1cm} C{1cm} C{2.2cm} C{2.6cm} C{2.6cm}}
+\toprule
+\rowcolor{primary}
+\hcell{$x$} & \hcell{$f[x]$} & \hcell{$f[\cdot,\cdot]$} & \hcell{$f[\cdot,\cdot,\cdot]$} & \hcell{$f[\cdot,\cdot,\cdot,\cdot]$} \\
+\midrule
+0 & 5 & & & \\
+\rowcolor{amberbg}
+ & & $\dfrac{6-5}{1-0}=1$ & & \\
+1 & 6 & & $\dfrac{22-1}{3-0}=7$ & \\
+\rowcolor{amberbg}
+ & & $\dfrac{50-6}{3-1}=22$ & & $\dfrac{11-7}{4-0}=1$ \\
+3 & 50 & & $\dfrac{55-22}{4-1}=11$ & \\
+\rowcolor{amberbg}
+ & & $\dfrac{105-50}{4-3}=55$ & & \\
+4 & 105 & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Newton's polynomial:}
+\begin{align*}
+  P(x) &= 5 + (x-0)(1) + (x-0)(x-1)(7) + (x-0)(x-1)(x-3)(1) \\
+  &= 5 + x + 7x(x-1) + x(x-1)(x-3) \\
+  &= x^3 + 3x^2 - 3x + 5
+\end{align*}
+
+\textbf{Find $f(2)$:}
+\[
+  P(2) = 5 + (2)(1) + (2)(1)(7) + (2)(1)(-1)(1) = 5 + 2 + 14 - 2 = \boxed{19}
+\]
+Verify: $P(0)=5$,\; $P(1)=6$,\; $P(3)=50$,\; $P(4)=105$ \checkmark
+\end{examplebox*}
+
+\bigskip
+
+\begin{keybox}
+\textbf{Adding a new point} $(x_5, y_5)$ only requires computing one new divided difference column — all previous columns remain valid. This is the key advantage over Lagrange's method.
+\end{keybox}
+
+\newpage
+% ────────────────────────────────────────────────────────────
+\section{Comprehensive Comparison of All Interpolation Formulas}
+% ────────────────────────────────────────────────────────────
+
+\begin{center}{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{3.2cm} C{2cm} C{2.8cm} C{2.8cm} C{2.2cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Formula} & \hcell{Spacing} & \hcell{Differences} & \hcell{Best For} & \hcell{$p$ Range} \\
+\midrule
+\rowcolor{amberbg}
+Newton Forward & Equal & $\Delta^k y_0$ & Near \textbf{start} of table & $0 < p < 1$ \\
+Newton Backward & Equal & $\nabla^k y_n$ & Near \textbf{end} of table & $-1 < p < 0$ \\
+\rowcolor{amberbg}
+Gauss Forward & Equal & Forward diagonal & Middle, $p > 0$ & $0 < p < 1$ \\
+Gauss Backward & Equal & Backward diagonal & Middle, $p < 0$ & $-1 < p < 0$ \\
+\rowcolor{amberbg}
+\textbf{Stirling's} & Equal & Mean of fwd \& bwd & Middle, $p \approx 0$ & $-\tfrac{1}{2} < p < \tfrac{1}{2}$ \\
+\textbf{Bessel's} & Equal & Central (averaged) & \textbf{Midpoint}, $p \approx \tfrac{1}{2}$ & $0 < p < 1$ \\
+\rowcolor{amberbg}
+\textbf{Lagrange's} & \textbf{Unequal} & None (direct) & Any point & Any \\
+\textbf{Newton Div.\ Diff.} & \textbf{Unequal} & Divided differences & Any point & Any \\
+\bottomrule
+\end{tabular}
+}\end{center}
+
+\bigskip
+
+\subsection*{Summary of All Formulas}
+
+\begin{center}{\small
+\begin{tabular}{p{3cm} p{11cm}}
+\toprule
+\rowcolor{primary}
+\hcell{Formula} & \hcell{Expression} \\
+\midrule
+\rowcolor{amberbg}
+Newton Forward & $y_p = y_0 + p\Delta y_0 + \dfrac{p(p-1)}{2!}\Delta^2 y_0 + \dfrac{p(p-1)(p-2)}{3!}\Delta^3 y_0 + \cdots$ \\[10pt]
+Newton Backward & $y_p = y_n + p\nabla y_n + \dfrac{p(p+1)}{2!}\nabla^2 y_n + \dfrac{p(p+1)(p+2)}{3!}\nabla^3 y_n + \cdots$ \\[10pt]
+\rowcolor{amberbg}
+Gauss Forward & $y_p = y_0 + p\Delta y_0 + \dfrac{p(p-1)}{2!}\Delta^2 y_{-1} + \dfrac{(p+1)p(p-1)}{3!}\Delta^3 y_{-1} + \cdots$ \\[10pt]
+Gauss Backward & $y_p = y_0 + p\nabla y_0 + \dfrac{p(p+1)}{2!}\nabla^2 y_0 + \dfrac{(p+1)p(p-1)}{3!}\nabla^3 y_0 + \cdots$ \\[10pt]
+\rowcolor{amberbg}
+Stirling's & $y_p = y_0 + p\!\left[\dfrac{\Delta y_0+\Delta y_{-1}}{2}\right] + \dfrac{p^2}{2!}\Delta^2 y_{-1} + \dfrac{p(p^2-1)}{3!}\!\left[\dfrac{\Delta^3 y_{-1}+\Delta^3 y_{-2}}{2}\right] + \cdots$ \\[10pt]
+Bessel's & $y_p = \dfrac{y_0+y_1}{2} + \!\left(p-\tfrac{1}{2}\right)\Delta y_0 + \dfrac{p(p-1)}{2!}\cdot\dfrac{\Delta^2 y_{-1}+\Delta^2 y_0}{2} + \cdots$ \\[10pt]
+\rowcolor{amberbg}
+Lagrange's & $P(x) = \displaystyle\sum_{i=0}^n L_i(x)\,y_i$,\quad $L_i(x)=\displaystyle\prod_{j\neq i}\dfrac{x-x_j}{x_i-x_j}$ \\[10pt]
+Newton Div.\ Diff. & $P(x) = f[x_0] + (x-x_0)f[x_0,x_1] + (x-x_0)(x-x_1)f[x_0,x_1,x_2] + \cdots$ \\
 \bottomrule
 \end{tabular}
 }\end{center}

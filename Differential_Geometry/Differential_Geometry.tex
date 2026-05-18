@@ -1,0 +1,431 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage[expansion=false]{microtype}
+
+\tcbuselibrary{skins, breakable}
+
+\geometry{margin=0.9in, top=1in, bottom=1in}
+
+\definecolor{primary}  {RGB}{27,  79, 114}
+\definecolor{accent}   {RGB}{46, 134, 193}
+\definecolor{lightbg}  {RGB}{234,244,251}
+\definecolor{darktext} {RGB}{44,  62,  80}
+\definecolor{purpleclr}{RGB}{90,  20, 140}
+\definecolor{purplebg} {RGB}{240,228,255}
+\definecolor{graybg}   {RGB}{245,245,245}
+\definecolor{grayclr}  {RGB}{80,  80,  80}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Differential Geometry}\;\textcolor{accent}{|}\;Solved Past Paper 2025}
+\fancyhead[R]{\small\color{darktext}BS-IV Mathematics}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+\newtcolorbox{qbox}[1]{
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=14pt, right=14pt, top=10pt, bottom=8pt,
+  borderline south={4pt}{0pt}{accent},
+  fontupper=\bfseries\color{white},
+  title={\small\bfseries\color{accent!80} #1},
+  coltitle=accent!80,
+  attach title to upper=\\[2pt],
+}
+
+\newtcolorbox{ansbox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=purplebg!50, colframe=purpleclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries\color{white} Solution},
+  colbacktitle=purpleclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=purpleclr, boxrule=0pt},
+  breakable,
+}
+
+\begin{document}
+
+% ── COVER PAGE ──────────────────────────────────────────────
+\thispagestyle{empty}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=20pt, right=20pt, top=28pt, bottom=20pt,
+  borderline south={5pt}{0pt}{accent},
+]
+  \centering
+  {\fontsize{26}{32}\bfseries\color{white} Differential Geometry\\[8pt] Solved Past Paper}\\[12pt]
+  {\large\color{lightbg} Unit Speed Curves \textbf{·} Frenet--Serret Apparatus \textbf{·} Non-Unit Speed Curves}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=white, colframe=white,
+  borderline north={2pt}{0pt}{primary},
+  borderline south={2pt}{0pt}{primary},
+  left=0pt, right=0pt, top=0pt, bottom=0pt,
+]
+\begin{tabular}{p{0.33\textwidth} | p{0.33\textwidth} | p{0.31\textwidth}}
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} TEACHER}\\[4pt]
+    {\bfseries\color{primary} Dr.\ Inayatullah Soomro}\\[3pt]
+    {\footnotesize\color{darktext} Dept.\ of Mathematics}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.3\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} COMPOSED BY}\\[4pt]
+    {\bfseries\color{primary} Nadir Ali Khan}\\[3pt]
+    {\footnotesize\color{darktext} BS-IV Mathematics}
+  \vspace{8pt}\end{minipage}
+  &
+  \hspace{12pt}\begin{minipage}[t]{0.28\textwidth}\vspace{8pt}
+    {\footnotesize\bfseries\color{accent} UNIVERSITY}\\[4pt]
+    {\bfseries\color{primary} SALU Khairpur}\\[3pt]
+    {\footnotesize\color{darktext} Dept.\ of Mathematics}
+  \vspace{8pt}\end{minipage}
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{16pt}
+
+\begin{tcolorbox}[colback=lightbg, colframe=accent, arc=4pt, boxrule=1pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt]
+\begin{tabular}{ll}
+  \textcolor{accent}{\bfseries Class:} & BS Part IV \\
+  \textcolor{accent}{\bfseries Session:} & 1\textsuperscript{st} Semester Examination 2025 \\
+  \textcolor{accent}{\bfseries Date:} & Thursday, 22\textsuperscript{nd} May 2025 \\
+  \textcolor{accent}{\bfseries Total Marks:} & 50 \quad(Attempt any \textbf{Four}, two from each section)\\
+  \textcolor{accent}{\bfseries Time:} & 2 Hours \\
+\end{tabular}
+\end{tcolorbox}
+
+\newpage
+
+% ════════════════════════════════════════
+%  SECTION A
+% ════════════════════════════════════════
+\begin{tcolorbox}[colback=primary, colframe=primary, arc=0pt, boxrule=0pt,
+  left=16pt, right=16pt, top=12pt, bottom=12pt,
+  borderline south={4pt}{0pt}{accent}]
+  \centering{\LARGE\bfseries\color{white} Section A \textendash\ Unit Speed Curves}
+\end{tcolorbox}
+
+\vspace{12pt}
+
+% ── Q1 ──────────────────────────────────────────────────────
+\begin{qbox}{Q.No.\ 1}
+Regular Curves and Re-parametrization
+\end{qbox}
+
+\vspace{6pt}
+\textbf{(a)} Define a regular curve and a re-parametrization of a curve.
+
+\begin{ansbox}
+A curve $\alpha:(a,b)\to\mathbb{R}^3$ is \textbf{regular} if $\alpha'(t)\neq\mathbf{0}$ for all $t\in(a,b)$.
+
+A \textbf{re-parametrization} is a diffeomorphism $g:(c,d)\to(a,b)$ (smooth bijection with $g'\neq0$). The curve $\beta=\alpha\circ g$ is then a re-parametrization of $\alpha$.
+\end{ansbox}
+
+\vspace{10pt}
+\textbf{(b)} Let $\beta=\alpha\circ g$, $t_0=g(s_0)$. Show that the unit tangent $S$ of $\beta$ at $s_0$ satisfies $S=\pm T$, where $T$ is the unit tangent of $\alpha$ at $t_0$.
+
+\begin{ansbox}
+\textbf{Step 1.} Apply the chain rule to $\beta=\alpha\circ g$:
+\[
+  \beta'(s_0)=\alpha'(g(s_0))\cdot g'(s_0)=\alpha'(t_0)\cdot g'(s_0).
+\]
+\textbf{Step 2.} Find the unit tangent of $\beta$:
+\[
+  S=\frac{\beta'(s_0)}{|\beta'(s_0)|}=\frac{\alpha'(t_0)\cdot g'(s_0)}{|\alpha'(t_0)|\cdot|g'(s_0)|}=\frac{g'(s_0)}{|g'(s_0)|}\cdot T = \pm T.
+\]
+\textbf{Conclusion:} $S=+T$ if $g'(s_0)>0$ (same direction), $S=-T$ if $g'(s_0)<0$ (opposite direction).\hfill$\square$
+\end{ansbox}
+
+\vspace{10pt}
+\textbf{(c)} Show that $\alpha$ and $\beta=\alpha\circ g$ have the same arc length.
+
+\begin{ansbox}
+\textbf{Step 1.} Write the arc length of $\alpha$:
+\[
+  L(\alpha)=\int_a^b|\alpha'(t)|\,dt.
+\]
+\textbf{Step 2.} Substitute $t=g(s)$, so $dt=g'(s)\,ds$. When $t$ goes from $a$ to $b$, $s$ goes from $c$ to $d$:
+\[
+  L(\alpha)=\int_c^d|\alpha'(g(s))|\,|g'(s)|\,ds=\int_c^d|\alpha'(g(s))\cdot g'(s)|\,ds=\int_c^d|\beta'(s)|\,ds=L(\beta).
+\]
+\textbf{Conclusion:} $L(\alpha)=L(\beta)$. Arc length does not depend on parametrization.\hfill$\square$
+\end{ansbox}
+
+\vspace{14pt}
+
+% ── Q2 ──────────────────────────────────────────────────────
+\begin{qbox}{Q.No.\ 2}
+Torsion and Curvature of a Plane Curve
+\end{qbox}
+
+\vspace{6pt}
+\textbf{(a)} Let $\alpha(s)$ be a $C^4$ unit-speed curve in the $(x,y)$-plane with $\kappa\neq0$. Prove $\tau\equiv0$.
+
+\begin{ansbox}
+\textbf{Step 1.} Write $\alpha(s)=(x(s),y(s),0)$. Compute the Frenet vectors:
+\[
+  T=\alpha'=(x',y',0), \qquad \kappa N=\alpha''=(x'',y'',0).
+\]
+\textbf{Step 2.} Compute the binormal $B=T\times N$:
+\[
+  B=\frac{1}{\kappa}\begin{vmatrix}\mathbf{i}&\mathbf{j}&\mathbf{k}\\x'&y'&0\\x''&y''&0\end{vmatrix}
+  =\frac{1}{\kappa}(0,\;0,\;x'y''-y'x'')\cdot\hat{k}=\pm(0,0,1)=\pm\mathbf{k}.
+\]
+\textbf{Step 3.} Since the curve lies in the $z=0$ plane, $B=\pm\mathbf{k}$ is a \emph{constant} vector. So:
+\[
+  B'(s)=\mathbf{0} \implies -\tau N=\mathbf{0} \implies \tau=0 \quad(\text{since }\kappa\neq0\Rightarrow N\neq\mathbf{0}).\quad\square
+\]
+\end{ansbox}
+
+\vspace{10pt}
+\textbf{(b)} Let $\alpha(s)=(x(s),y(s),0)$ be unit-speed. Prove $\kappa=|x'y''-x''y'|$.
+
+\begin{ansbox}
+\textbf{Step 1.} Since $\alpha$ is unit-speed: $|\alpha'|=1$, so
+\[
+  x'^2+y'^2=1.
+\]
+\textbf{Step 2.} Differentiate the above:
+\[
+  x'x''+y'y''=0.
+\]
+\textbf{Step 3.} Apply the Lagrange identity $|a\times b|^2=|a|^2|b|^2-(a\cdot b)^2$ with $a=(x',y')$, $b=(x'',y'')$:
+\[
+  |x'y''-x''y'|^2+(x'x''+y'y'')^2=(x'^2+y'^2)(x''^2+y''^2).
+\]
+\textbf{Step 4.} Substitute Steps 1 and 2:
+\[
+  |x'y''-x''y'|^2 + 0 = 1\cdot(x''^2+y''^2)=|\alpha''|^2=\kappa^2.
+\]
+Therefore $\kappa=|x'y''-x''y'|$.\hfill$\square$
+\end{ansbox}
+
+\vspace{14pt}
+
+% ── Q3 ──────────────────────────────────────────────────────
+\begin{qbox}{Q.No.\ 3}
+Osculating Planes at $s=0$\quad [Equation: $(\mathbf{r}-\alpha(0))\cdot B(0)=0$]
+\end{qbox}
+
+\vspace{6pt}
+\textbf{(a)} $\alpha(s)=\left(\dfrac{5}{13}\cos s,\;\dfrac{8}{13}-\sin s,\;-\dfrac{12}{13}\cos s\right)$
+
+\begin{ansbox}
+$\alpha'(s)=(-\tfrac{5}{13}\sin s,-\cos s,\tfrac{12}{13}\sin s)$, \quad $|\alpha'|^2=\tfrac{25}{169}\sin^2s+\cos^2s+\tfrac{144}{169}\sin^2s=1$.\;\checkmark
+
+At $s=0$:
+\[
+  \alpha(0)=\Bigl(\tfrac{5}{13},\tfrac{8}{13},-\tfrac{12}{13}\Bigr),\quad T=(0,-1,0),\quad
+  \alpha''(0)=\Bigl(-\tfrac{5}{13},0,\tfrac{12}{13}\Bigr)\Rightarrow\kappa=1,\;N=\Bigl(-\tfrac{5}{13},0,\tfrac{12}{13}\Bigr).
+\]
+\[
+  B=T\times N=\begin{vmatrix}\mathbf{i}&\mathbf{j}&\mathbf{k}\\0&-1&0\\-\frac{5}{13}&0&\frac{12}{13}\end{vmatrix}
+  =\Bigl(-\tfrac{12}{13},\;0,\;-\tfrac{5}{13}\Bigr).
+\]
+Osculating plane:
+\[
+  -\tfrac{12}{13}(x-\tfrac{5}{13})-\tfrac{5}{13}(z+\tfrac{12}{13})=0\;\implies\;\boxed{12x+5z=0}.
+\]
+\end{ansbox}
+
+\vspace{10pt}
+\textbf{(b)} $\alpha(s)=\dfrac{1}{\sqrt{5}}\!\left(\sqrt{1+s^2},\;2s,\;\ln(s+\sqrt{1+s^2})\right)$
+
+\begin{ansbox}
+$\alpha'(s)=\dfrac{1}{\sqrt5}\!\left(\dfrac{s}{\sqrt{1+s^2}},2,\dfrac{1}{\sqrt{1+s^2}}\right)$,\quad
+$|\alpha'|^2=\dfrac{1}{5}\!\left(\dfrac{s^2+1}{1+s^2}+4\right)=1$.\;\checkmark
+
+At $s=0$:
+\[
+  \alpha(0)=\Bigl(\tfrac{1}{\sqrt5},0,0\Bigr),\quad T=\Bigl(0,\tfrac{2}{\sqrt5},\tfrac{1}{\sqrt5}\Bigr),\quad
+  \alpha''(0)=\Bigl(\tfrac{1}{\sqrt5},0,0\Bigr)\Rightarrow\kappa=\tfrac{1}{\sqrt5},\;N=(1,0,0).
+\]
+\[
+  B=T\times N=\begin{vmatrix}\mathbf{i}&\mathbf{j}&\mathbf{k}\\0&\frac{2}{\sqrt5}&\frac{1}{\sqrt5}\\1&0&0\end{vmatrix}
+  =\Bigl(0,\;\tfrac{1}{\sqrt5},\;-\tfrac{2}{\sqrt5}\Bigr).
+\]
+Osculating plane:
+\[
+  \tfrac{y}{\sqrt5}-\tfrac{2z}{\sqrt5}=0\;\implies\;\boxed{y=2z}.
+\]
+\end{ansbox}
+
+\newpage
+
+% ════════════════════════════════════════
+%  SECTION B
+% ════════════════════════════════════════
+\begin{tcolorbox}[colback=primary, colframe=primary, arc=0pt, boxrule=0pt,
+  left=16pt, right=16pt, top=12pt, bottom=12pt,
+  borderline south={4pt}{0pt}{accent}]
+  \centering{\LARGE\bfseries\color{white} Section B \textendash\ Non-Unit Speed Curves}
+\end{tcolorbox}
+
+\vspace{12pt}
+
+% ── Q4 ──────────────────────────────────────────────────────
+\begin{qbox}{Q.No.\ 4}
+Frenet Formulas for a Regular (Non-Unit Speed) Curve $\beta(t)$ in $\mathbb{R}^3$
+\end{qbox}
+
+\vspace{4pt}
+{\small\color{darktext}\textit{Let $\dot\beta,\ddot\beta,\dddot\beta$ denote derivatives w.r.t.\ $t$, and $\dot s=|\dot\beta|$.
+Key expansion: $\dot\beta=\dot sT$, $\ddot\beta=\ddot sT+\dot s^2\kappa N$, giving $\dot\beta\times\ddot\beta=\dot s^3\kappa B$.}}
+
+\vspace{8pt}
+\textbf{(i)} Show $B=\dfrac{\dot\beta\times\ddot\beta}{|\dot\beta\times\ddot\beta|}$.
+
+\begin{ansbox}
+\textbf{Step 1.} Express $\dot\beta$ and $\ddot\beta$ in the Frenet frame. Since $\dot s=|\dot\beta|$:
+\[
+  \dot\beta=\dot s\,T,\qquad \ddot\beta=\ddot s\,T+\dot s^2\kappa N.
+\]
+\textbf{Step 2.} Take the cross product (using $T\times T=0$ and $T\times N=B$):
+\[
+  \dot\beta\times\ddot\beta=(\dot s\,T)\times(\ddot s\,T+\dot s^2\kappa N)=\dot s\ddot s(T\times T)+\dot s^3\kappa(T\times N)=\dot s^3\kappa\, B.
+\]
+\textbf{Step 3.} Divide by its magnitude ($|B|=1$, so $|\dot\beta\times\ddot\beta|=\dot s^3\kappa$):
+\[
+  \frac{\dot\beta\times\ddot\beta}{|\dot\beta\times\ddot\beta|}=\frac{\dot s^3\kappa\, B}{\dot s^3\kappa}=B.\quad\square
+\]
+\end{ansbox}
+
+\vspace{10pt}
+\textbf{(ii)} Show $\kappa=\dfrac{|\dot\beta\times\ddot\beta|}{|\dot\beta|^3}$.
+
+\begin{ansbox}
+\textbf{Step 1.} From part (i): $|\dot\beta\times\ddot\beta|=\dot s^3\kappa$.
+
+\textbf{Step 2.} Since $\dot s=|\dot\beta|$, we have $\dot s^3=|\dot\beta|^3$. So:
+\[
+  |\dot\beta\times\ddot\beta|=|\dot\beta|^3\kappa \implies \kappa=\frac{|\dot\beta\times\ddot\beta|}{|\dot\beta|^3}.\quad\square
+\]
+\end{ansbox}
+
+\vspace{10pt}
+\textbf{(iii)} Show $\tau=\dfrac{[\dot\beta,\ddot\beta,\dddot\beta]}{|\dot\beta\times\ddot\beta|^2}$.
+
+\begin{ansbox}
+\textbf{Step 1.} Differentiate $\ddot\beta=\ddot s\,T+\dot s^2\kappa N$ using $\dot N=\dot s(-\kappa T+\tau B)$:
+\[
+  \dddot\beta=(\dddot s-\dot s^3\kappa^2)T + (\text{some coefficient})N + \dot s^3\kappa\tau\, B.
+\]
+The key point: the $B$-component of $\dddot\beta$ is $\dot s^3\kappa\tau$.
+
+\textbf{Step 2.} Write all three in the $\{T,N,B\}$ frame and take the triple product:
+\[
+  [\dot\beta,\ddot\beta,\dddot\beta]
+  =\det\!\begin{pmatrix}\dot s&0&0\\\ddot s&\dot s^2\kappa&0\\*&*&\dot s^3\kappa\tau\end{pmatrix}
+  =\dot s\cdot\dot s^2\kappa\cdot\dot s^3\kappa\tau=\dot s^6\kappa^2\tau.
+\]
+\textbf{Step 3.} Since $|\dot\beta\times\ddot\beta|^2=\dot s^6\kappa^2$:
+\[
+  \tau=\frac{[\dot\beta,\ddot\beta,\dddot\beta]}{|\dot\beta\times\ddot\beta|^2}.\quad\square
+\]
+\end{ansbox}
+
+\vspace{14pt}
+
+% ── Q5 ──────────────────────────────────────────────────────
+\begin{qbox}{Q.No.\ 5}
+Frenet--Serret Apparatus and Plane Curves
+\end{qbox}
+
+\vspace{6pt}
+\textbf{(a)} Compute the Frenet--Serret apparatus for $\beta(t)=(t-\cos t,\;\sin t,\;t)$.
+
+\begin{ansbox}
+\textbf{Derivatives:}\quad $\dot\beta=(1+\sin t,\cos t,1)$,\quad $\ddot\beta=(\cos t,-\sin t,0)$,\quad $\dddot\beta=(-\sin t,-\cos t,0)$.
+
+\medskip
+\textbf{Speed:}\quad $|\dot\beta|^2=(1+\sin t)^2+\cos^2t+1=3+2\sin t$.
+
+\medskip
+\textbf{Unit Tangent:}
+\[
+  T=\frac{(1+\sin t,\;\cos t,\;1)}{\sqrt{3+2\sin t}}.
+\]
+
+\textbf{Cross product:}
+\[
+  \dot\beta\times\ddot\beta=\begin{vmatrix}\mathbf{i}&\mathbf{j}&\mathbf{k}\\1+\sin t&\cos t&1\\\cos t&-\sin t&0\end{vmatrix}
+  =(\sin t,\;\cos t,\;-(1+\sin t)).
+\]
+\[
+  |\dot\beta\times\ddot\beta|^2=\sin^2t+\cos^2t+(1+\sin t)^2=1+(1+\sin t)^2.
+\]
+
+\textbf{Binormal:}
+\[
+  B=\frac{(\sin t,\;\cos t,\;-(1+\sin t))}{\sqrt{1+(1+\sin t)^2}}.
+\]
+
+\textbf{Curvature:}
+\[
+  \kappa=\frac{\sqrt{1+(1+\sin t)^2}}{(3+2\sin t)^{3/2}}.
+\]
+
+\textbf{Triple product for torsion:}
+\[
+  \ddot\beta\times\dddot\beta=\begin{vmatrix}\mathbf{i}&\mathbf{j}&\mathbf{k}\\\cos t&-\sin t&0\\-\sin t&-\cos t&0\end{vmatrix}=(0,0,-1),
+  \quad[\dot\beta,\ddot\beta,\dddot\beta]=\dot\beta\cdot(0,0,-1)=-1.
+\]
+
+\textbf{Torsion:}
+\[
+  \tau=\frac{-1}{1+(1+\sin t)^2}.
+\]
+
+\textbf{Principal Normal:} $N=B\times T$.
+\end{ansbox}
+
+\vspace{10pt}
+\textbf{(b)} Prove $\beta$ is a plane curve $\iff$ $[\dot\beta,\ddot\beta,\dddot\beta]\equiv0$ (given $\kappa\neq0$).
+
+\begin{ansbox}
+\textbf{Part 1 ($\Rightarrow$): Plane curve $\implies$ triple product $=0$.}
+
+\textbf{Step 1.} Suppose $\beta$ lies in a fixed plane with unit normal $\mathbf{n}$.\\
+Then $T$ and $N$ always stay in that plane, so $B=\pm\mathbf{n}=$ constant.
+
+\textbf{Step 2.} Since $B$ is constant: $B'=\mathbf{0}$. From the Frenet equation $B'=-\tau N$:
+\[
+  -\tau N=\mathbf{0} \implies \tau=0.
+\]
+\textbf{Step 3.} From part (iii) of Q4: $[\dot\beta,\ddot\beta,\dddot\beta]=\dot s^6\kappa^2\tau=\dot s^6\kappa^2\cdot0=0$.\hfill$\checkmark$
+
+\medskip
+\textbf{Part 2 ($\Leftarrow$): Triple product $=0$ $\implies$ plane curve.}
+
+\textbf{Step 1.} If $[\dot\beta,\ddot\beta,\dddot\beta]=0$, then $\dot s^6\kappa^2\tau=0$.\\
+Since $\dot s\neq0$ (regular curve) and $\kappa\neq0$ (given), we must have $\tau=0$.
+
+\textbf{Step 2.} $\tau=0 \implies B'=-\tau N=\mathbf{0}$, so $B=\mathbf{c}$ (a constant unit vector).
+
+\textbf{Step 3.} Fix any point $\beta(t_0)$. Differentiate $(\beta(t)-\beta(t_0))\cdot\mathbf{c}$:
+\[
+  \frac{d}{dt}\bigl[(\beta-\beta(t_0))\cdot\mathbf{c}\bigr]=\dot\beta\cdot\mathbf{c}=\dot s\,T\cdot B=0
+  \quad(T\perp B\text{ always}).
+\]
+\textbf{Step 4.} So $(\beta(t)-\beta(t_0))\cdot\mathbf{c}=\text{const}=0$. This means $\beta$ lies in the plane:
+\[
+  \{p\in\mathbb{R}^3\;:\;(p-\beta(t_0))\cdot\mathbf{c}=0\}.\quad\square
+\]
+\end{ansbox}
+
+\end{document}

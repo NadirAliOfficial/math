@@ -1,0 +1,626 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\tcbuselibrary{skins, breakable}
+
+\geometry{margin=0.9in, top=1in, bottom=1in}
+\setlength{\headheight}{14pt}
+
+% ── Colour palette (matches existing NA files) ────────────────────────────────
+\definecolor{primary}  {RGB}{27,  79, 114}
+\definecolor{accent}   {RGB}{46, 134, 193}
+\definecolor{lightbg}  {RGB}{234,244,251}
+\definecolor{tealclr}  {RGB}{0,  110,  90}
+\definecolor{tealbg}   {RGB}{220,245,240}
+\definecolor{amberclr} {RGB}{160, 90,   0}
+\definecolor{amberbg}  {RGB}{255,243,220}
+\definecolor{purpleclr}{RGB}{90,  20, 140}
+\definecolor{purplebg} {RGB}{240,228,255}
+\definecolor{greenclr} {RGB}{20, 120,  40}
+\definecolor{greenbg}  {RGB}{220,248,228}
+\definecolor{grayclr}  {RGB}{80,  80,  80}
+\definecolor{graybg}   {RGB}{245,245,245}
+\definecolor{darktext} {RGB}{44,  62,  80}
+\definecolor{gold}     {RGB}{183,149, 11}
+\definecolor{goldbg}   {RGB}{254,249,231}
+
+% ── Page style ────────────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{primary}\textbf{Numerical Analysis I}\;\textcolor{accent}{|}\;Interpolation Methods}
+\fancyhead[R]{\small\color{darktext}Nadir Ali Khan \textbar\ MT-0123-052}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\color{accent}\rule[-1ex]{\textwidth}{1.2pt}}
+\fancyfoot[C]{\small\color{darktext}\thepage}
+
+% ── Section styling ───────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{primary}}{}
+  {0em}{}
+  [\color{accent}\rule{\linewidth}{2pt}]
+\titlespacing*{\section}{0pt}{20pt}{10pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{accent}}{}
+  {0em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+% ── tcolorbox styles ──────────────────────────────────────────────────────────
+\newtcolorbox{methodtitle}[1]{
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=16pt, bottom=12pt,
+  borderline south={4pt}{0pt}{accent},
+  fontupper=\LARGE\bfseries\color{white},
+  #1
+}
+
+\newtcolorbox{defbox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=tealbg, colframe=tealclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries #1},
+  colbacktitle=tealclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=tealclr, boxrule=0pt},
+}
+
+\newtcolorbox{formulabox}[1][]{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=amberbg, colframe=amberclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries #1},
+  colbacktitle=amberclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=amberclr, boxrule=0pt},
+}
+
+\newtcolorbox{exbox}[1][]{
+  enhanced, arc=4pt, boxrule=1pt,
+  colback=graybg, colframe=grayclr!70,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries #1},
+  colbacktitle=grayclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=grayclr, boxrule=0pt},
+}
+
+\newtcolorbox{ansbox}{
+  enhanced, arc=4pt, boxrule=1.5pt,
+  colback=greenbg, colframe=greenclr,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  title={\small\bfseries Result},
+  colbacktitle=greenclr, coltitle=white,
+  attach boxed title to top left={xshift=10pt, yshift=-\tcboxedtitleheight/2},
+  boxed title style={arc=3pt, colframe=greenclr, boxrule=0pt},
+}
+
+\newtcolorbox{notebox}{
+  enhanced,
+  borderline west={4pt}{0pt}{purpleclr},
+  colback=purplebg!60, colframe=white,
+  arc=0pt, boxrule=0pt,
+  left=12pt, right=8pt, top=6pt, bottom=6pt,
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+\thispagestyle{empty}
+
+% ── Title Banner ──────────────────────────────────────────────────────────────
+\begin{tcolorbox}[
+  enhanced, arc=0pt, boxrule=0pt,
+  colback=primary, colframe=primary,
+  left=16pt, right=16pt, top=20pt, bottom=16pt,
+  borderline south={4pt}{0pt}{accent},
+]
+  \centering
+  {\huge\bfseries\color{white} Numerical Analysis I}\\[4pt]
+  {\large\color{accent} Interpolation Methods --- Central Differences \& Divided Differences}\\[10pt]
+  \color{lightbg}\rule{0.55\textwidth}{0.4pt}\\[10pt]
+  \begin{tabular}{rl}
+    {\color{lightbg}\textbf{Name:}}       & {\color{white} Nadir Ali Khan} \\[3pt]
+    {\color{lightbg}\textbf{Roll No:}}    & {\color{white} MT-0123-052} \\[3pt]
+    {\color{lightbg}\textbf{Subject:}}    & {\color{white} Numerical Analysis I} \\[3pt]
+    {\color{lightbg}\textbf{Department:}} & {\color{white} BS Mathematics} \\
+  \end{tabular}
+\end{tcolorbox}
+
+\vspace{12pt}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Stirling's Interpolation Formula}
+
+\begin{defbox}[Central Differences --- Overview]
+In central difference interpolation, we use differences from \emph{both sides} of the interpolating point $x_0$.
+The parameter $p = \dfrac{x - x_0}{h}$ lies in the range $[-\tfrac{1}{2},\, \tfrac{1}{2}]$.
+Stirling's formula is most accurate when $p$ is close to $0$.
+\end{defbox}
+
+\subsection*{Stirling's Difference Table}
+
+The difference table is centred at $x_0$ with entries at $x_{-3}, x_{-2}, x_{-1}, x_0, x_1, x_2, x_3$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary!90}
+  {\color{white}$x$} & {\color{white}$y$} &
+  {\color{white}$\Delta y$} & {\color{white}$\Delta^2 y$} &
+  {\color{white}$\Delta^3 y$} & {\color{white}$\Delta^4 y$} & {\color{white}$\Delta^5 y$} \\
+  \hline
+  $x_{-2}$ & $y_{-2}$ & & & & & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & $\Delta y_{-2}$ & & & & \\
+  \hline
+  $x_{-1}$ & $y_{-1}$ & & $\Delta^2 y_{-2}$ & & & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & $\Delta y_{-1}$ & & $\Delta^3 y_{-2}$ & & \\
+  \hline
+  \rowcolor{accent!10}
+  $\mathbf{x_0}$ & $\mathbf{y_0}$ & & $\Delta^2 y_{-1}$ & & $\Delta^4 y_{-2}$ & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & $\Delta y_0$ & & $\Delta^3 y_{-1}$ & & $\Delta^5 y_{-2}$ \\
+  \hline
+  $x_1$ & $y_1$ & & $\Delta^2 y_0$ & & $\Delta^4 y_{-1}$ & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & $\Delta y_1$ & & $\Delta^3 y_0$ & & \\
+  \hline
+  $x_2$ & $y_2$ & & $\Delta^2 y_1$ & & & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & $\Delta y_2$ & & & & \\
+  \hline
+  $x_3$ & $y_3$ & & & & & \\
+  \hline
+\end{tabular}
+\end{center}
+
+\subsection*{Derivation}
+
+Stirling's formula is the \textbf{arithmetic mean} of Gauss Forward and Gauss Backward formulae.
+
+\medskip
+\textbf{Gauss Forward formula:}
+\[
+  y_p = y_0 + p\Delta y_0 + \frac{p(p-1)}{2!}\Delta^2 y_{-1}
+  + \frac{(p+1)p(p-1)}{3!}\Delta^3 y_{-1}
+  + \frac{(p+1)p(p-1)(p-2)}{4!}\Delta^4 y_{-2} + \cdots
+\]
+
+\textbf{Gauss Backward formula:}
+\[
+  y_p = y_0 + p\nabla y_0 + \frac{p(p+1)}{2!}\nabla^2 y_0
+  + \frac{(p+1)p(p-1)}{3!}\nabla^3 y_0
+  + \frac{(p+2)(p+1)p(p-1)}{4!}\nabla^4 y_0 + \cdots
+\]
+
+Adding both and dividing by 2:
+
+\begin{formulabox}[Stirling's Interpolation Formula]
+\[
+  y_p = y_0
+  + p\!\left[\frac{\Delta y_0 + \Delta y_{-1}}{2}\right]
+  + \frac{p^2}{2!}\,\Delta^2 y_{-1}
+  + \frac{p(p^2-1)}{3!}\!\left[\frac{\Delta^3 y_{-1}+\Delta^3 y_{-2}}{2}\right]
+  + \frac{p^2(p^2-1)}{4!}\,\Delta^4 y_{-2}
+  + \frac{p(p^2-1)(p^2-4)}{5!}\!\left[\frac{\Delta^5 y_{-2}+\Delta^5 y_{-3}}{2}\right]
+  + \cdots
+\]
+where $p = \dfrac{x - x_0}{h}$.
+\end{formulabox}
+
+\begin{notebox}
+\textbf{Notes:} (1) Odd-factorial terms use the \emph{mean} of two differences.
+(2) Even-factorial terms use a single difference.
+(3) Odd terms start with $p$'s; even terms start with $p^2$'s.
+\end{notebox}
+
+\subsection*{Solved Example}
+
+\begin{exbox}[Example --- Stirling's Formula]
+\textbf{Given:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary!80}
+  {\color{white}$x$} & {\color{white}1.0} & {\color{white}1.2} & {\color{white}1.4} & {\color{white}1.6} & {\color{white}1.8} \\
+  \hline
+  $y=e^x$ & 2.7183 & 3.3201 & 4.0552 & 4.9530 & 6.0496 \\
+  \hline
+\end{tabular}
+\end{center}
+Find $y(1.3)$ using Stirling's formula. Here $h = 0.2$, take $x_0 = 1.4$.
+
+\medskip\textbf{Difference Table:}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary!80}
+  {\color{white}$x$} & {\color{white}$y$} & {\color{white}$\Delta y$} & {\color{white}$\Delta^2 y$} & {\color{white}$\Delta^3 y$} & {\color{white}$\Delta^4 y$} \\
+  \hline
+  1.0 & 2.7183 & & & & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & 0.6018 & & & \\
+  \hline
+  1.2 & 3.3201 & & 0.1333 & & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & 0.7351 & & 0.0294 & \\
+  \hline
+  \rowcolor{accent!10}
+  \textbf{1.4} & \textbf{4.0552} & & \textbf{0.1627} & & \textbf{0.0066} \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & 0.8978 & & 0.0360 & \\
+  \hline
+  1.6 & 4.9530 & & 0.1987 & & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & 1.0966 & & & \\
+  \hline
+  1.8 & 6.0496 & & & & \\
+  \hline
+\end{tabular}
+\end{center}
+
+\textbf{Applying Stirling's Formula:}\\[4pt]
+$p = \dfrac{1.3 - 1.4}{0.2} = -0.5$;\quad
+$y_0=4.0552$,\; $\Delta y_0=0.8978$,\; $\Delta y_{-1}=0.7351$,\;
+$\Delta^2 y_{-1}=0.1627$,\; $\Delta^3 y_{-1}=0.0360$,\; $\Delta^3 y_{-2}=0.0294$,\; $\Delta^4 y_{-2}=0.0066$.
+
+\begin{align*}
+  y_{1.3} &= 4.0552
+  + (-0.5)\!\left[\frac{0.8978+0.7351}{2}\right]
+  + \frac{(-0.5)^2}{2}(0.1627) \\
+  &\quad + \frac{(-0.5)\bigl((-0.5)^2-1\bigr)}{6}\!\left[\frac{0.0360+0.0294}{2}\right]
+  + \frac{(-0.5)^2\bigl((-0.5)^2-1\bigr)}{24}(0.0066) \\[4pt]
+  &= 4.0552 - 0.5(0.8165) + 0.125(0.1627) \\
+  &\quad + \frac{(-0.5)(-0.75)}{6}(0.0327) + \frac{(0.25)(-0.75)}{24}(0.0066)\\[4pt]
+  &= 4.0552 - 0.4082 + 0.0203 + 0.00204 - 0.0000516\\
+  &\approx \mathbf{3.6693}
+\end{align*}
+\end{exbox}
+
+\begin{ansbox}
+$y(1.3) \approx 3.6693$\quad (Exact: $e^{1.3} = 3.6693$) $\checkmark$
+\end{ansbox}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Bessel's Interpolation Formula}
+
+\begin{defbox}[When to Use Bessel's Formula]
+Bessel's formula is a central difference formula most accurate when $p \approx \tfrac{1}{2}$, i.e., when the interpolation point lies near the \emph{midpoint} between two tabulated values.
+\end{defbox}
+
+\subsection*{Derivation}
+
+Starting from Gauss Forward formula and substituting:
+\[
+  \Delta^3 y_{-1} = \Delta^2 y_0 - \Delta^2 y_{-1}, \qquad
+  \Delta^5 y_{-2} = \Delta^4 y_{-1} - \Delta^4 y_{-2}
+\]
+
+\begin{formulabox}[Bessel's Interpolation Formula]
+\begin{align*}
+  y_p &= \frac{y_0+y_1}{2}
+  + \!\left(p-\tfrac{1}{2}\right)\Delta y_0
+  + \frac{p(p-1)}{2!}\cdot\frac{\Delta^2 y_{-1}+\Delta^2 y_0}{2} \\[4pt]
+  &\quad+\frac{\left(p-\frac{1}{2}\right)p(p-1)}{3!}\,\Delta^3 y_{-1}
+  + \frac{p(p-1)\!\left(p+1\right)\!\left(p-2\right)}{4!}\cdot\frac{\Delta^4 y_{-2}+\Delta^4 y_{-1}}{2}
+  + \cdots
+\end{align*}
+where $p = \dfrac{x-x_0}{h}$ and $y_1$ is the value at $x_1 = x_0+h$.
+\end{formulabox}
+
+\begin{notebox}
+At $p = \tfrac{1}{2}$: the terms with $(p - \tfrac{1}{2})$ vanish, leaving only even-order difference terms — making the formula particularly efficient at the midpoint.
+\end{notebox}
+
+\subsection*{Solved Example}
+
+\begin{exbox}[Example --- Bessel's Formula]
+\textbf{Given:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary!80}
+  {\color{white}$x$} & {\color{white}10} & {\color{white}20} & {\color{white}30} & {\color{white}40} \\
+  \hline
+  $y$ & 46 & 66 & 81 & 93 \\
+  \hline
+\end{tabular}
+\end{center}
+Find $y(25)$ using Bessel's formula. Take $x_0=20$, $h=10$.
+
+\medskip\textbf{Difference Table:}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary!80}
+  {\color{white}$x$} & {\color{white}$y$} & {\color{white}$\Delta y$} & {\color{white}$\Delta^2 y$} & {\color{white}$\Delta^3 y$} \\
+  \hline
+  10 & 46 & & & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & 20 & & \\
+  \hline
+  \rowcolor{accent!10}
+  \textbf{20} & \textbf{66} & & $-5$ & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & \textbf{15} & & \textbf{2} \\
+  \hline
+  \textbf{30} & \textbf{81} & & $-3$ & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & 12 & & \\
+  \hline
+  40 & 93 & & & \\
+  \hline
+\end{tabular}
+\end{center}
+
+$p = \dfrac{25-20}{10} = 0.5$;\quad $y_0=66$,\; $y_1=81$,\; $\Delta y_0=15$,\; $\Delta^2 y_{-1}=-5$,\; $\Delta^2 y_0=-3$,\; $\Delta^3 y_{-1}=2$.
+
+\begin{align*}
+  y_{25} &= \frac{66+81}{2} + \left(0.5-0.5\right)(15)
+  + \frac{(0.5)(0.5-1)}{2}\cdot\frac{-5+(-3)}{2}
+  + \frac{(0.5-0.5)(0.5)(0.5-1)}{6}(2) \\[4pt]
+  &= 73.5 + 0 + \frac{(0.5)(-0.5)}{2}\cdot(-4) + 0 \\[4pt]
+  &= 73.5 + (-0.125)(-4) \\
+  &= 73.5 + 0.5 = \mathbf{74}
+\end{align*}
+\end{exbox}
+
+\begin{ansbox}
+$y(25) = \mathbf{74}$
+\end{ansbox}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Lagrange's Interpolation Formula}
+
+\begin{defbox}[Lagrange Polynomials]
+Lagrange's method constructs an interpolating polynomial through $n+1$ points that may be \textbf{unequally spaced}. No difference table is required.
+\end{defbox}
+
+\subsection*{Formula}
+
+\begin{formulabox}[General Form]
+Given $(x_0,y_0),(x_1,y_1),\ldots,(x_n,y_n)$, the interpolating polynomial is:
+\[
+  P(x) = \sum_{i=0}^{n} L_i(x)\,y_i
+  = L_0(x)\,y_0 + L_1(x)\,y_1 + \cdots + L_n(x)\,y_n
+\]
+where the \textbf{basis polynomials} are:
+\[
+  L_i(x) = \prod_{\substack{j=0 \\ j\neq i}}^{n}
+  \frac{x - x_j}{x_i - x_j}
+\]
+Explicitly:
+\begin{align*}
+  L_0(x) &= \frac{(x-x_1)(x-x_2)\cdots(x-x_n)}{(x_0-x_1)(x_0-x_2)\cdots(x_0-x_n)} \\[6pt]
+  L_1(x) &= \frac{(x-x_0)(x-x_2)\cdots(x-x_n)}{(x_1-x_0)(x_1-x_2)\cdots(x_1-x_n)}
+\end{align*}
+\end{formulabox}
+
+\begin{notebox}
+\textbf{Key property:} $L_i(x_j) = \delta_{ij}$ (1 if $i=j$, 0 otherwise). Each basis polynomial equals 1 at its own node and 0 at all others.
+\end{notebox}
+
+\subsection*{Solved Example}
+
+\begin{exbox}[Example --- Lagrange's Formula]
+\textbf{Given:} $y = x^3$
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary!80}
+  {\color{white}$x$} & {\color{white}1} & {\color{white}2} & {\color{white}3} & {\color{white}4} \\
+  \hline
+  $y$ & 1 & 8 & 27 & 64 \\
+  \hline
+\end{tabular}
+\end{center}
+Find $y(1.5)$ using Lagrange's interpolation.
+
+\medskip\textbf{Compute basis polynomials at $x = 1.5$:}
+\begin{align*}
+  L_0(1.5) &= \frac{(1.5-2)(1.5-3)(1.5-4)}{(1-2)(1-3)(1-4)}
+  = \frac{(-0.5)(-1.5)(-2.5)}{(-1)(-2)(-3)}
+  = \frac{-1.875}{-6} = 0.3125 \\[6pt]
+  L_1(1.5) &= \frac{(1.5-1)(1.5-3)(1.5-4)}{(2-1)(2-3)(2-4)}
+  = \frac{(0.5)(-1.5)(-2.5)}{(1)(-1)(-2)}
+  = \frac{1.875}{2} = 0.9375 \\[6pt]
+  L_2(1.5) &= \frac{(1.5-1)(1.5-2)(1.5-4)}{(3-1)(3-2)(3-4)}
+  = \frac{(0.5)(-0.5)(-2.5)}{(2)(1)(-1)}
+  = \frac{0.625}{-2} = -0.3125 \\[6pt]
+  L_3(1.5) &= \frac{(1.5-1)(1.5-2)(1.5-3)}{(4-1)(4-2)(4-3)}
+  = \frac{(0.5)(-0.5)(-1.5)}{(3)(2)(1)}
+  = \frac{0.375}{6} = 0.0625
+\end{align*}
+
+\textbf{Interpolated value:}
+\begin{align*}
+  P(1.5) &= 1(0.3125) + 8(0.9375) + 27(-0.3125) + 64(0.0625) \\
+  &= 0.3125 + 7.5 - 8.4375 + 4 = \mathbf{3.375}
+\end{align*}
+\end{exbox}
+
+\begin{ansbox}
+$y(1.5) = \mathbf{3.375}$\quad (Exact: $(1.5)^3 = 3.375$) $\checkmark$
+\end{ansbox}
+
+\subsection*{Advantages and Disadvantages}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{7cm}|p{7cm}|}
+  \hline
+  \rowcolor{greenclr!20}
+  \textbf{Advantages} & \textbf{Disadvantages} \\
+  \hline
+  Works for unequally spaced data & Adding a new point requires full recomputation \\
+  \hline
+  No difference table required & Computationally expensive for large $n$ \\
+  \hline
+  Direct polynomial form & Susceptible to Runge's phenomenon \\
+  \hline
+\end{tabular}
+\end{center}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\section{Newton's Divided Difference Method}
+
+\begin{defbox}[Motivation]
+Lagrange's formula has the drawback that if a new interpolation point is inserted, all coefficients must be recomputed. Newton's Divided Difference method overcomes this by building the polynomial \emph{incrementally}.
+\end{defbox}
+
+\subsection*{Divided Differences}
+
+Let $y_0, y_1, \ldots, y_n$ be values of $y = f(x)$ at $x_0, x_1, \ldots, x_n$ (not necessarily equally spaced).
+
+\textbf{First divided differences:}
+\[
+  f[x_i, x_{i+1}] = \frac{y_{i+1} - y_i}{x_{i+1} - x_i}
+\]
+
+\textbf{Second divided differences:}
+\[
+  f[x_i, x_{i+1}, x_{i+2}] = \frac{f[x_{i+1},x_{i+2}] - f[x_i,x_{i+1}]}{x_{i+2}-x_i}
+\]
+
+\textbf{$k$-th divided difference:}
+\[
+  f[x_0,x_1,\ldots,x_k] = \frac{f[x_1,x_2,\ldots,x_k] - f[x_0,x_1,\ldots,x_{k-1}]}{x_k - x_0}
+\]
+
+\begin{formulabox}[Newton's Divided Difference Formula]
+\[
+  P(x) = f[x_0]
+  + (x-x_0)\,f[x_0,x_1]
+  + (x-x_0)(x-x_1)\,f[x_0,x_1,x_2]
+  + \cdots
+  + (x-x_0)(x-x_1)\cdots(x-x_{n-1})\,f[x_0,\ldots,x_n]
+\]
+\end{formulabox}
+
+\subsection*{Solved Example}
+
+\begin{exbox}[Example --- Newton's Divided Difference]
+\textbf{Given:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary!80}
+  {\color{white}$x$} & {\color{white}0} & {\color{white}1} & {\color{white}3} & {\color{white}4} \\
+  \hline
+  $f(x)$ & 5 & 6 & 50 & 105 \\
+  \hline
+\end{tabular}
+\end{center}
+Find $f(2)$ using Newton's divided difference method.
+
+\medskip\textbf{Divided Difference Table:}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|c|c|c|c|c|}
+  \hline
+  \rowcolor{primary!80}
+  {\color{white}$x$} & {\color{white}$f[x]$} &
+  {\color{white}$f[\cdot,\cdot]$} & {\color{white}$f[\cdot,\cdot,\cdot]$} & {\color{white}$f[\cdot,\cdot,\cdot,\cdot]$} \\
+  \hline
+  0 & 5 & & & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & $\dfrac{6-5}{1-0}=1$ & & \\
+  \hline
+  1 & 6 & & $\dfrac{22-1}{3-0}=7$ & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & $\dfrac{50-6}{3-1}=22$ & & $\dfrac{11-7}{4-0}=1$ \\
+  \hline
+  3 & 50 & & $\dfrac{55-22}{4-1}=11$ & \\
+  \hline
+  \rowcolor{lightbg!50}
+  & & $\dfrac{105-50}{4-3}=55$ & & \\
+  \hline
+  4 & 105 & & & \\
+  \hline
+\end{tabular}
+\end{center}
+
+\textbf{Newton's polynomial:}
+\begin{align*}
+  P(x) &= 5 + (x-0)(1) + (x-0)(x-1)(7) + (x-0)(x-1)(x-3)(1) \\
+  &= 5 + x + 7x(x-1) + x(x-1)(x-3) \\
+  &= 5 + x + 7x^2 - 7x + x^3 - 4x^2 + 3x \\
+  &= x^3 + 3x^2 - 3x + 5
+\end{align*}
+
+\textbf{Find $f(2)$:}
+\begin{align*}
+  P(2) &= 5 + (2)(1) + (2)(1)(7) + (2)(1)(-1)(1) \\
+  &= 5 + 2 + 14 - 2 = \mathbf{19}
+\end{align*}
+
+\textbf{Verify:} $P(2) = 8 + 12 - 6 + 5 = 19$ $\checkmark$\\
+Spot checks: $P(0)=5$, $P(1)=6$, $P(3)=50$, $P(4)=105$ all match. $\checkmark$
+\end{exbox}
+
+\begin{ansbox}
+$f(2) = \mathbf{19}$
+\end{ansbox}
+
+\subsection*{Comparison of Interpolation Methods}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{3.2cm}|p{3cm}|p{3cm}|p{4.2cm}|}
+  \hline
+  \rowcolor{primary!90}
+  {\color{white}\textbf{Method}} &
+  {\color{white}\textbf{Spacing}} &
+  {\color{white}\textbf{Best for}} &
+  {\color{white}\textbf{Key Feature}} \\
+  \hline
+  \rowcolor{lightbg!40}
+  Stirling's & Equal & $p \approx 0$ (middle) & Mean of Gauss fwd \& bwd \\
+  \hline
+  Bessel's & Equal & $p \approx 0.5$ (midpoint) & Best at midpoint \\
+  \hline
+  \rowcolor{lightbg!40}
+  Lagrange's & Unequal & Any point & No difference table needed \\
+  \hline
+  Newton's Div.\ Diff.\ & Unequal & Any point & Incremental, efficient updates \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{20pt}
+\noindent\color{accent}\rule{\linewidth}{1.5pt}
+\begin{center}
+  \small\color{darktext}\textit{End of Assignment \quad\textbullet\quad Numerical Analysis I \quad\textbullet\quad Nadir Ali Khan \quad\textbullet\quad MT-0123-052}
+\end{center}
+
+\end{document}
