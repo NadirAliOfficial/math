@@ -16,4 +16,4 @@ Requires a LaTeX distribution (TeX Live or MiKTeX).
 
 ## License
 Academic use only
-<!-- updated: 2025-09-11-r01 -->
+<!-- updated: 2026-06-04 -->
