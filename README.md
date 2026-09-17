@@ -104,19 +104,23 @@ Professional LaTeX notes, past paper solutions, and midterm papers for mathemati
 ---
 
 ## Compiling
->>>>>>> 8a533d1 (Add System of Lake Pollution notes and compiled PDF)
 
-## Compilation
 ```bash
-pdflatex main.tex
+pdflatex filename.tex
+pdflatex filename.tex   # run twice for TOC
 ```
 
-Requires a LaTeX distribution (TeX Live or MiKTeX).
+Required packages: `amsmath`, `amssymb`, `tcolorbox`, `tikz`, `booktabs`, `multicol`, `enumitem`, `titlesec`, `fancyhdr`, `geometry`, `xcolor`, `multirow`, `microtype`
+
+---
+
+## Contact
+
+For feedback or to request additional topics: **+92 304 2019543**
+
+---
 
 ## License
-Academic use only
-<!-- updated: 2026-06-04 -->x
 
-test backdate
+Academic and educational use only.
 
-Git DB API test
